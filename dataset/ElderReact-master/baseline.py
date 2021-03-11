@@ -62,6 +62,7 @@ def read_data(audio_feat_file, video_feat_file, label_file, affect_state, featur
 
     return X, y
 
+
 base_dir = 'C:\\Users\\us98\\PycharmProjects\\elderReactProject\\dataset\\ElderReact-master'
 
 f = open(os.path.join(base_dir, "Features/Audio_feat/train_audio.txt")).readlines()
