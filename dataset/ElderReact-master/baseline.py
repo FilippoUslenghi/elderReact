@@ -86,8 +86,8 @@ X_test = np.asarray(X_test)
 print(np.where(np.isnan(X)))
 print(np.where(np.isnan(X_val)))
 print(np.where(np.isnan(X_test)))
-X_test = np.delete(X_test, (289), axis=0)  # delete NaN value
-X_test = np.delete(X_test, (43), axis=0)
+X_test = np.delete(X_test, 289, axis=0)  # delete NaN value
+X_test = np.delete(X_test, 43, axis=0)
 y_test.pop(289)
 y_test.pop(43)
 
