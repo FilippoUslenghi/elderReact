@@ -133,6 +133,8 @@ dmypy.json
 
 # OpenFace
 OpenFace
+processed
+myProcessed
 
 # Colab
 0.0.7

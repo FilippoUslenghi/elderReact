@@ -137,7 +137,7 @@ num_iter = 100
 all_pred = []
 all_prob = []
 all_f1 = 0
-clf_mode = "svm"  # svm, gnb, xgboost, dummy
+clf_mode = "xgboost"  # svm, gnb, xgboost, dummy
 mode = "test"  # val or test. val mode is for searching for hyperparameters
 for i in range(num_iter):
     if clf_mode == "gnb":
