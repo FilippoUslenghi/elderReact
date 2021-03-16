@@ -27,10 +27,9 @@ base_dir = os.path.join(os.getcwd(), 'dataset\\ElderReact_Data\\ElderReact_train
 
 
 for filename in os.listdir(base_dir):
-    
-    if filename[:-4] in os.listdir("C:\\Users\\us98\\PycharmProjects\\elderReactProject\\myProcessed"): continue
+
     FILENAME = base_dir + filename
-    os.system(os.getcwd() + '\\OpenFace\\FeatureExtraction.exe -f ' +  FILENAME + ' -out_dir processed')
+    os.system(os.getcwd() + '\\OpenFace\\FeatureExtraction.exe -f ' +  FILENAME + ' -out_dir processed\\' + filename[:-4])
 
 
 # %% [markdown]
