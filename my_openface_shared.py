@@ -30,7 +30,7 @@ for filename in os.listdir(base_dir):
     
     if filename[:-4] in os.listdir("C:\\Users\\us98\\PycharmProjects\\elderReactProject\\myProcessed"): continue
     FILENAME = base_dir + filename
-    os.system(os.getcwd() + '\\OpenFace\\FeatureExtraction.exe -f ' +  FILENAME + ' -pdmparams -pose -aus -gaze -out_dir myProcessed')
+    os.system(os.getcwd() + '\\OpenFace\\FeatureExtraction.exe -f ' +  FILENAME + ' -out_dir processed')
 
 
 # %% [markdown]
