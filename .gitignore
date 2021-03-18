@@ -136,6 +136,7 @@ OpenFace
 processed
 myProcessed
 myProcessed_old
+myProcessed_csv
 
 # Colab
 0.0.7

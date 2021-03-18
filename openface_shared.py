@@ -21,26 +21,32 @@ import time
 from ipywidgets import interact
 import ipywidgets as widgets
 
-
 # %%
-base_dir = os.path.join(os.getcwd(), 'dataset\\ElderReact_Data\\ElderReact_train\\')
-
-
-for filename in os.listdir(base_dir):
-
-    FILENAME = base_dir + filename
-#    os.system(os.getcwd() + '\\OpenFace\\FeatureExtraction.exe -f ' +  FILENAME + ' -out_dir myProcessed\\' + filename[:-4])
+# base_dir = '/var/dataset/ElderReact_Data/ElderReact_train/'
+base_dir = os.getcwd() + 'elderReactProject\\dataset\\ElderReact_Data\\ElderReact_train\\'
+filename =  '50_50_106'
+ 
+FILENAME = base_dir + filename + '.mp4'
+#os.system('mkdir ' + filename)
+#os.system('./OpenFace/build/bin/FeatureExtraction -f ' +  FILENAME + ' -out_dir processed/' + filename)
+#os.system(os.getcwd() + 'OpenFace\\FeatureExtraction.exe -f ' +  FILENAME + ' -out_dir processed\\' + filename)
+#os.system('ffmpeg -y -loglevel info -i processed/' + filename + '/' +  filename + '.avi processed/' + filename + '/' + filename + '.mp4')
+#os.system('ffmpeg -y -loglevel info -i processed\\' + filename + '\\' +  filename + '.avi processed\\' + filename + '\\' + filename + '.mp4')
 
 # %% [markdown]
-#Scelgo un file ogni 5 video; così se ho, per esempio, 15 video di reazioni ad uno stimolo, avrò 3 file rappresentativi
-#mentre se ho 6 video relativi ad un altro stimolo ne avrò 1 ecc ecc.
+# Finally, visualize the result:
 
 # %%
-filenames = []
-for i, filename in enumerate(os.listdir("myProcessed")):
-    if i%5==0:
-        filenames.append(filename)
-print("Numero di video scelti: ", len(filenames))
+def show_local_mp4_video(file_name, width=640, height=480):
+  import io
+  import base64
+  from IPython.display import HTML
+  video_encoded = base64.b64encode(io.open(file_name, 'rb').read())
+  return HTML(data='''<video width="{0}" height="{1}" alt="test" controls>
+                        <source src="data:video/mp4;base64,{2}" type="video/mp4" />
+                      </video>'''.format(width, height, video_encoded.decode('ascii')))
+outputVideo = 'processed/' + filename + '/' + filename + '.mp4' 
+show_local_mp4_video(outputVideo, width=960, height=720)
 
 # %% [markdown]
 # # Extra: Here are some tips for loading and plotting the data. 
@@ -49,19 +55,16 @@ print("Numero di video scelti: ", len(filenames))
 get_ipython().run_line_magic('matplotlib', 'inline')
 get_ipython().run_line_magic('config', "InlineBackend.figure_format = 'retina'")
 import pandas as pd, seaborn as sns
-sns.set_style('white')  
+sns.set_style('white')
 import matplotlib.pyplot as plt 
 
 # Load data
-processed_csvs = []
-for filename in filenames:
-    df = pd.read_csv('myProcessed/'+ filename + '/' + filename + '.csv')
-    processed_csvs.append(df)
-    # Remove empty spaces in column names.
-    df.columns = [col.replace(" ", "") for col in df.columns]
-    # Print few values of data.
-    # print(f"Max number of frames {df.frame.max()}", f"\nTotal shape of dataframe {df.shape}")
-processed_csvs[0].head()
+df = pd.read_csv('processed/'+ filename + '/' + filename + '.csv')
+# Remove empty spaces in column names.
+df.columns = [col.replace(" ", "") for col in df.columns]
+# Print few values of data.
+print(f"Max number of frames {df.frame.max()}", f"\nTotal shape of dataframe {df.shape}")
+df.head()
 
 
 # %%
