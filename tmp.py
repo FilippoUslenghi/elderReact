@@ -1,6 +1,5 @@
 # %%
 import os
-from PIL.Image import BILINEAR
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -82,6 +81,7 @@ axes[cf_ix].legend(loc=5)
 # print(filename, "length: ", len(time))
 
 # %% [markdown]
+# ##Analisi della confidence
 # Voglio utilizzare lo zero crossing rate per analizzare la confindence nei video.
 # Per fare questo sottraggo al valore della confidence 0.75 in modo tale da avere uno zero corssing ogni volta
 # che la confidence scende (e risale) da tale valore.
