@@ -1,7 +1,7 @@
 # %%
 import os
+from PIL.Image import BILINEAR
 import numpy as np
-from numpy.lib.function_base import disp
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -81,8 +81,8 @@ axes[cf_ix].legend(loc=5)
 # plt.show()
 # print(filename, "length: ", len(time))
 
-# %%
-# Voglio utilizzare il zero crossing rate per analizzare la confindence nei video.
+# %% [markdown]
+# Voglio utilizzare lo zero crossing rate per analizzare la confindence nei video.
 # Per fare questo sottraggo al valore della confidence 0.75 in modo tale da avere uno zero corssing ogni volta
 # che la confidence scende (e risale) da tale valore.
 # Faccio poi un plot dello zero crossing/2 rate per ogni video
@@ -111,10 +111,46 @@ data = {
 zeroCrossing_df = pd.DataFrame(data, columns=['videos', 'zeroCrossingRate'])
 
 plt.bar(zeroCrossing_df.index, zeroCrossing_df.zeroCrossingRate)
-plt.title("Zero corssing rate for the shifted confidence")
-plt.xlabel("Videos")
+plt.title("Zero crossing rate of the confidence for each video")
+plt.xlabel("Video's index")
 plt.ylabel("ZCR")
 plt.yticks([0,10,20,30,40,50])
 plt.show()
-    
+
+print("ZCR medio ", zeroCrossing_df.zeroCrossingRate.mean())
+
+# %% [markdown]
+# Andando a guardare i video di openFace che hanno uno ZCR=8
+# si nota che la maggior parte riguardano la stessa persona.
+# Questo probabilmente è dovuto al fatto che indossando gli occhiali
+# il tool non riesce a mantenere una condifence alta.
+
+# %%
+print(zeroCrossing_df.videos[zeroCrossing_df.zeroCrossingRate == 8])
+
+# %% [markdown]
+# Vediamo quanti video hanno un ZCR>=5 e osserviamone i grafici della confidence
+
+# %%
+videos = zeroCrossing_df.videos[zeroCrossing_df.zeroCrossingRate >= 5].tolist()
+print("Numero di video ", len(videos))
+
+plots = [x.replace(".csv", "_confidence.jpg") for x in videos]
+base_dir= "C:\\Users\\us98\\PycharmProjects\\elderReactProject\\myProcessed"
+import cv2
+
+i=1
+plt.figure(figsize=(150,100))
+for plot in plots:
+    if i == 1:
+        first_img = cv2.imread(base_dir + '\\' + plot[:-15] + '\\' + plot)
+        ax1 = plt.subplot(8, 6, i)
+        plt.imshow(first_img)
+        i+=1
+        continue
+    img = cv2.imread(base_dir + '\\' + plot[:-15] + '\\' + plot)
+    plt.subplot(8, 6, i, sharex=ax1, sharey=ax1)
+    plt.imshow(img, interpolation="bilinear")
+    i+=1
+
 # %%
