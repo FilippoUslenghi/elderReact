@@ -110,7 +110,7 @@ data = {
 
 zeroCrossing_df = pd.DataFrame(data, columns=['videos', 'zeroCrossingRate'])
 
-plt.bar(zeroCrossing_df.zeroCrossingRate, bins=len(filenames))
+plt.bar(zeroCrossing_df.index, zeroCrossing_df.zeroCrossingRate)
 plt.title("Zero corssing rate for the shifted confidence")
 plt.xlabel("Videos")
 plt.ylabel("ZCR")
