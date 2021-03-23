@@ -88,73 +88,39 @@ plots = [x.replace(".csv", "_confidence.jpg") for x in videos]
 base_dir= "C:\\Users\\us98\\PycharmProjects\\elderReactProject\\myProcessed"
 import cv2
 
-i=1
 plt.figure(figsize=(150,100))
-for plot in plots:
-    if i == 1:
+for i, plot in enumerate(plots):
+    if i == 0:
         first_img = cv2.imread(base_dir + '\\' + plot[:-15] + '\\' + plot)
-        ax1 = plt.subplot(8, 6, i)
+        ax1 = plt.subplot(8, 6, i+1)
         plt.imshow(first_img)
-        i+=1
         continue
     img = cv2.imread(base_dir + '\\' + plot[:-15] + '\\' + plot)
-    plt.subplot(8, 6, i, sharex=ax1, sharey=ax1)
+    plt.subplot(8, 6, i+1, sharex=ax1, sharey=ax1)
     plt.imshow(img)
-    i+=1
 plt.tight_layout()
 
 # %% [markdown]
 # Procedo con la visualizzazione delle features di 40 video presi casualmente
 
+# %% [markdown]
+# Visualizzazione del gaze angle
+
 # %%
 base_dir = 'C:\\Users\\us98\\PycharmProjects\\elderReactProject\\myProcessed\\'
 small_videoList = videoList[::15][:-1]
 
-stop = 0
-for videoName in small_videoList:
-    if stop == 1: break
+f, axes = plt.subplots(8, 5, figsize=(25, 20), sharey=True)
+axes = axes.flatten()
+for i, videoName in enumerate(small_videoList):
+    # if i == 4: break
     csvVideo = base_dir + videoName + '\\' + videoName + '.csv'
     df = pd.read_csv(csvVideo)
     df.columns = [col.lstrip().rstrip() for col in df.columns]
 
-    gazeAng_x = df["gaze_angle_x"]
-    gazeAng_y = df["gaze_angle_y"]
-    time = df["frame"]
+    df[['gaze_angle_x', 'gaze_angle_y']].plot(ax=axes[i], legend = False)
+    axes[i].set(ylim=[-1.5, 1.5], xlabel='Frame Number', ylabel="Radians")
+    axes[i].legend(['gaze_angle_x', 'gaze_angle_y'], loc='lower left')
 
-
-    f, axes = plt.subplots(2, len(df), figsize=(10, 5))
-    for faces_ix, face_id in enumerate(df[::-1]):
-        df.plot.scatter(x='gaze_angle_x', y='gaze_angle_y', ax=axes[0])
-        axes[0].scatter(0, 0, marker='x', color='k')  # draw origin.
-        axes[0].set(xlim=[-2, 2], ylim=[-2, 2], title=f'Gaze movement of face_id=={face_id}')
-        df[['gaze_angle_x', 'gaze_angle_y']].plot(ax=axes[1])
-        axes[1].set(ylim=[-1.5, 1.5], xlabel='Frame Number', ylabel="Radians")
-    plt.tight_layout()
-    plt.show()
-
-    stop += 1
-
-
-    # plt.plot(time, gazeAng_x, color="blue")
-    # plt.plot(time, gazeAng_y, color="red")
-    # plt.title('Gaze angle in video "' + videoName + '"' )
-    # plt.xlabel('Time')
-    # plt.ylabel('Gaze angle')
-    # plt.show()
-
-    # time = df["frame"]
-    # plt.figure()
-    # plt.title('Confidence throughout the video "' + videoName + '.avi"')
-    # plt.xlabel("Frame number")
-    # plt.ylabel("Confidence")
-    # plt.plot(time, cf)
-    # plt.yticks([x/10 for x in range(10)])
-    # # plt.savefig(f"{videoName}_confidence.jpg", format="jpg", dpi=150)
-    # plt.show()
-
-
-
-# %%
-
-
-# %%
+plt.tight_layout()
+plt.show()
