@@ -126,13 +126,13 @@ df_clean.pivot(index='frame', columns='face_id', values='AU12_r').corr()
 f, axes = plt.subplots(2, len(df_clean.face_id.unique()), figsize=(10, 5))
 for faces_ix, face_id in enumerate(df_clean.face_id.unique()[::-1]):
     df_clean.query(f'face_id=={face_id}').plot.scatter(
-        x='gaze_angle_x', y='gaze_angle_y', ax=axes[0][faces_ix])
-    axes[0][faces_ix].scatter(0, 0, marker='x', color='k')  # draw origin.
-    axes[0][faces_ix].set(xlim=[-2, 2], ylim=[-2, 2],
+        x='gaze_angle_x', y='gaze_angle_y', ax=axes[0])
+    axes[0].scatter(0, 0, marker='x', color='k')  # draw origin.
+    axes[0].set(xlim=[-2, 2], ylim=[-2, 2],
                           title=f'Gaze movement of face_id=={face_id}')
     df_clean.query(f'face_id=={face_id}')[
-        ['gaze_angle_x', 'gaze_angle_y']].plot(ax=axes[1][faces_ix])
-    axes[1][faces_ix].set(
+        ['gaze_angle_x', 'gaze_angle_y']].plot(ax=axes[1])
+    axes[1].set(
         ylim=[-1.5, 1.5], xlabel='Frame Number', ylabel="Radians")
 plt.tight_layout()
 plt.show()

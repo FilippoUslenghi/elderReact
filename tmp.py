@@ -5,87 +5,36 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# %%
-os.chdir("myProcessed_csv")
-
-# %%
-filenames = os.listdir()[::20]
-for filename in filenames:
-    df = pd.read_csv(filename)
-    df.columns = [col.lstrip().rstrip() for col in df.columns]
-    
-
-    cf = df["confidence"]
-    time = df["frame"]
-    plt.figure()
-    plt.plot(time, cf)
-    plt.yticks([x/10 for x in range(10)])
-    plt.show()
-    print(filename, "length: ", len(time))
-
 # %% [markdown]
 # Plotto la confidence nel tempo di ogni video e salvo l'immagine nella relativa direcorty
 
 # %%
-filenames = os.listdir("C:\\Users\\us98\\PycharmProjects\\elderReactProject\\myProcessed")
+base_dir = 'C:\\Users\\us98\\PycharmProjects\\elderReactProject\\myProcessed\\'
+videoList = os.listdir(base_dir)
 
-# for filename in filenames:
-#     os.chdir(filename)
-#     FILENAME = filename + ".csv"
-#     df = pd.read_csv(FILENAME)
-#     df.columns = [col.lstrip().rstrip() for col in df.columns]
+for videoName in videoList:
+    csvVideo = base_dir + videoName + '\\' + videoName + ".csv"
+    df = pd.read_csv(csvVideo)
+    df.columns = [col.lstrip().rstrip() for col in df.columns]
     
-
-#     cf = df["confidence"]
-#     time = df["frame"]
-#     plt.figure()
-#     plt.title('Confidence throughout the video "' + filename + '.avi"')
-#     plt.xlabel("Frame number")
-#     plt.ylabel("Confidence")
-#     plt.plot(time, cf)
-#     plt.yticks([x/10 for x in range(10)])
-#     plt.savefig(f"{filename}_confidence.jpg", format="jpg", dpi=150)
-#     plt.show()
-#     os.chdir('..')
-
-# %% [markdown]
-# Creo dei subpplot della confidence di alcuni video scelti ad intervalli arbitari
-
-# %%
-tot_cf = []
-tot_frame = []
-
-filenames = os.listdir()[::20]
-for filename in filenames:
-    df = pd.read_csv(filename)
-    df.columns = [col.replace(" ", "") for col in df.columns]
-
-    tot_cf.extend([df["confidence"]])
-    tot_frame.extend([df["frame"]])
-
-small_df = [tot_cf, tot_frame]
-f, axes = plt.subplots(4, 8, figsize=(10, 12), sharex=True, sharey=True)
-axes = axes.flatten()
-
-for cf_ix, cf_col in enumerate(tot_cf):
-	sns.lineplot(x='frame', y=cf_col,
-                 data=small_df, ax=axes[cf_ix])
-axes[cf_ix].set(title=cf_col, ylabel='Intensity')
-axes[cf_ix].legend(loc=5)
-
-
-# plt.figure()
-# plt.plot(time, cf)
-# plt.yticks(list(dict.fromkeys(df.confidence)))
-# plt.show()
-# print(filename, "length: ", len(time))
+    #commento perché plottare fa perdere tempo
+    # cf = df["confidence"]
+    # time = df["frame"]
+    # plt.figure()
+    # plt.title('Confidence throughout the video "' + videoName + '.avi"')
+    # plt.xlabel("Frame number")
+    # plt.ylabel("Confidence")
+    # plt.plot(time, cf)
+    # plt.yticks([x/10 for x in range(10)])
+    # # plt.savefig(f"{videoName}_confidence.jpg", format="jpg", dpi=150)
+    # plt.show()
 
 # %% [markdown]
 # ##Analisi della confidence
 # Voglio utilizzare lo zero crossing rate per analizzare la confindence nei video.
 # Per fare questo sottraggo al valore della confidence 0.75 in modo tale da avere uno zero corssing ogni volta
 # che la confidence scende (e risale) da tale valore.
-# Faccio poi un plot dello zero crossing/2 rate per ogni video
+# Faccio poi un plot dello zero crossing rate per ogni video
 # Se un video ha un alto zero crossing rate allora non vi è una continua affidabilità dei risultati.
 
 # %%
@@ -93,46 +42,46 @@ zeroCrossing_values = []
 
 csv_dir = 'C:\\Users\\us98\\PycharmProjects\\elderReactProject\\myProcessed_csv\\'
 
-filenames = os.listdir(csv_dir)
-for filename in filenames:
-    df = pd.read_csv(csv_dir + filename)
+csv_files = os.listdir(csv_dir)
+for csv_file in csv_files:
+    df = pd.read_csv(csv_dir + csv_file)
     df.columns = [col.replace(" ", "") for col in df.columns]
 
     cf = np.array(df.confidence - 0.75)
-    zero_crosses = np.diff(cf > 0).sum()
+    number_of_zeroCrosses = np.diff(cf > 0).sum()
 
-    zeroCrossing_values.append(zero_crosses/2)
+    zeroCrossing_values.append(number_of_zeroCrosses)
 
 data = {
-    'videos': filenames,
+    'videos': csv_files,
     'zeroCrossingRate': zeroCrossing_values
 }
 
-zeroCrossing_df = pd.DataFrame(data, columns=['videos', 'zeroCrossingRate'])
+ZCR_df = pd.DataFrame(data, columns=['videos', 'zeroCrossingRate'])
 
-plt.bar(zeroCrossing_df.index, zeroCrossing_df.zeroCrossingRate)
+plt.bar(ZCR_df.index, ZCR_df.zeroCrossingRate)
 plt.title("Zero crossing rate of the confidence for each video")
 plt.xlabel("Video's index")
 plt.ylabel("ZCR")
-plt.yticks([0,10,20,30,40,50])
+plt.yticks([x for x in range(100)][::10])
 plt.show()
 
-print("ZCR medio ", zeroCrossing_df.zeroCrossingRate.mean())
+print("Medium ZCR ", ZCR_df.zeroCrossingRate.mean())
 
 # %% [markdown]
-# Andando a guardare i video di openFace che hanno uno ZCR=8
+# Andando a guardare i video di openFace che hanno uno ZCR=16
 # si nota che la maggior parte riguardano la stessa persona.
 # Questo probabilmente è dovuto al fatto che indossando gli occhiali
 # il tool non riesce a mantenere una condifence alta.
 
 # %%
-print(zeroCrossing_df.videos[zeroCrossing_df.zeroCrossingRate == 8])
+print(ZCR_df.videos[ZCR_df.zeroCrossingRate == 16])
 
 # %% [markdown]
-# Vediamo quanti video hanno un ZCR>=5 e osserviamone i grafici della confidence
+# Vediamo quanti video hanno un ZCR>=10 e osserviamone i grafici della confidence
 
 # %%
-videos = zeroCrossing_df.videos[zeroCrossing_df.zeroCrossingRate >= 5].tolist()
+videos = ZCR_df.videos[ZCR_df.zeroCrossingRate >= 10].tolist()
 print("Numero di video ", len(videos))
 
 plots = [x.replace(".csv", "_confidence.jpg") for x in videos]
@@ -150,7 +99,62 @@ for plot in plots:
         continue
     img = cv2.imread(base_dir + '\\' + plot[:-15] + '\\' + plot)
     plt.subplot(8, 6, i, sharex=ax1, sharey=ax1)
-    plt.imshow(img, interpolation="bilinear")
+    plt.imshow(img)
     i+=1
+plt.tight_layout()
+
+# %% [markdown]
+# Procedo con la visualizzazione delle features di 40 video presi casualmente
+
+# %%
+base_dir = 'C:\\Users\\us98\\PycharmProjects\\elderReactProject\\myProcessed\\'
+small_videoList = videoList[::15][:-1]
+
+stop = 0
+for videoName in small_videoList:
+    if stop == 1: break
+    csvVideo = base_dir + videoName + '\\' + videoName + '.csv'
+    df = pd.read_csv(csvVideo)
+    df.columns = [col.lstrip().rstrip() for col in df.columns]
+
+    gazeAng_x = df["gaze_angle_x"]
+    gazeAng_y = df["gaze_angle_y"]
+    time = df["frame"]
+
+
+    f, axes = plt.subplots(2, len(df), figsize=(10, 5))
+    for faces_ix, face_id in enumerate(df[::-1]):
+        df.plot.scatter(x='gaze_angle_x', y='gaze_angle_y', ax=axes[0])
+        axes[0].scatter(0, 0, marker='x', color='k')  # draw origin.
+        axes[0].set(xlim=[-2, 2], ylim=[-2, 2], title=f'Gaze movement of face_id=={face_id}')
+        df[['gaze_angle_x', 'gaze_angle_y']].plot(ax=axes[1])
+        axes[1].set(ylim=[-1.5, 1.5], xlabel='Frame Number', ylabel="Radians")
+    plt.tight_layout()
+    plt.show()
+
+    stop += 1
+
+
+    # plt.plot(time, gazeAng_x, color="blue")
+    # plt.plot(time, gazeAng_y, color="red")
+    # plt.title('Gaze angle in video "' + videoName + '"' )
+    # plt.xlabel('Time')
+    # plt.ylabel('Gaze angle')
+    # plt.show()
+
+    # time = df["frame"]
+    # plt.figure()
+    # plt.title('Confidence throughout the video "' + videoName + '.avi"')
+    # plt.xlabel("Frame number")
+    # plt.ylabel("Confidence")
+    # plt.plot(time, cf)
+    # plt.yticks([x/10 for x in range(10)])
+    # # plt.savefig(f"{videoName}_confidence.jpg", format="jpg", dpi=150)
+    # plt.show()
+
+
+
+# %%
+
 
 # %%
