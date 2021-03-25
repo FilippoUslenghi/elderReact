@@ -110,10 +110,10 @@ plt.tight_layout()
 base_dir = 'C:\\Users\\us98\\PycharmProjects\\elderReactProject\\myProcessed\\'
 small_videoList = videoList[::15][:-1]
 
-f, axes = plt.subplots(8, 5, figsize=(25, 20), sharey=True)
+fig, axes = plt.subplots(8, 5, figsize=(25, 20), sharey=True)
 axes = axes.flatten()
+
 for i, videoName in enumerate(small_videoList):
-    # if i == 4: break
     csvVideo = base_dir + videoName + '\\' + videoName + '.csv'
     df = pd.read_csv(csvVideo)
     df.columns = [col.lstrip().rstrip() for col in df.columns]
@@ -124,3 +124,34 @@ for i, videoName in enumerate(small_videoList):
 
 plt.tight_layout()
 plt.show()
+
+# %% [markdown]
+# Visualizzazione delle coordinate 3D del *gaze vector*
+
+# %%
+from mpl_toolkits.mplot3d import Axes3D
+
+base_dir = 'C:\\Users\\us98\\PycharmProjects\\elderReactProject\\myProcessed\\'
+
+fig = plt.figure(figsize=(25, 10))
+for i, videoName in enumerate(small_videoList):
+    csvVideo = base_dir + videoName + '\\' + videoName + '.csv'
+    df = pd.read_csv(csvVideo)
+    df.columns = [col.replace(" ", "") for col in df.columns]
+
+
+    # Plot delle coordinate spaziali del gaze vector
+    ax = fig.add_subplot(4, 10, i+1, projection='3d')
+
+    ax.plot(df.gaze_0_x, df.gaze_0_y, df.gaze_0_z, color='blue')
+    ax.plot(df.gaze_1_x, df.gaze_1_y, df.gaze_1_z, color='red')
+    ax.set_title(videoName)
+    ax.set(xlabel='x', ylabel='y', zlabel='z', xticks=[], yticks=[], zticks=[])
+    ax.set_xlabel(xlabel='x', labelpad=0)
+    ax.set_ylabel(ylabel='y', labelpad=0)
+    ax.set_zlabel(zlabel='z', labelpad=0)
+    ax.legend(['Leftmost eye', 'Rightmost eye'], fontsize='xx-small')
+
+plt.tight_layout()
+plt.show()
+# %%
