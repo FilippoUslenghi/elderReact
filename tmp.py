@@ -185,19 +185,30 @@ plt.show()
 # Visualizzazione della media dei *face landmark* in 2D di ogni frame
 
 # %%
+print("Mean of the face's coordinates of each frame for each videos")
+
 import re
 x_regex_pat = re.compile(r'^x_[0-9]+$')
 y_regex_pat = re.compile(r'^y_[0-9]+$')
-x_locs = df.columns[df.columns.str.contains(x_regex_pat)]
-y_locs = df.columns[df.columns.str.contains(y_regex_pat)]
 
-# no_unique_faces = len(df.face_id.unique())
-palette = sns.color_palette()
+fig, axes = plt.subplots(8, 5, figsize=(15, 15), sharex=True, sharey=True)
+axes = axes.flatten()
 
-avg_face_df = pd.DataFrame({'x_locs': df[x_locs].mean(
-    axis=1), 'y_locs': df[y_locs].mean(axis=1)}) # 'face_id': df.face_id})
-ax = sns.scatterplot(x='x_locs', y='y_locs', data=avg_face_df, marker='+')
-ax.set(xlim=[0, 1920], ylim=[1080, 0], title='Mean of the face coordinates for each frame')
+for i, videoName in enumerate(small_videoList):
+    videoCsv = base_dir + videoName + '\\' + videoName + '.csv'
+    df = pd.read_csv(videoCsv)
+    df.columns = columns
+
+    x_locs = df.columns[df.columns.str.contains(x_regex_pat)]
+    y_locs = df.columns[df.columns.str.contains(y_regex_pat)]
+
+
+    palette = sns.color_palette()
+    avg_face_df = pd.DataFrame({'x_locs': df[x_locs].mean(axis=1), 'y_locs': df[y_locs].mean(axis=1)})
+    sns.scatterplot(x='x_locs', y='y_locs', data=avg_face_df, marker='+', ax=axes[i])
+    axes[i].set(xlim=[0, 1920], ylim=[1080, 0], title=videoName)
+
+plt.tight_layout()
 plt.show()
 
 # %%
