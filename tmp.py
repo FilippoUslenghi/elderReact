@@ -4,6 +4,9 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import cv2
+from mpl_toolkits.mplot3d import Axes3D
+import re
 
 # %% [markdown]
 # Plotto la confidence nel tempo di ogni video e salvo l'immagine nella relativa direcorty
@@ -86,7 +89,7 @@ print("Numero di video ", len(videos))
 
 plots = [x.replace(".csv", "_confidence.jpg") for x in videos]
 base_dir= "C:\\Users\\us98\\PycharmProjects\\elderReactProject\\myProcessed"
-import cv2
+
 
 plt.figure(figsize=(150,100))
 for i, plot in enumerate(plots):
@@ -159,10 +162,6 @@ plt.show()
 # %%
 print("Coordinate del gaze vector nel tempo per ogni video:")
 
-from mpl_toolkits.mplot3d import Axes3D
-
-base_dir = 'C:\\Users\\us98\\PycharmProjects\\elderReactProject\\myProcessed\\'
-
 fig = plt.figure(figsize=(25, 10))
 for i, videoName in enumerate(small_videoList):
     videoCsv = base_dir + videoName + '\\' + videoName + '.csv'
@@ -181,13 +180,13 @@ for i, videoName in enumerate(small_videoList):
 
 plt.tight_layout()
 plt.show()
+
 # %% [markdown]
 # Visualizzazione della media dei *face landmark* in 2D di ogni frame
 
 # %%
-print("Mean of the face's coordinates of each frame for each videos")
+print("Media delle coordinate 2D dei face landmark per ogni frame:")
 
-import re
 x_regex_pat = re.compile(r'^x_[0-9]+$')
 y_regex_pat = re.compile(r'^y_[0-9]+$')
 
@@ -207,6 +206,38 @@ for i, videoName in enumerate(small_videoList):
     avg_face_df = pd.DataFrame({'x_locs': df[x_locs].mean(axis=1), 'y_locs': df[y_locs].mean(axis=1)})
     sns.scatterplot(x='x_locs', y='y_locs', data=avg_face_df, marker='+', ax=axes[i])
     axes[i].set(xlim=[0, 1920], ylim=[1080, 0], title=videoName)
+
+plt.tight_layout()
+plt.show()
+
+# %% [markdown]
+# Visualizzazione della media dei *face landmark* in 2D di ogni frame
+
+# %%
+print("Media delle coordinate 3D dei face landmark per ogni frame:")
+
+X_regex_pat = re.compile(r'^X_[0-9]+$')
+Y_regex_pat = re.compile(r'^Y_[0-9]+$')
+Z_regex_pat = re.compile(r'^Z_[0-9]+$')
+
+fig = plt.figure(figsize=(25, 10))
+for i, videoName in enumerate(small_videoList):
+    videoCsv = base_dir + videoName + '\\' + videoName + '.csv'
+    df = pd.read_csv(videoCsv)
+    df.columns = columns
+
+    X_locs = df.columns[df.columns.str.contains(X_regex_pat)]
+    Y_locs = df.columns[df.columns.str.contains(Y_regex_pat)]
+    Z_locs = df.columns[df.columns.str.contains(Z_regex_pat)]
+
+    df_locs = pd.DataFrame({'X_locs': df[X_locs].mean(axis=1), 'Y_locs': df[Y_locs].mean(axis=1), 'Z_locs': df[Z_locs].mean(axis=1)})
+
+    # Plot delle coordinate spaziali del gaze vector
+    ax = fig.add_subplot(4, 10, i+1, projection='3d')
+
+    ax.scatter(df_locs.X_locs, df_locs.Y_locs, df_locs.Z_locs, marker='+')
+    ax.set_title(videoName)
+    ax.set(xlabel='x', ylabel='y', zlabel='z', xticks=[], yticks=[], zticks=[])
 
 plt.tight_layout()
 plt.show()
