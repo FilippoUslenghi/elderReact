@@ -13,9 +13,9 @@ base_dir = 'C:\\Users\\us98\\PycharmProjects\\elderReactProject\\myProcessed\\'
 videoList = os.listdir(base_dir)
 
 for videoName in videoList:
-    csvVideo = base_dir + videoName + '\\' + videoName + ".csv"
-    df = pd.read_csv(csvVideo)
-    df.columns = [col.lstrip().rstrip() for col in df.columns]
+    videoCsv = base_dir + videoName + '\\' + videoName + ".csv"
+    df = pd.read_csv(videoCsv)
+    df.columns = [col.replace(" ", "") for col in df.columns]
     
     #commento perché plottare fa perdere tempo
     # cf = df["confidence"]
@@ -101,22 +101,50 @@ for i, plot in enumerate(plots):
 plt.tight_layout()
 
 # %% [markdown]
+# #Visualizzazione dati
 # Procedo con la visualizzazione delle features di 40 video presi casualmente
 
+# %%
+# Creazione delle variabili comuni
+base_dir = 'C:\\Users\\us98\\PycharmProjects\\elderReactProject\\myProcessed\\'
+videoList = os.listdir(base_dir)
+small_videoList = videoList[::15][:-1]
+columns = [col.replace(" ", "") for col in pd.read_csv(base_dir + '50_50_4\\50_50_4.csv').columns]
+
 # %% [markdown]
-# Visualizzazione del gaze angle
+# Visualizzazione della confidence
 
 # %%
-base_dir = 'C:\\Users\\us98\\PycharmProjects\\elderReactProject\\myProcessed\\'
-small_videoList = videoList[::15][:-1]
+print("Confidence nel tempo per ogni video:")
 
 fig, axes = plt.subplots(8, 5, figsize=(25, 20), sharey=True)
 axes = axes.flatten()
 
 for i, videoName in enumerate(small_videoList):
-    csvVideo = base_dir + videoName + '\\' + videoName + '.csv'
-    df = pd.read_csv(csvVideo)
-    df.columns = [col.lstrip().rstrip() for col in df.columns]
+    videoCsv = base_dir + videoName + '\\' + videoName + ".csv"
+    df = pd.read_csv(videoCsv)
+    df.columns = columns
+    
+    df[['confidence']].plot(ax=axes[i], legend = False)
+    axes[i].set(xlabel='Frame Number', ylabel="Confidence")
+
+plt.yticks([x/10 for x in range(11)])
+plt.tight_layout()
+plt.show()
+
+# %% [markdown]
+# Visualizzazione del gaze angle
+
+# %%
+print("Gaze angle nel tempo per ogni video:")
+
+fig, axes = plt.subplots(8, 5, figsize=(25, 20), sharey=True)
+axes = axes.flatten()
+
+for i, videoName in enumerate(small_videoList):
+    videoCsv = base_dir + videoName + '\\' + videoName + '.csv'
+    df = pd.read_csv(videoCsv)
+    df.columns = columns
 
     df[['gaze_angle_x', 'gaze_angle_y']].plot(ax=axes[i], legend = False)
     axes[i].set(ylim=[-1.5, 1.5], xlabel='Frame Number', ylabel="Radians")
@@ -129,15 +157,17 @@ plt.show()
 # Visualizzazione delle coordinate 3D del *gaze vector*
 
 # %%
+print("Coordinate del gaze vector nel tempo per ogni video:")
+
 from mpl_toolkits.mplot3d import Axes3D
 
 base_dir = 'C:\\Users\\us98\\PycharmProjects\\elderReactProject\\myProcessed\\'
 
 fig = plt.figure(figsize=(25, 10))
 for i, videoName in enumerate(small_videoList):
-    csvVideo = base_dir + videoName + '\\' + videoName + '.csv'
-    df = pd.read_csv(csvVideo)
-    df.columns = [col.replace(" ", "") for col in df.columns]
+    videoCsv = base_dir + videoName + '\\' + videoName + '.csv'
+    df = pd.read_csv(videoCsv)
+    df.columns = columns
 
 
     # Plot delle coordinate spaziali del gaze vector
@@ -147,11 +177,27 @@ for i, videoName in enumerate(small_videoList):
     ax.plot(df.gaze_1_x, df.gaze_1_y, df.gaze_1_z, color='red')
     ax.set_title(videoName)
     ax.set(xlabel='x', ylabel='y', zlabel='z', xticks=[], yticks=[], zticks=[])
-    ax.set_xlabel(xlabel='x', labelpad=0)
-    ax.set_ylabel(ylabel='y', labelpad=0)
-    ax.set_zlabel(zlabel='z', labelpad=0)
     ax.legend(['Leftmost eye', 'Rightmost eye'], fontsize='xx-small')
 
 plt.tight_layout()
 plt.show()
+# %% [markdown]
+# Visualizzazione della media dei *face landmark* in 2D di ogni frame
+
+# %%
+import re
+x_regex_pat = re.compile(r'^x_[0-9]+$')
+y_regex_pat = re.compile(r'^y_[0-9]+$')
+x_locs = df.columns[df.columns.str.contains(x_regex_pat)]
+y_locs = df.columns[df.columns.str.contains(y_regex_pat)]
+
+# no_unique_faces = len(df.face_id.unique())
+palette = sns.color_palette()
+
+avg_face_df = pd.DataFrame({'x_locs': df[x_locs].mean(
+    axis=1), 'y_locs': df[y_locs].mean(axis=1)}) # 'face_id': df.face_id})
+ax = sns.scatterplot(x='x_locs', y='y_locs', data=avg_face_df, marker='+')
+ax.set(xlim=[0, 1920], ylim=[1080, 0], title='Mean of the face coordinates for each frame')
+plt.show()
+
 # %%
