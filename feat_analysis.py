@@ -204,8 +204,6 @@ print("Visualizzazione dell'area del volto per frame:")
 #-------------------------------------------------------------------------------[y_0,...,y_16,y_26,...,y_17]
 face_coordinates_pattern_x = ['x_' + str(x) for x in range(17)] + ['x_' + str(x) for x in range(17, 27)][::-1]
 face_coordinates_pattern_y = ['y_' + str(y) for y in range(17)] + ['y_' + str(y) for y in range(17, 27)][::-1]
-mouth_coordinates_pattern_x = ['x_' + str(x) for x in range(48,60)]
-mouth_coordinates_pattern_y = ['y_' + str(y) for y in range(48,60)]
 
 fig, axes = plt.subplots(8, 5, figsize=(25, 15))
 axes = axes.flatten()
@@ -220,11 +218,6 @@ for i, videoName in enumerate(small_videoList):
     face_y_points_df = df[face_coordinates_pattern_y]
     face_area_for_all_frames = np.zeros(shape=len(df))
 
-    # Mouth
-    mouth_x_points_df = df[mouth_coordinates_pattern_x]
-    mouth_y_points_df = df[mouth_coordinates_pattern_y]
-    mouth_area_for_all_frames = np.zeros(shape=len(df))
-    
     for j in range(len(df)):
 
         # Face
@@ -233,21 +226,10 @@ for i, videoName in enumerate(small_videoList):
         face_area_frame_j = polyArea(face_x_points, face_y_points)
         face_area_for_all_frames[j] = face_area_frame_j
 
-        # Mouth
-        mouth_x_points = mouth_x_points_df.iloc[j].to_numpy()
-        mouth_y_points = mouth_y_points_df.iloc[j].to_numpy()
-        mouth_area_frame_j = polyArea(mouth_x_points, mouth_y_points)
-        mouth_area_for_all_frames[j] = mouth_area_frame_j
-
-        # break
-
-    face_area_df = pd.DataFrame({'frame': df.frame, 'face_area': face_area_for_all_frames, 'mouth_area': mouth_area_for_all_frames})
+    face_area_df = pd.DataFrame({'frame': df.frame, 'face_area': face_area_for_all_frames})
     palette = sns.color_palette()
     sns.lineplot(x='frame', y='face_area', data=face_area_df, ax=axes[i])
-    sns.lineplot(x='frame', y='mouth_area', data=face_area_df, ax=axes[i])
     axes[i].set(xlabel='Frame', ylabel='Area', title=videoName)
-    axes[i].legend(['Face area', 'Mouth area'], loc='lower left')
-    # break
 
 plt.tight_layout()
 plt.show()
@@ -263,7 +245,7 @@ print("Visualizzazione dell'area della bocca per frame:")
 mouth_coordinates_pattern_x = ['x_' + str(x) for x in range(48,60)]
 mouth_coordinates_pattern_y = ['y_' + str(y) for y in range(48,60)]
 
-fig, axes = plt.subplots(8, 5, figsize=(25, 15), sharey=True)
+fig, axes = plt.subplots(8, 5, figsize=(25, 15))
 axes = axes.flatten()
 
 for i, videoName in enumerate(small_videoList):
@@ -284,13 +266,10 @@ for i, videoName in enumerate(small_videoList):
         mouth_area_frame_j = polyArea(mouth_x_points, mouth_y_points)
         mouth_area_for_all_frames[j] = mouth_area_frame_j
 
-        # break
-
     mouth_area_df = pd.DataFrame({'frame': df.frame, 'mouth_area': mouth_area_for_all_frames})
     palette = sns.color_palette()
     sns.lineplot(x='frame', y='mouth_area', data=mouth_area_df, ax=axes[i])
     axes[i].set(xlabel='Frame', ylabel='Area', title=videoName)
-    # break
 
 plt.tight_layout()
 plt.show()
@@ -301,11 +280,6 @@ plt.show()
 # %%
 print("Visualizzazione dell'area degli occhi per frame:")
 
-eye1_regex_pat_x = re.compile(r'')
-eye1_regex_pat_y = re.compile(r'')
-eye2_regex_pat_x = re.compile(r'')
-eye2_regex_pat_y = re.compile(r'')
-
 # Per costruire l'area degli occhi le coordinate devono seguire questo pattern -> [eye_lmk_x_8,...,eye_lmk_x_19]
 # ------------------------------------------------------------------------------- [eye_lmk_y_8,...,eye_lmk_y_19]
 eye1_coordinates_pattern_x = ['eye_lmk_x_' + str(x) for x in range(8,20)]
@@ -313,7 +287,7 @@ eye1_coordinates_pattern_y = ['eye_lmk_y_' + str(y) for y in range(8,20)]
 eye2_coordinates_pattern_x = ['eye_lmk_x_' + str(x) for x in range(36,48)]
 eye2_coordinates_pattern_y = ['eye_lmk_y_' + str(y) for y in range(36,48)]
 
-fig, axes = plt.subplots(8, 5, figsize=(25, 15), sharey=True)
+fig, axes = plt.subplots(8, 5, figsize=(25, 15))
 axes = axes.flatten()
 
 for i, videoName in enumerate(small_videoList):
