@@ -6,6 +6,7 @@ import os
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from pandas.core.frame import DataFrame
 import seaborn as sns
 import cv2
 from mpl_toolkits.mplot3d import Axes3D
@@ -190,12 +191,168 @@ plt.tight_layout()
 plt.show()
 
 # %%
-# Visualizzazione dell'area contenuta dal contorno del volto nel tempo per ogni video
+# Visualizzazione dell'area contenuta dal contorno del volto, nel tempo, per ogni video
 
 # %%
-def PolyArea(x,y):
+def polyArea(x,y):
     return 0.5*np.abs(np.dot(x,np.roll(y,1))-np.dot(y,np.roll(x,1)))
 
+# %%
 print("Visualizzazione dell'area del volto per frame:")
 
+# Per costruire l'area del volto le coordinate devono seguire questo pattern -> [x_0,...,x_16,x_26,...,x_17]
+#-------------------------------------------------------------------------------[y_0,...,y_16,y_26,...,y_17]
+face_coordinates_pattern_x = ['x_' + str(x) for x in range(17)] + ['x_' + str(x) for x in range(17, 27)][::-1]
+face_coordinates_pattern_y = ['y_' + str(y) for y in range(17)] + ['y_' + str(y) for y in range(17, 27)][::-1]
+mouth_coordinates_pattern_x = ['x_' + str(x) for x in range(48,60)]
+mouth_coordinates_pattern_y = ['y_' + str(y) for y in range(48,60)]
 
+fig, axes = plt.subplots(8, 5, figsize=(25, 15))
+axes = axes.flatten()
+
+for i, videoName in enumerate(small_videoList):
+    videoCsv = base_dir + videoName + '\\' + videoName + '.csv'
+    df = pd.read_csv(videoCsv)
+    df.columns = columns
+
+    # Face
+    face_x_points_df = df[face_coordinates_pattern_x]
+    face_y_points_df = df[face_coordinates_pattern_y]
+    face_area_for_all_frames = np.zeros(shape=len(df))
+
+    # Mouth
+    mouth_x_points_df = df[mouth_coordinates_pattern_x]
+    mouth_y_points_df = df[mouth_coordinates_pattern_y]
+    mouth_area_for_all_frames = np.zeros(shape=len(df))
+    
+    for j in range(len(df)):
+
+        # Face
+        face_x_points = face_x_points_df.iloc[j].to_numpy()
+        face_y_points = face_y_points_df.iloc[j].to_numpy()
+        face_area_frame_j = polyArea(face_x_points, face_y_points)
+        face_area_for_all_frames[j] = face_area_frame_j
+
+        # Mouth
+        mouth_x_points = mouth_x_points_df.iloc[j].to_numpy()
+        mouth_y_points = mouth_y_points_df.iloc[j].to_numpy()
+        mouth_area_frame_j = polyArea(mouth_x_points, mouth_y_points)
+        mouth_area_for_all_frames[j] = mouth_area_frame_j
+
+        # break
+
+    face_area_df = pd.DataFrame({'frame': df.frame, 'face_area': face_area_for_all_frames, 'mouth_area': mouth_area_for_all_frames})
+    palette = sns.color_palette()
+    sns.lineplot(x='frame', y='face_area', data=face_area_df, ax=axes[i])
+    sns.lineplot(x='frame', y='mouth_area', data=face_area_df, ax=axes[i])
+    axes[i].set(xlabel='Frame', ylabel='Area', title=videoName)
+    axes[i].legend(['Face area', 'Mouth area'], loc='lower left')
+    # break
+
+plt.tight_layout()
+plt.show()
+
+# %% [markdown]
+# Visualizzazione dell'area contenuta dal contorno della bocca, nel tempo, per ogni video
+
+# %%
+print("Visualizzazione dell'area della bocca per frame:")
+
+# Per costruire l'area della bocca le coordinate devono seguire questo pattern -> [x_48,...,x_59]
+#---------------------------------------------------------------------------------[y_46,...,y_59]
+mouth_coordinates_pattern_x = ['x_' + str(x) for x in range(48,60)]
+mouth_coordinates_pattern_y = ['y_' + str(y) for y in range(48,60)]
+
+fig, axes = plt.subplots(8, 5, figsize=(25, 15), sharey=True)
+axes = axes.flatten()
+
+for i, videoName in enumerate(small_videoList):
+    videoCsv = base_dir + videoName + '\\' + videoName + '.csv'
+    df = pd.read_csv(videoCsv)
+    df.columns = columns
+
+    # Mouth
+    mouth_x_points_df = df[mouth_coordinates_pattern_x]
+    mouth_y_points_df = df[mouth_coordinates_pattern_y]
+    mouth_area_for_all_frames = np.zeros(shape=len(df))
+    
+    for j in range(len(df)):
+
+        # Mouth
+        mouth_x_points = mouth_x_points_df.iloc[j].to_numpy()
+        mouth_y_points = mouth_y_points_df.iloc[j].to_numpy()
+        mouth_area_frame_j = polyArea(mouth_x_points, mouth_y_points)
+        mouth_area_for_all_frames[j] = mouth_area_frame_j
+
+        # break
+
+    mouth_area_df = pd.DataFrame({'frame': df.frame, 'mouth_area': mouth_area_for_all_frames})
+    palette = sns.color_palette()
+    sns.lineplot(x='frame', y='mouth_area', data=mouth_area_df, ax=axes[i])
+    axes[i].set(xlabel='Frame', ylabel='Area', title=videoName)
+    # break
+
+plt.tight_layout()
+plt.show()
+
+# %% [markdown]
+# Visualizzazione dell'area contenuta dal contorno degli occhi, nel tempo, per ogni video
+
+# %%
+print("Visualizzazione dell'area degli occhi per frame:")
+
+eye1_regex_pat_x = re.compile(r'')
+eye1_regex_pat_y = re.compile(r'')
+eye2_regex_pat_x = re.compile(r'')
+eye2_regex_pat_y = re.compile(r'')
+
+# Per costruire l'area degli occhi le coordinate devono seguire questo pattern -> [eye_lmk_x_8,...,eye_lmk_x_19]
+# ------------------------------------------------------------------------------- [eye_lmk_y_8,...,eye_lmk_y_19]
+eye1_coordinates_pattern_x = ['eye_lmk_x_' + str(x) for x in range(8,20)]
+eye1_coordinates_pattern_y = ['eye_lmk_y_' + str(y) for y in range(8,20)]
+eye2_coordinates_pattern_x = ['eye_lmk_x_' + str(x) for x in range(36,48)]
+eye2_coordinates_pattern_y = ['eye_lmk_y_' + str(y) for y in range(36,48)]
+
+fig, axes = plt.subplots(8, 5, figsize=(25, 15), sharey=True)
+axes = axes.flatten()
+
+for i, videoName in enumerate(small_videoList):
+    videoCsv = base_dir + videoName + '\\' + videoName + '.csv'
+    df = pd.read_csv(videoCsv)
+    df.columns = columns
+
+    # Eye1
+    eye1_x_points_df = df[eye1_coordinates_pattern_x]
+    eye1_y_points_df = df[eye1_coordinates_pattern_y]
+    eye1_area_for_all_frames = np.zeros(shape=len(df))
+
+    # Eye2
+    eye2_x_points_df = df[eye2_coordinates_pattern_x]
+    eye2_y_points_df = df[eye2_coordinates_pattern_y]
+    eye2_area_for_all_frames = np.zeros(shape=len(df))
+    
+    for j in range(len(df)):
+
+        # Eye1
+        eye1_x_points = eye1_x_points_df.iloc[j].to_numpy()
+        eye1_y_points = eye1_y_points_df.iloc[j].to_numpy()
+        eye1_area_frame_j = polyArea(eye1_x_points, eye1_y_points)
+        eye1_area_for_all_frames[j] = eye1_area_frame_j
+
+        # Eye2
+        eye2_x_points = eye2_x_points_df.iloc[j].to_numpy()
+        eye2_y_points = eye2_y_points_df.iloc[j].to_numpy()
+        eye2_area_frame_j = polyArea(eye2_x_points, eye2_y_points)
+        eye2_area_for_all_frames[j] = eye2_area_frame_j
+
+    eyes_area_df = pd.DataFrame({'frame': df.frame, 'eye1_area': eye1_area_for_all_frames, 'eye2_area': eye2_area_for_all_frames})
+    palette = sns.color_palette()
+    sns.lineplot(x='frame', y='eye1_area', data=eyes_area_df, ax=axes[i])
+    sns.lineplot(x='frame', y='eye2_area', data=eyes_area_df, ax=axes[i])
+    axes[i].set(xlabel='Frame', ylabel='Area', title=videoName)
+    axes[i].legend(['Eye_1 area', 'Eye_2 area'], loc='lower left')
+
+plt.tight_layout()
+plt.show()
+
+# %%
