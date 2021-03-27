@@ -12,7 +12,7 @@ import cv2
 from mpl_toolkits.mplot3d import Axes3D
 import re
 
-# %%
+# %% [markdown]
 # ## Visualizzazione delle features di 40 video presi casualmente
 
 # %%
@@ -22,6 +22,7 @@ base_dir = 'C:\\Users\\us98\\PycharmProjects\\elderReactProject\\myProcessed\\'
 videoList = os.listdir(base_dir)
 small_videoList = videoList[::15][:-1]
 columns = [col.replace(" ", "") for col in pd.read_csv(base_dir + '50_50_4\\50_50_4.csv').columns]
+
 # %% [markdown]
 # Visualizzazione della confidence
 
@@ -190,7 +191,7 @@ for i, videoName in enumerate(small_videoList):
 plt.tight_layout()
 plt.show()
 
-# %%
+# %% [markdown]
 # Visualizzazione dell'area contenuta dal contorno del volto, nel tempo, per ogni video
 
 # %%
@@ -201,7 +202,7 @@ def polyArea(x,y):
 print("Visualizzazione dell'area del volto per frame:")
 
 # Per costruire l'area del volto le coordinate devono seguire questo pattern -> [x_0,...,x_16,x_26,...,x_17]
-#-------------------------------------------------------------------------------[y_0,...,y_16,y_26,...,y_17]
+# ----------------------------------------------------------------------------- [y_0,...,y_16,y_26,...,y_17]
 face_coordinates_pattern_x = ['x_' + str(x) for x in range(17)] + ['x_' + str(x) for x in range(17, 27)][::-1]
 face_coordinates_pattern_y = ['y_' + str(y) for y in range(17)] + ['y_' + str(y) for y in range(17, 27)][::-1]
 
@@ -241,7 +242,7 @@ plt.show()
 print("Visualizzazione dell'area della bocca per frame:")
 
 # Per costruire l'area della bocca le coordinate devono seguire questo pattern -> [x_48,...,x_59]
-#---------------------------------------------------------------------------------[y_46,...,y_59]
+# ------------------------------------------------------------------------------- [y_46,...,y_59]
 mouth_coordinates_pattern_x = ['x_' + str(x) for x in range(48,60)]
 mouth_coordinates_pattern_y = ['y_' + str(y) for y in range(48,60)]
 
@@ -329,8 +330,8 @@ for i, videoName in enumerate(small_videoList):
 plt.tight_layout()
 plt.show()
 
-# %%
-# Visualizzazione dell'intensità delle action unit, nel tempo, per un video preso casualmente.
+# %% [markdown]
+# Visualizzazione dell'intensità delle *action unit*, nel tempo, per un video preso casualmente.
 
 # %%
 import random as rd
@@ -347,7 +348,7 @@ for au_ix, au_col in enumerate(au_columns):
     sns.lineplot(x='frame', y=au_col, hue='face_id', data=df, ax=axes[au_ix])
     axes[au_ix].set(title=au_col, ylabel='Intensity')
     axes[au_ix].legend(loc=5)
-plt.suptitle("AU intensity predictions by time for each face", y=1.02)
+plt.suptitle(randVideoName, y=1.02)
 plt.tight_layout()
 
 # %%
