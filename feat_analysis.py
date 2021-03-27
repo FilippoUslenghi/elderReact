@@ -1,3 +1,6 @@
+# %% [markdown]
+# #Visualizzazione dati
+
 # %%
 import os
 import numpy as np
@@ -8,17 +11,16 @@ import cv2
 from mpl_toolkits.mplot3d import Axes3D
 import re
 
-# %% [markdown]
-# #Visualizzazione dati
-# Procedo con la visualizzazione delle features di 40 video presi casualmente
+# %%
+# ## Visualizzazione delle features di 40 video presi casualmente
 
 # %%
 # Creazione delle variabili comuni
+
 base_dir = 'C:\\Users\\us98\\PycharmProjects\\elderReactProject\\myProcessed\\'
 videoList = os.listdir(base_dir)
 small_videoList = videoList[::15][:-1]
 columns = [col.replace(" ", "") for col in pd.read_csv(base_dir + '50_50_4\\50_50_4.csv').columns]
-
 # %% [markdown]
 # Visualizzazione della confidence
 
@@ -55,7 +57,7 @@ for i, videoName in enumerate(small_videoList):
     df.columns = columns
 
     df[['gaze_angle_x', 'gaze_angle_y']].plot(ax=axes[i], legend = False)
-    axes[i].set(ylim=[-1.5, 1.5], xlabel='Frame Number', ylabel="Radians")
+    axes[i].set(ylim=[-1.5, 1.5], xlabel='Frame Number', ylabel='Radians', title=videoName)
     axes[i].legend(['gaze_angle_x', 'gaze_angle_y'], loc='lower left')
 
 plt.tight_layout()
@@ -147,4 +149,53 @@ for i, videoName in enumerate(small_videoList):
 plt.tight_layout()
 plt.show()
 
+# %% [markdown]
+# Visualizzazione delle coordinate della *head pose location* di ogni frame
+
 # %%
+print("Coordinate della head pose location di ogni frame:")
+
+fig = plt.figure(figsize=(25, 10))
+for i, videoName in enumerate(small_videoList):
+    videoCsv = base_dir + videoName + '\\' + videoName + '.csv'
+    df = pd.read_csv(videoCsv)
+    df.columns = columns
+
+    # Plot delle coordinate spaziali del gaze vector
+    ax = fig.add_subplot(4, 10, i+1, projection='3d')
+
+    ax.scatter(df.pose_Tx, df.pose_Ty, df.pose_Tz, marker='+')
+    ax.set_title(videoName)
+    ax.set(xlabel='x', ylabel='y', zlabel='z', xticks=[], yticks=[], zticks=[])
+
+# %% [markdown]
+# Visualizzazione della * head pose rotation* nel tempo per ogni video
+
+# %%
+print("Head pose rotation nel tempo per ogni video:")
+
+fig, axes = plt.subplots(8, 5, figsize=(25, 20), sharey=True)
+axes = axes.flatten()
+
+for i, videoName in enumerate(small_videoList):
+    videoCsv = base_dir + videoName + '\\' + videoName + '.csv'
+    df = pd.read_csv(videoCsv)
+    df.columns = columns
+
+    df[['pose_Rx', 'pose_Ry', 'pose_Rz']].plot(ax=axes[i], legend = False)
+    axes[i].set(ylim=[-1.5, 1.5], xlabel='Frame Number', ylabel='Radians', title=videoName)
+    axes[i].legend(['pose_Rx', 'pose_Ry', 'pose_Rz'], loc='lower left')
+
+plt.tight_layout()
+plt.show()
+
+# %%
+# Visualizzazione dell'area contenuta dal contorno del volto nel tempo per ogni video
+
+# %%
+def PolyArea(x,y):
+    return 0.5*np.abs(np.dot(x,np.roll(y,1))-np.dot(y,np.roll(x,1)))
+
+print("Visualizzazione dell'area del volto per frame:")
+
+
