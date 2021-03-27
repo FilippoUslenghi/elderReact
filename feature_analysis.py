@@ -24,7 +24,7 @@ small_videoList = videoList[::15][:-1]
 columns = [col.replace(" ", "") for col in pd.read_csv(base_dir + '50_50_4\\50_50_4.csv').columns]
 
 # %% [markdown]
-# Visualizzazione della confidence
+# #### Visualizzazione della confidence
 
 # %%
 print("Confidence nel tempo per ogni video:")
@@ -45,7 +45,7 @@ plt.tight_layout()
 plt.show()
 
 # %% [markdown]
-# Visualizzazione del gaze angle
+# #### Visualizzazione del gaze angle
 
 # %%
 print("Gaze angle nel tempo per ogni video:")
@@ -66,7 +66,7 @@ plt.tight_layout()
 plt.show()
 
 # %% [markdown]
-# Visualizzazione delle coordinate 3D del *gaze vector*
+# #### Visualizzazione delle coordinate 3D del *gaze vector*
 
 # %%
 print("Coordinate del gaze vector nel tempo per ogni video:")
@@ -91,7 +91,7 @@ plt.tight_layout()
 plt.show()
 
 # %% [markdown]
-# Visualizzazione della media dei *face landmark* in 2D di ogni frame
+# #### Visualizzazione della media dei *face landmark* in 2D di ogni frame
 
 # %%
 print("Media delle coordinate 2D dei face landmark per ogni frame:")
@@ -120,7 +120,7 @@ plt.tight_layout()
 plt.show()
 
 # %% [markdown]
-# Visualizzazione della media dei *face landmark* in 2D di ogni frame
+# #### Visualizzazione della media dei *face landmark* in 2D di ogni frame
 
 # %%
 print("Media delle coordinate 3D dei face landmark per ogni frame:")
@@ -152,7 +152,7 @@ plt.tight_layout()
 plt.show()
 
 # %% [markdown]
-# Visualizzazione delle coordinate della *head pose location* di ogni frame
+# #### Visualizzazione delle coordinate della *head pose location* di ogni frame
 
 # %%
 print("Coordinate della head pose location di ogni frame:")
@@ -171,7 +171,7 @@ for i, videoName in enumerate(small_videoList):
     ax.set(xlabel='x', ylabel='y', zlabel='z', xticks=[], yticks=[], zticks=[])
 
 # %% [markdown]
-# Visualizzazione della * head pose rotation* nel tempo per ogni video
+# #### Visualizzazione della *head pose rotation* nel tempo per ogni video
 
 # %%
 print("Head pose rotation nel tempo per ogni video:")
@@ -192,7 +192,7 @@ plt.tight_layout()
 plt.show()
 
 # %% [markdown]
-# Visualizzazione dell'area contenuta dal contorno del volto, nel tempo, per ogni video
+# #### Visualizzazione dell'area contenuta dal contorno del volto, nel tempo, per ogni video
 
 # %%
 def polyArea(x,y):
@@ -236,7 +236,7 @@ plt.tight_layout()
 plt.show()
 
 # %% [markdown]
-# Visualizzazione dell'area contenuta dal contorno della bocca, nel tempo, per ogni video
+# #### Visualizzazione dell'area contenuta dal contorno della bocca, nel tempo, per ogni video
 
 # %%
 print("Visualizzazione dell'area della bocca per frame:")
@@ -276,7 +276,7 @@ plt.tight_layout()
 plt.show()
 
 # %% [markdown]
-# Visualizzazione dell'area contenuta dal contorno degli occhi, nel tempo, per ogni video
+# #### Visualizzazione dell'area contenuta dal contorno degli occhi, nel tempo, per ogni video
 
 # %%
 print("Visualizzazione dell'area degli occhi per frame:")
@@ -331,7 +331,7 @@ plt.tight_layout()
 plt.show()
 
 # %% [markdown]
-# Visualizzazione dell'intensità delle *action unit*, nel tempo, per un video preso casualmente.
+# #### Visualizzazione dell'intensità delle *action unit*, nel tempo, per un video preso casualmente.
 
 # %%
 import random as rd
