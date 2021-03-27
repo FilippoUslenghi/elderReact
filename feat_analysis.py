@@ -330,3 +330,24 @@ plt.tight_layout()
 plt.show()
 
 # %%
+# Visualizzazione dell'intensità delle action unit, nel tempo, per un video preso casualmente.
+
+# %%
+import random as rd
+randVideoName = videoList[rd.randint(0, len(videoList))]
+randVideoCsv = base_dir + randVideoName + '\\' + randVideoName + '.csv'
+df = pd.read_csv(randVideoCsv)
+df.columns = columns
+# Plot all Action Unit time series. 
+au_regex_pat = re.compile(r'^AU[0-9]+_r$')
+au_columns = df.columns[df.columns.str.contains(au_regex_pat)]
+fig,axes = plt.subplots(6, 3, figsize=(10,12), sharex=True, sharey=True)
+axes = axes.flatten()
+for au_ix, au_col in enumerate(au_columns):
+    sns.lineplot(x='frame', y=au_col, hue='face_id', data=df, ax=axes[au_ix])
+    axes[au_ix].set(title=au_col, ylabel='Intensity')
+    axes[au_ix].legend(loc=5)
+plt.suptitle("AU intensity predictions by time for each face", y=1.02)
+plt.tight_layout()
+
+# %%
