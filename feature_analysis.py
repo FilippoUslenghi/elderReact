@@ -1,5 +1,5 @@
 # %% [markdown]
-# #Visualizzazione dati
+# # Visualizzazione dati
 
 # %%
 import os
