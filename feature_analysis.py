@@ -6,7 +6,6 @@ import os
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from pandas.core.frame import DataFrame
 import seaborn as sns
 import cv2
 from mpl_toolkits.mplot3d import Axes3D
@@ -17,7 +16,6 @@ import re
 
 # %%
 # Creazione delle variabili comuni
-
 base_dir = 'C:\\Users\\us98\\PycharmProjects\\elderReactProject\\myProcessed\\'
 videoList = os.listdir(base_dir)
 small_videoList = videoList[::15][:-1]
