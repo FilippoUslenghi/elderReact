@@ -15,25 +15,25 @@ import re
 base_dir = 'C:\\Users\\us98\\PycharmProjects\\elderReactProject\\myProcessed\\'
 videoList = os.listdir(base_dir)
 
-for videoName in videoList:
-    videoCsv = base_dir + videoName + '\\' + videoName + ".csv"
-    df = pd.read_csv(videoCsv)
-    df.columns = [col.replace(" ", "") for col in df.columns]
+# for videoName in videoList:
+#     videoCsv = base_dir + videoName + '\\' + videoName + ".csv"
+#     df = pd.read_csv(videoCsv)
+#     df.columns = [col.replace(" ", "") for col in df.columns]
+
     
-    #commento perché plottare fa perdere tempo
-    # cf = df["confidence"]
-    # time = df["frame"]
-    # plt.figure()
-    # plt.title('Confidence throughout the video "' + videoName + '.avi"')
-    # plt.xlabel("Frame number")
-    # plt.ylabel("Confidence")
-    # plt.plot(time, cf)
-    # plt.yticks([x/10 for x in range(10)])
-    # # plt.savefig(f"{videoName}_confidence.jpg", format="jpg", dpi=150)
-    # plt.show()
+#     cf = df["confidence"]
+#     time = df["frame"]
+#     plt.figure()
+#     plt.title('Confidence throughout the video "' + videoName + '.avi"')
+#     plt.xlabel("Frame number")
+#     plt.ylabel("Confidence")
+#     plt.plot(time, cf)
+#     plt.yticks([x/10 for x in range(10)])
+#     plt.savefig(f"{videoName}_confidence.jpg", format="jpg", dpi=150)
+#     plt.show()
 
 # %% [markdown]
-# ##Analisi della confidence
+# ## Analisi della confidence
 # Voglio utilizzare lo zero crossing rate per analizzare la confindence nei video.
 # Per fare questo sottraggo al valore della confidence 0.75 in modo tale da avere uno zero corssing ogni volta
 # che la confidence scende (e risale) da tale valore.
@@ -101,6 +101,29 @@ for i, plot in enumerate(plots):
     img = cv2.imread(base_dir + '\\' + plot[:-15] + '\\' + plot)
     plt.subplot(8, 6, i+1, sharex=ax1, sharey=ax1)
     plt.imshow(img)
+
 plt.tight_layout()
 
+# %% [markdown]
+# Vediamo ora il grafico di alcuni video con ZCR<10
+
 # %%
+videos = ZCR_df.videos[ZCR_df.zeroCrossingRate < 10].tolist()[:48]
+print("Numero di video ", len(videos))
+
+plots = [x.replace(".csv", "_confidence.jpg") for x in videos]
+base_dir= "C:\\Users\\us98\\PycharmProjects\\elderReactProject\\myProcessed"
+
+
+plt.figure(figsize=(150,100))
+for i, plot in enumerate(plots):
+    if i == 0:
+        first_img = cv2.imread(base_dir + '\\' + plot[:-15] + '\\' + plot)
+        ax1 = plt.subplot(8, 6, i+1)
+        plt.imshow(first_img)
+        continue
+    img = cv2.imread(base_dir + '\\' + plot[:-15] + '\\' + plot)
+    plt.subplot(8, 6, i+1, sharex=ax1, sharey=ax1)
+    plt.imshow(img)
+    
+plt.tight_layout()
