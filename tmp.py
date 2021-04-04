@@ -79,6 +79,9 @@ for i, videoName in enumerate(videoList):
     df = pd.read_csv(videoCsv)
     df.columns = columns
 
+    if df.confidence.var()>threshold[0]:
+        continue
+
     df[['confidence']].plot(ax=axes[i], legend = False)
     axes[i].set(xlabel='Frame Number', ylabel="Confidence", title=videoName)
 
