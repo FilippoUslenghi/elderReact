@@ -14,7 +14,7 @@ videoList = os.listdir(base_dir)
 small_videoList = videoList[::15][:-1]
 columns = [col.replace(" ", "") for col in pd.read_csv(base_dir + '50_50_4\\50_50_4.csv').columns]
 
-# %%
+# %% [markdown]
 # # Confidence
 # Per ogni video voglio vedere che valore assume la varianza della confidence.
 # Questo perhé sono interessato ad imporre una threshold su di essa in base alla quale selezionare i video che manterrò.
@@ -40,7 +40,7 @@ plt.ylabel='Variance'
 plt.tight_layout()
 plt.show()
 
-# %%
+# %% [markdown]
 # ## Selezione sui video di small_videoList
 
 # %%
@@ -63,7 +63,7 @@ plt.yticks([x/10 for x in range(11)])
 plt.tight_layout()
 plt.show()
 
-# %%
+# %% [markdown]
 # ## Selezione sui video di videoList
 
 # %%
