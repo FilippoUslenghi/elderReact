@@ -36,7 +36,7 @@ for i, videoName in enumerate(small_videoList):
     df.columns = columns
     
     df[['confidence']].plot(ax=axes[i], legend = False)
-    axes[i].set(xlabel='Frame Number', ylabel="Confidence")
+    axes[i].set(xlabel='Frame Number', ylabel="Confidence", title=videoName)
 
 plt.yticks([x/10 for x in range(11)])
 plt.tight_layout()

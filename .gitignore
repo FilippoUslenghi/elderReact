@@ -139,6 +139,7 @@ myProcessed
 myProcessed_old
 myProcessed_csv
 myProcessed_video
+myProcessed_confidence
 
 # Colab
 0.0.7
