@@ -118,7 +118,7 @@ plt.tight_layout()
 plt.show()
 
 # %% [markdown]
-# #### Visualizzazione della media dei *face landmark* in 2D di ogni frame
+# #### Visualizzazione della media dei *face landmark* in 3D di ogni frame
 
 # %%
 print("Media delle coordinate 3D dei face landmark per ogni frame:")
@@ -150,10 +150,10 @@ plt.tight_layout()
 plt.show()
 
 # %% [markdown]
-# #### Visualizzazione delle coordinate della *head pose location* di ogni frame
+# #### Visualizzazione delle coordinate 3D della *head pose location* di ogni frame
 
 # %%
-print("Coordinate della head pose location di ogni frame:")
+print("Coordinate 3D della head pose location di ogni frame:")
 
 fig = plt.figure(figsize=(25, 10))
 for i, videoName in enumerate(small_videoList):
