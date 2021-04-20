@@ -141,8 +141,11 @@ myProcessed_csv
 myProcessed_video
 myProcessed_confidence
 
-# Colab
-0.0.7
+# MediaPipe
+mediaPipe_videos
 
 # VScode
 .vscode
+
+# Colab
+0.0.7
