@@ -142,7 +142,7 @@ myProcessed_video
 myProcessed_confidence
 
 # MediaPipe
-mediaPipe_videos
+mediaPipe/videos
 
 # VScode
 .vscode
