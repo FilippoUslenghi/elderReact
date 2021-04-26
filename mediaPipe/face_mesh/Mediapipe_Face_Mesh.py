@@ -79,7 +79,7 @@ extract_landmark(228,165)
 
 
 # %%
-img = cv2.imread('frontal_face_annotated_colored.png')
+img = cv2.imread('frontal_face_annotated.png')
 img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 for x in range(451):
     for y in range(259):
