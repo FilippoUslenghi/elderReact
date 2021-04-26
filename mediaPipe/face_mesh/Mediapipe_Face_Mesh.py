@@ -92,7 +92,7 @@ for point in points:
     img[point[2],point[1],0] = 255
     img[point[2],point[1],1] = 0
     img[point[2],point[1],2] = 0
-    if point[0] >= 96:
+    if point[0] >= 185:
       print(point)
       fig = px.imshow(img)
       fig.show()
