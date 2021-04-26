@@ -79,7 +79,7 @@ extract_landmark(228,165)
 
 
 # %%
-img = cv2.imread('frontal_face_annotated.png')
+img = cv2.imread('frontal_face_annotated_colored.png')
 img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 for x in range(451):
     for y in range(259):
@@ -88,17 +88,18 @@ for x in range(451):
             img[y,x,1]=0
             img[y,x,2]=0
 for point in points:
-    
+
     img[point[2],point[1],0] = 255
     img[point[2],point[1],1] = 0
     img[point[2],point[1],2] = 0
-    print(point)
-    fig = px.imshow(img)
-    fig.show()
-    next = input('Next landmark...')
-    clear_output(wait=True)
-    img[point[2],point[1],0] = 0
+    if point[0] >= 96:
+      print(point)
+      fig = px.imshow(img)
+      fig.show()
+      next = input('Next landmark...')
+      clear_output(wait=True)
+    img[point[2],point[1],0] = 255
     img[point[2],point[1],1] = 255
-    img[point[2],point[1],2] = 0
+    img[point[2],point[1],2] = 255
 
 # %%
