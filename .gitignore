@@ -146,7 +146,7 @@ mediaPipe/videos
 
 # VScode
 .vscode
-.virtual_document
+.virtual_documents
 
 # Colab
 0.0.7
