@@ -141,6 +141,7 @@ myProcessed_old
 myProcessed_csv
 myProcessed_video
 myProcessed_confidence
+processed_cleansed
 
 # MediaPipe
 mediaPipe/videos
