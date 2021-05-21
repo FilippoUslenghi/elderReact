@@ -14,13 +14,15 @@ mp_drawing = mp.solutions.drawing_utils
 drawing_spec = mp_drawing.DrawingSpec(thickness=1, circle_radius=1)
 
 for i, video in enumerate(videos):
-
+    
+    if os.path.isdir(video): continue
     videoName = video[:-4]
     cap = cv2.VideoCapture(base_dir + video)
     img_array = []
 
     if videoName + '_mediapipe.avi' in os.listdir(out_dir): continue
 
+    unknown_size = True
     while cap.isOpened():
 
         success, image = cap.read()
@@ -54,16 +56,15 @@ for i, video in enumerate(videos):
         # Create a video with the landmark
         height, width, layers = image.shape
         size = (width,height)
-        img_array.append(image)
+        
+        if unknown_size:
+            out = cv2.VideoWriter(out_dir + videoName + '_mediapipe.avi', cv2.VideoWriter_fourcc(*'DIVX'), 24, size)
+            unknown_size = False
+            
+        out.write(image)
         
     print(i, '\t', videoName)
 
-    out = cv2.VideoWriter(out_dir + videoName + '_mediapipe.avi', cv2.VideoWriter_fourcc(*'DIVX'), 24, size)
-
-
-    for i in range(len(img_array)):
-        out.write(img_array[i])
-    out.release()
 
     cap.release()
 
