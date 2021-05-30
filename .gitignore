@@ -142,6 +142,7 @@ myProcessed_csv
 myProcessed_video
 myProcessed_confidence
 processed_cleansed
+processed_interpolated
 
 # MediaPipe
 mediaPipe/videos
