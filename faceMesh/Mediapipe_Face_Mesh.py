@@ -13,7 +13,6 @@ from IPython import get_ipython
 # Upload any image that contains face(s) to the Colab. We take two example images from the web: https://unsplash.com/photos/JyVcAIUAcPM and https://unsplash.com/photos/auTAb39ImXg
 
 # %%
-import os
 import cv2
 import plotly.express as px
 import matplotlib.pyplot as plt
@@ -92,7 +91,7 @@ for point in points:
     img[point[2],point[1],0] = 255
     img[point[2],point[1],1] = 0
     img[point[2],point[1],2] = 0
-    if point[0] >= 185:
+    if point[0] >= 0:
       print(point)
       fig = px.imshow(img)
       fig.show()
