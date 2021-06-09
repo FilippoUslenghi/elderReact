@@ -133,7 +133,6 @@ dmypy.json
 
 # OpenFace
 OpenFace
-openFace
 processed
 processed.zip
 myProcessed
@@ -142,10 +141,11 @@ myProcessed_csv
 myProcessed_video
 myProcessed_confidence
 processed_cleansed
-processed_interpolated
+videos
+
 
 # MediaPipe
-mediaPipe/videos
+mediaPipe
 
 # VScode
 .vscode
@@ -154,4 +154,7 @@ mediaPipe/videos
 # Colab
 0.0.7
 
-dataframes
+# dataframes
+dataframes/delaunay
+dataframes/landamrks
+dataframes/*.csv
