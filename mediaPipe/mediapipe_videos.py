@@ -5,7 +5,7 @@ import mediapipe as mp
 
 # %%
 datasets = ['train','dev','test']
-for i in range(1,3):
+for i in range(3):
     base_dir = os.path.join('dataset','ElderReact_Data',f'ElderReact_{datasets[i]}','')
     out_dir = os.path.join('mediaPipe',f'{datasets[i]}','videos','')
 
