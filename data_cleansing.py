@@ -56,7 +56,7 @@ for i in range(1,3):
     for video in os.listdir(base_dir):
         videoName = video[:-4]
         openface_df = pd.read_csv(os.path.join('openFace', datasets[i],'processed',f'{videoName}_openface.csv'))
-        mediapipe_df = pd.read_csv(os.path.join('mediaPipe', datasets[i],'processed' f'{videoName}_mediapipe.csv'))
+        mediapipe_df = pd.read_csv(os.path.join('mediaPipe', datasets[i],'processed', f'{videoName}_mediapipe.csv'))
         
         openface_df, openface_firstFrame = remove_first_frames(openface_df)
         mediapipe_df, mediapipe_firstFrame = remove_first_frames(mediapipe_df)

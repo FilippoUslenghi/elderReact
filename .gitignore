@@ -133,7 +133,6 @@ dmypy.json
 
 # OpenFace
 OpenFace
-processed
 processed.zip
 myProcessed
 myProcessed_old
