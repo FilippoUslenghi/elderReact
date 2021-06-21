@@ -43,7 +43,7 @@ with open("triangles_scheme.json") as jsonFile:
 TRIANGLES_SCHEME = jsonObject.get('TRIANGLES_SCHEME')
 datasets = ['train','dev','test']
 for dataset in datasets:
-    if dataset == datasets[0]: continue
+
     base_dir = os.path.join('openFace', dataset, 'processed_interpolated', '')
     landmarks_regex = re.compile(r'^x_[0-9]+$|^y_[0-9]+$')
     delaunay_df_columns = ['frame'] # initialize the columns of the dataframe
