@@ -51,12 +51,12 @@ def remove_last_frames(df: pd.DataFrame):
 
 
 datasets = ['train', 'dev', 'test']
-for i in range(1,3):
-    base_dir = os.path.join('dataset','ElderReact_Data',f'ElderReact_{datasets[i]}','')
+for dataset in datasets:
+    base_dir = os.path.join('dataset','ElderReact_Data',f'ElderReact_{dataset}','')
     for video in os.listdir(base_dir):
         videoName = video[:-4]
-        openface_df = pd.read_csv(os.path.join('openFace', datasets[i],'processed',f'{videoName}_openface.csv'))
-        mediapipe_df = pd.read_csv(os.path.join('mediaPipe', datasets[i],'processed', f'{videoName}_mediapipe.csv'))
+        openface_df = pd.read_csv(os.path.join('openFace', dataset,'processed',f'{videoName}_openface.csv'))
+        mediapipe_df = pd.read_csv(os.path.join('mediaPipe', dataset,'processed', f'{videoName}_mediapipe.csv'))
         
         openface_df, openface_firstFrame = remove_first_frames(openface_df)
         mediapipe_df, mediapipe_firstFrame = remove_first_frames(mediapipe_df)
@@ -74,5 +74,5 @@ for i in range(1,3):
         if mediapipe_lastFrame!=mediapipe_df.iloc[-1][0]:
             openface_df = openface_df.iloc[:mediapipe_lastFrame, :]
         
-        openface_df.to_csv(os.path.join('openFace',datasets[i],'processed_cleansed',f'{videoName}_openface.csv'), index=False)
-        mediapipe_df.to_csv(os.path.join('mediaPipe',datasets[i],'processed_cleansed',f'{videoName}_mediapipe.csv'), index=False)
+        openface_df.to_csv(os.path.join('openFace',dataset,'processed_cleansed',f'{videoName}_openface.csv'), index=False)
+        mediapipe_df.to_csv(os.path.join('mediaPipe',dataset,'processed_cleansed',f'{videoName}_mediapipe.csv'), index=False)
