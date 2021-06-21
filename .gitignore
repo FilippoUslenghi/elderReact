@@ -131,26 +131,15 @@ dmypy.json
 # PyCharm
 .idea
 
-# OpenFace
-OpenFace
+# dataset
 processed.zip
-myProcessed
-myProcessed_old
-myProcessed_csv
-myProcessed_video
-myProcessed_confidence
-videos
-
-
-# MediaPipe
-
 
 # VScode
 .vscode
 .virtual_documents
 
-# Colab
-0.0.7
+# videos
+videos
 
 # dataframes
 dataframes/delaunay

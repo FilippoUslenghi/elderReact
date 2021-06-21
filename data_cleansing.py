@@ -74,6 +74,6 @@ for i in range(1,3):
         if mediapipe_lastFrame!=mediapipe_df.iloc[-1][0]:
             openface_df = openface_df.iloc[:mediapipe_lastFrame, :]
         
-        openface_df.to_csv(os.path.join('openFace','processed_cleansed',f'{videoName}_openface.csv'), index=False)
-        mediapipe_df.to_csv(os.path.join('mediaPipe','processed_cleansed',f'{videoName}_mediapipe.csv'), index=False)
+        openface_df.to_csv(os.path.join('openFace',datasets[i],'processed_cleansed',f'{videoName}_openface.csv'), index=False)
+        mediapipe_df.to_csv(os.path.join('mediaPipe',datasets[i],'processed_cleansed',f'{videoName}_mediapipe.csv'), index=False)
 
