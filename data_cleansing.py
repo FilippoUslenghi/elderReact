@@ -76,4 +76,3 @@ for i in range(1,3):
         
         openface_df.to_csv(os.path.join('openFace',datasets[i],'processed_cleansed',f'{videoName}_openface.csv'), index=False)
         mediapipe_df.to_csv(os.path.join('mediaPipe',datasets[i],'processed_cleansed',f'{videoName}_mediapipe.csv'), index=False)
-
