@@ -152,3 +152,4 @@ for dataset in datasets:
         openface_df, mediapipe_df = clean_and_interpolate(openface_df, mediapipe_df, THRESHOLD, AU=True)
         if openface_df is not None:
             openface_df.to_csv(os.path.join('openFace', dataset, 'processed_interpolated_AU', f'{video_name}_openface.csv'), index=False)
+            
