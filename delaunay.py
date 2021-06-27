@@ -35,7 +35,7 @@ def polygon_area(x, y, n):
 # tri = Delaunay(landmarks_points) # compute Delaunay triangulation
 # triangles = landmarks_points[tri.simplices]
 
-
+# loading the triangle scheme
 with open("triangles_scheme.json") as jsonFile:
     jsonObject = json.load(jsonFile)
     jsonFile.close()
