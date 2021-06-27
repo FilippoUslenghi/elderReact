@@ -80,7 +80,7 @@ for dataset in datasets:
                 areas.append(area)
 
             tot_area = sum(areas)
-            normalized_aras = areas/tot_area
+            normalized_aras = np.divide(areas, tot_area)
 
             # builds the dataframe
             delaunay_df_row_values.extend(normalized_aras)  # build the row
@@ -91,4 +91,4 @@ for dataset in datasets:
 
         video_name = csv.replace('_openface.csv', '')
         out_dir = os.path.join('openFace', dataset, 'delaunay')
-        delaunay_df.to_csv(os.path.join(out_dir, f'{video_name}_delaunay.csv'), index=False)
+        #delaunay_df.to_csv(os.path.join(out_dir, f'{video_name}_delaunay.csv'), index=False)
