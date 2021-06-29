@@ -9,10 +9,10 @@ import matplotlib.pyplot as plt
 def load_group(group):
     
     # load x
-    x_dir = os.path.join('dataset_net', group, 'delaunay_pose_padded')
+    x_dir = os.path.join('dataset_net', 'Features', group, 'delaunay_pose_padded')
 
     matrix_list = list()
-    for csv in os.listdir(x_dir):
+    for csv in sorted(os.listdir(x_dir)):
         df_values = pd.read_csv(os.path.join(x_dir, csv)).values
         matrix_list.append(df_values)
     
@@ -20,7 +20,7 @@ def load_group(group):
     x_group.reshape(x_group.shape[2], x_group.shape[0], x_group.shape[1]) # reshaping for the LSTM
 
     # load y
-    y_path = os.path.join('dataset', 'ElderReact-master', 'Annotations', f'{group}_labels.txt')
+    y_path = os.path.join('dataset_net', 'Annotations', f'{group}_labels.txt')
     y_df = pd.read_csv(y_path, delim_whitespace=True, header=None)
 
     valence = y_df[8].values
@@ -74,7 +74,7 @@ n_outputs = 1
 es = tf.keras.callbacks.EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=5)
 
 # Create checkpoint callback that will save the best model observed during training for later use
-checkpoint_path = "network_checkpoints/cp.ckpt"
+checkpoint_path = os.path.join('network_checkpoints','cp.ckpt')
 cp_callback = tf.keras.callbacks.ModelCheckpoint(checkpoint_path, monitor='val_loss', save_weights_only=True, verbose=1)
 
 # Build the model
