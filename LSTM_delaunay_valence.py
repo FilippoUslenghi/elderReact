@@ -27,7 +27,7 @@ def load_group(group):
     mean = np.mean(valence)
     std_dv = np.std(valence)
 
-    # normilize the valence to a normal distribution
+    # normalize the valence to a normal distribution
     y_group = np.asarray([(y-mean)/std_dv for y in valence])
 
     return x_group, y_group
