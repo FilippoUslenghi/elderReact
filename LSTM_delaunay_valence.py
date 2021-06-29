@@ -17,6 +17,7 @@ def load_group(group):
         matrix_list.append(df_values)
     
     x_group = np.dstack(matrix_list)[:,1:,:] # remove the `frame` column
+    x_group.reshape(x_group.shape[2], x_group.shape[0], x_group.shape[1]) # reshaping for the LSTM
 
     # load y
     y_path = os.path.join('dataset', 'ElderReact-master', 'Annotations', f'{group}_labels.txt')
@@ -64,7 +65,6 @@ def plot_history(history):
 
 
 x_train, y_train, x_dev, y_dev, x_test, y_test = load_dataset()
-x_train.reshape(x_train.shape[2], x_train.shape[0], x_train.shape[1]) # reshapeing for the LSTM
 epochs = 15
 batch_size = 64
 n_timesteps, n_features = x_train.shape[1], x_train.shape[2]
