@@ -46,8 +46,8 @@ def load_dataset():
 
 def plot_history(history):
     # Plot training & validation MSE values
-    plt.plot(history.history['MSE'])
-    plt.plot(history.history['val_MSE'])
+    plt.plot(history.history['mean_squared_error'])
+    plt.plot(history.history['val_mean_squared_error'])
     plt.title('Model MSE')
     plt.ylabel('MSE')
     plt.xlabel('Epoch')
