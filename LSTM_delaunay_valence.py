@@ -57,16 +57,9 @@ def plot_history(history):
 
 x_train, y_train, x_dev, y_dev, x_test, y_test = load_dataset()
 epochs = 15
-batch_size = 64
+batch_size = 128
 n_timesteps, n_features = x_train.shape[1], x_train.shape[2]
 n_outputs = 1
-
-# early stopping
-es = tf.keras.callbacks.EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=5)
-
-# Create checkpoint callback that will save the best model observed during training for later use
-checkpoint_path = os.path.join('network_checkpoints','cp.ckpt')
-cp_callback = tf.keras.callbacks.ModelCheckpoint(checkpoint_path, monitor='val_loss', save_weights_only=True, verbose=1)
 
 # Build the model
 model = Sequential()
@@ -76,6 +69,12 @@ model.add(Dense(n_outputs, activation='linear'))
 
 # Compile the model
 model.compile(loss='mean_squared_error', optimizer='adam', metrics=['mean_squared_error'])
+
+# Early stopping
+es = tf.keras.callbacks.EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=5)
+# Create checkpoint callback that will save the best model observed during training for later use
+checkpoint_path = os.path.join('network_checkpoints','cp.ckpt')
+cp_callback = tf.keras.callbacks.ModelCheckpoint(checkpoint_path, monitor='val_loss', save_weights_only=True, verbose=1)
 
 # Train
 history = model.fit(x_train, y_train, validation_data=(x_dev, y_dev), epochs=epochs, batch_size=batch_size, verbose=1, callbacks=[es,cp_callback])
