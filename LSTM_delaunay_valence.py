@@ -17,7 +17,7 @@ def load_group(group):
         matrix_list.append(df_values)
     
     x_group = np.dstack(matrix_list)[:,1:,:] # remove the `frame` column
-    x_group.reshape(x_group.shape[2], x_group.shape[0], x_group.shape[1]) # reshaping for the LSTM
+    x_group = x_group.reshape(x_group.shape[2], x_group.shape[0], x_group.shape[1]) # reshaping for the LSTM
 
     # load y
     y_path = os.path.join('dataset_net', 'Annotations', f'{group}_labels.txt')
