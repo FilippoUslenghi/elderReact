@@ -75,7 +75,7 @@ model.add(Dense(100, activation='relu'))
 model.add(Dense(n_outputs, activation='linear'))
 
 # Compile the model
-model.compile(loss='mean_squared_error', optimizer='adam', metrics=['accuracy'])
+model.compile(loss='mean_squared_error', optimizer='adam', metrics=['mean_squared_error'])
 
 # Train
 history = model.fit(x_train, y_train, validation_data=(x_dev, y_dev), epochs=epochs, batch_size=batch_size, verbose=1, callbacks=[es,cp_callback])
