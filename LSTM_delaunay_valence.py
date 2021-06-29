@@ -1,5 +1,7 @@
 import os
 import tensorflow as tf
+from keras.models import Sequential
+from keras.layers import LSTM, Dense
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -15,6 +17,7 @@ def load_group(group):
         matrix_list.append(df_values)
     
     x_group = np.dstack(matrix_list)[:,1:,:] # remove the `frame` column
+    x_group.reshape(x_group.shape[2], x_group.shape[0], x_group.shape[1]) # reshapeing for the LSTM
 
     # load y
     y_path = os.path.join('dataset', 'ElderReact-master', 'Annotations', f'{group}_labels.txt')
@@ -64,7 +67,7 @@ def plot_history(history):
 x_train, y_train, x_dev, y_dev, x_test, y_test = load_dataset()
 epochs = 15
 batch_size = 64
-n_timesteps, n_features = x_train.shape[0], x_train.shape[1]
+n_timesteps, n_features = x_train.shape[1], x_train.shape[2]
 n_outputs = 1
 
 # early stopping
@@ -75,10 +78,10 @@ checkpoint_path = "network_checkpoints/cp.ckpt"
 cp_callback = tf.keras.callbacks.ModelCheckpoint(checkpoint_path, monitor='val_loss', save_weights_only=True, verbose=1)
 
 # Build the model
-model = tf.keras.models.Sequential()
-model.add(tf.keras.layers.LSTM(100, input_shape=(n_timesteps,n_features)))
-model.add(tf.keras.layers.Dense(100, activation='relu'))
-model.add(tf.keras.layers.Dense(n_outputs, activation='linear'))
+model = Sequential()
+model.add(LSTM(100, input_shape=(n_timesteps,n_features)))
+model.add(Dense(100, activation='relu'))
+model.add(Dense(n_outputs, activation='linear'))
 
 # Compile the model
 model.compile(loss='mean_squared_error', optimizer='adam', metrics=['mean_squared_error'])
@@ -89,6 +92,6 @@ history = model.fit(x_train, y_train, validation_data=(x_dev, y_dev), epochs=epo
 plot_history(history)
 
 # Test
-_, mse = model.evaluate(x_test, y_test, batch_size=batch_size, verbose=0)
+_, mse = model.evaluate(x_test, y_test, batch_size=batch_size, verbose=1)
 
 print('Test: %.3f' % (mse))
