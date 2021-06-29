@@ -61,8 +61,6 @@ def plot_history(history):
     plt.show()
 
 
-print(type(x) for x in load_dataset())
-import sys; sys.exit()
 x_train, y_train, x_dev, y_dev, x_test, y_test = load_dataset()
 epochs = 15
 batch_size = 64
