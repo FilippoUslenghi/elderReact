@@ -5,6 +5,7 @@ from tensorflow.keras.layers import LSTM, Dense
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from tensorflow.python.keras.layers.core import Dropout
 
 def load_group(group):
     
@@ -63,8 +64,10 @@ n_outputs = 1
 
 # Build the model
 model = Sequential()
-model.add(LSTM(100, input_shape=(n_timesteps,n_features)))
-model.add(Dense(100, activation='relu'))
+model.add(LSTM(32, input_shape=(n_timesteps,n_features)))
+model.add(Dropout(0.5))
+model.add(Dense(16, activation='relu'))
+model.add(Dropout(0.5))
 model.add(Dense(n_outputs, activation='linear'))
 
 # Compile the model
