@@ -11,7 +11,7 @@ def load_group(group):
     # load x
     x_dir = os.path.join('dataset_net', 'Features', group, 'delaunay_pose_padded')
 
-    matrix_list = list()
+    matrix_list = []
     for csv in sorted(os.listdir(x_dir)):
         df_values = pd.read_csv(os.path.join(x_dir, csv)).values
         matrix_list.append(df_values)
@@ -34,7 +34,7 @@ def load_group(group):
 
 def load_dataset():
 
-    dataset = list()
+    dataset = []
     groups = ['train', 'dev', 'test']
 
     for group in groups:
@@ -77,7 +77,7 @@ checkpoint_path = os.path.join('network_checkpoints','cp.ckpt')
 cp_callback = tf.keras.callbacks.ModelCheckpoint(checkpoint_path, monitor='val_loss', save_weights_only=True, verbose=1)
 
 # Train
-history = model.fit(x_train, y_train, validation_data=(x_dev, y_dev), epochs=epochs, batch_size=batch_size, verbose=1, callbacks=[es,cp_callback])
+history = model.fit(x_train, y_train, validation_data=(x_dev, y_dev), epochs=epochs, batch_size=batch_size, verbose=1) #callbacks=[es,cp_callback])
 
 plot_history(history)
 
