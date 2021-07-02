@@ -64,7 +64,7 @@ n_outputs = 1
 
 # Build the model
 model = Sequential()
-model.add(LSTM(32, input_shape=(n_timesteps,n_features)))
+model.add(LSTM(32, input_shape=(1,n_features)))
 model.add(Dropout(0.5))
 model.add(Dense(16, activation='relu'))
 model.add(Dropout(0.5))
