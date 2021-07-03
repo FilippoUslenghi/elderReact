@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from tensorflow.python.keras.layers.core import Dropout
-from keras.preprocessing import sequence
+from tensorflow.keras.preprocessing import sequence
 
 def load_group(group):
     
