@@ -19,7 +19,8 @@ def load_group(group):
         matrix_list.append(df.values)
     
     flatten_matrix_list = [matrix.flatten() for matrix in matrix_list] # flatten the matrixes
-    padded_flatten_matrix_list = sequence.pad_sequences(flatten_matrix_list, padding='post') # pad the matrix
+    # pad the flatten matrix for a length of 748 (biggest n_timesteps in the dataset) by 113 (n_features)
+    padded_flatten_matrix_list = sequence.pad_sequences(flatten_matrix_list, maxlen=748*113, padding='post')
     flatten_matrix_list = [flatten_matrix.reshape(113,-1).T for flatten_matrix in padded_flatten_matrix_list] # reshape the flatten matrices to the original shape
     x_group = np.dstack(flatten_matrix_list) # create a 3D matrix of the stacked dataframes
     x_group = x_group.reshape(x_group.shape[2], x_group.shape[0], x_group.shape[1]) # reshaping for the LSTM
@@ -67,7 +68,7 @@ n_outputs = 1
 
 # Build the model
 model = Sequential()
-model.add(LSTM(32, input_shape=(1,n_features)))
+model.add(LSTM(32, input_shape=(n_timesteps, n_features)))
 model.add(Dropout(0.5))
 model.add(Dense(16, activation='relu'))
 model.add(Dropout(0.5))
