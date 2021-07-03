@@ -6,18 +6,22 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from tensorflow.python.keras.layers.core import Dropout
+from keras.preprocessing import sequence
 
 def load_group(group):
     
     # load x
-    x_dir = os.path.join('dataset_net', 'Features', group, 'delaunay_pose_padded')
+    x_dir = os.path.join('dataset_net', 'Features', group, 'delaunay_pose')
 
     matrix_list = []
     for csv in sorted(os.listdir(x_dir)):
-        df_values = pd.read_csv(os.path.join(x_dir, csv)).values
-        matrix_list.append(df_values)
+        df = pd.read_csv(os.path.join(x_dir, csv)).drop(columns='frame') # remove the `frame` column
+        matrix_list.append(df.values)
     
-    x_group = np.dstack(matrix_list)[:,1:,:] # remove the `frame` column
+    flatten_matrix_list = [matrix.flatten() for matrix in matrix_list] # flatten the matrixes
+    padded_flatten_matrix_list = sequence.pad_sequences(flatten_matrix_list, padding='post') # pad the matrix
+    flatten_matrix_list = padded_flatten_matrix_list.reshape(113,-1).T # reshape the flatten matrix to the original shape
+    x_group = np.dstack(flatten_matrix_list) # create a 3D matrix of the stacked dataframes
     x_group = x_group.reshape(x_group.shape[2], x_group.shape[0], x_group.shape[1]) # reshaping for the LSTM
 
     # load y
