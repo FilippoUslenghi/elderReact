@@ -20,19 +20,18 @@ def load_group(group):
     
     flatten_matrix_list = [matrix.flatten() for matrix in matrix_list] # flatten the matrixes
     padded_flatten_matrix_list = sequence.pad_sequences(flatten_matrix_list, padding='post') # pad the matrix
-    flatten_matrix_list = [flatten_matrix.reshape(113,-1).T for flatten_matrix in padded_flatten_matrix_list] # reshape the flatten matrix to the original shape
+    flatten_matrix_list = [flatten_matrix.reshape(113,-1).T for flatten_matrix in padded_flatten_matrix_list] # reshape the flatten matrices to the original shape
     x_group = np.dstack(flatten_matrix_list) # create a 3D matrix of the stacked dataframes
     x_group = x_group.reshape(x_group.shape[2], x_group.shape[0], x_group.shape[1]) # reshaping for the LSTM
 
     # load y
     y_path = os.path.join('dataset_net', 'Annotations', f'{group}_labels.txt')
     y_df = pd.read_csv(y_path, delim_whitespace=True, header=None)
-
     valence = y_df[8].values
-    mean = np.mean(valence)
-    std_dv = np.std(valence)
 
     # normalize the valence to a normal distribution
+    mean = np.mean(valence)
+    std_dv = np.std(valence)
     y_group = np.asarray([(y-mean)/std_dv for y in valence])
 
     return x_group, y_group
