@@ -20,10 +20,10 @@ def load_group(group):
     
     flatten_matrix_list = [matrix.flatten() for matrix in matrix_list] # flatten the matrixes
     # pad the flatten matrix for a length of 748 (biggest n_timesteps in the dataset) by 113 (n_features)\1
-    padded_flatten_matrix_list = sequence.pad_sequences(flatten_matrix_list, maxlen=748*113, padding='post')
-    flatten_matrix_list = [flatten_matrix.reshape(113,-1).T for flatten_matrix in padded_flatten_matrix_list] # reshape the flatten matrices to the original shape
-    x_group = np.dstack(flatten_matrix_list) # create a 3D matrix of the stacked dataframes
-    x_group = x_group.reshape(x_group.shape[2], x_group.shape[0], x_group.shape[1]) # reshaping for the LSTM
+    padded_flatten_matrix_list = sequence.pad_sequences(flatten_matrix_list, maxlen=748*113, padding='post', dtype=np.float64)
+    padded_matrix_list = [flatten_matrix.reshape(748,-1) for flatten_matrix in padded_flatten_matrix_list] # reshape the flatten matrices to the original shape
+    x_group = np.dstack(padded_matrix_list) # create a 3D matrix of the stacked dataframes
+    x_group = x_group.reshape(x_group.shape[2], x_group.shape[0], x_group.shape[1]) # reshaping for the LSTM (n_samples, n_timestep, _n_features)
 
     # load y
     y_path = os.path.join('dataset_net', 'Annotations', f'{group}_labels.txt')
@@ -87,6 +87,6 @@ history = model.fit(x_train, y_train, validation_data=(x_dev, y_dev), epochs=epo
 plot_history(history)
 
 # Test
-_, mse = model.evaluate(x_test, y_test, batch_size=batch_size, verbose=1)
+_, accuracy = model.evaluate(x_test, y_test, batch_size=batch_size, verbose=1)
 
-print('Test: %.3f' % (mse))
+print('Test: %.3f accuracy' % (accuracy))
