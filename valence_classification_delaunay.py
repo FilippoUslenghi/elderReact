@@ -58,8 +58,6 @@ def plot_history(history):
 
 
 x_train, y_train, x_dev, y_dev, x_test, y_test = load_dataset()
-print(x_train[0,:,0])
-import sys; sys.exit()
 epochs = 15
 batch_size = 8
 n_timesteps, n_features = x_train.shape[1], x_train.shape[2]
