@@ -22,8 +22,7 @@ def load_group(group):
     # pad the flatten matrix for a length of 748 (biggest n_timesteps in the dataset) by 113 (n_features)\1
     padded_flatten_matrix_list = sequence.pad_sequences(flatten_matrix_list, maxlen=748*113, padding='post', dtype=np.float64)
     padded_matrix_list = [flatten_matrix.reshape(748,-1) for flatten_matrix in padded_flatten_matrix_list] # reshape the flatten matrices to the original shape
-    x_group = np.dstack(padded_matrix_list) # create a 3D matrix of the stacked dataframes
-    x_group = x_group.reshape(x_group.shape[2], x_group.shape[0], x_group.shape[1]) # reshaping for the LSTM (n_samples, n_timestep, _n_features)
+    x_group = np.stack(padded_matrix_list, axis=0) # create a 3D matrix of the stacked dataframes with LSTM shape (n_samples, n_timestep, n_features)
 
     # load y
     y_path = os.path.join('dataset_net', 'Annotations', f'{group}_labels.txt')
@@ -59,6 +58,8 @@ def plot_history(history):
 
 
 x_train, y_train, x_dev, y_dev, x_test, y_test = load_dataset()
+print(x_train[0,:,0])
+import sys; sys.exit()
 epochs = 15
 batch_size = 8
 n_timesteps, n_features = x_train.shape[1], x_train.shape[2]
