@@ -19,8 +19,8 @@ def load_group(group):
         matrix_list.append(df.values)
     
     flatten_matrix_list = [matrix.flatten() for matrix in matrix_list] # flatten the matrixes
-    # pad the flatten matrix for a length of 748 (biggest n_timesteps in the dataset) by 113 (n_features)\1
-    padded_flatten_matrix_list = sequence.pad_sequences(flatten_matrix_list, maxlen=748*113, padding='post', dtype=np.float64)
+    # pad the flatten matrix for a length of 748 (biggest n_timesteps in the dataset) by n_features
+    padded_flatten_matrix_list = sequence.pad_sequences(flatten_matrix_list, maxlen=748*len(df.columns), padding='post', dtype=np.float64)
     padded_matrix_list = [flatten_matrix.reshape(748,-1) for flatten_matrix in padded_flatten_matrix_list] # reshape the flatten matrices to the original shape
     x_group = np.stack(padded_matrix_list, axis=0) # create a 3D matrix of the stacked dataframes with LSTM shape (n_samples, n_timestep, n_features)
 
