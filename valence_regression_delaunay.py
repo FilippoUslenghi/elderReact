@@ -11,7 +11,7 @@ from tensorflow.keras.preprocessing import sequence
 def load_group(group):
     
     # load x
-    x_dir = os.path.join('dataset_net', 'Features', group, 'delaunay_pose')
+    x_dir = os.path.join('dataset_net', 'Features', group, 'interpolated_AU')
 
     matrix_list = []
     for csv in sorted(os.listdir(x_dir)):
