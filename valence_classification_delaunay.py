@@ -1,7 +1,7 @@
 import os
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import LSTM, Dense
+from tensorflow.keras.layers import LSTM, Dense, Masking
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -65,6 +65,7 @@ n_outputs = 1
 
 # Build the model
 model = Sequential()
+model.add(Masking(mask_value=0.0, input_shape=(n_timesteps, n_features)))
 model.add(LSTM(32, input_shape=(n_timesteps, n_features)))
 model.add(Dropout(0.5))
 model.add(Dense(16, activation='relu'))
