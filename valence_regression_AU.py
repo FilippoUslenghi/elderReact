@@ -1,10 +1,10 @@
 import os
-import tensorflow as tf
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import LSTM, Dense, Masking
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import LSTM, Dense, Masking
 from tensorflow.python.keras.layers.core import Dropout
 from tensorflow.keras.preprocessing import sequence
 
@@ -60,15 +60,16 @@ def plot_history(history):
 
 
 x_train, y_train, x_dev, y_dev, x_test, y_test = load_dataset()
-epochs = 25
-batch_size = 8
+epochs = 20
+batch_size = 16
 n_timesteps, n_features = x_train.shape[1], x_train.shape[2]
 n_outputs = 1
 
 # Build the model
 model = Sequential()
 model.add(Masking(mask_value=0.0, input_shape=(n_timesteps, n_features)))
-model.add(LSTM(32, input_shape=(n_timesteps, n_features)))
+model.add(LSTM(32, input_shape=(n_timesteps, n_features), dropout=0.5))
+model.add(Dense(32, activation='relu'))
 model.add(Dropout(0.5))
 model.add(Dense(16, activation='relu'))
 model.add(Dropout(0.5))
