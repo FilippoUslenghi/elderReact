@@ -63,7 +63,7 @@ def read_data(audio_feat_file, video_feat_file, label_file, affect_state, featur
     return X, y
 
 
-base_dir = 'C:\\Users\\us98\\PycharmProjects\\elderReactProject\\dataset\\ElderReact-master'
+base_dir = os.path.join('dataset', 'ElderReact-master')
 
 f = open(os.path.join(base_dir, "Features/Audio_feat/train_audio.txt")).readlines()
 g = open(os.path.join(base_dir, "Features/Video_feat/train_video.txt")).readlines()
@@ -76,7 +76,7 @@ h = open(os.path.join(base_dir, "Annotations/dev_labels.txt")).readlines()
 X_val, y_val = read_data(f, g, h, affect_state, feature_mode)
 
 f = open(os.path.join(base_dir, "Features/Audio_feat/test_audio.txt")).readlines()
-g = open(os.path.join(base_dir, "Features/Video_feat/dev_video.txt")).readlines()
+g = open(os.path.join(base_dir, "Features/Video_feat/test_video.txt")).readlines()
 h = open(os.path.join(base_dir, "Annotations/test_labels.txt")).readlines()
 X_test, y_test = read_data(f, g, h, affect_state, feature_mode)
 
