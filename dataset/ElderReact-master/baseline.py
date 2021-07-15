@@ -26,7 +26,7 @@ from sklearn.metrics import precision_recall_fscore_support
 affects = ['anger', 'disgust', 'fear', 'happy', 'sad', 'surprise']
 affect_state = 5  # choose the affect to recognize, range 0~5
 print(affects[affect_state] + "...")
-feature_mode = "audio"  # audio, video or bimodal
+feature_mode = "video"  # audio, video or bimodal
 train_path = ''  # change to your training data path
 val_path = ''
 test_path = ''
@@ -137,7 +137,7 @@ num_iter = 100
 all_pred = []
 all_prob = []
 all_f1 = 0
-clf_mode = "xgboost"  # svm, gnb, xgboost, dummy
+clf_mode = "svm"  # svm, gnb, xgboost, dummy
 mode = "test"  # val or test. val mode is for searching for hyperparameters
 for i in range(num_iter):
     if clf_mode == "gnb":
