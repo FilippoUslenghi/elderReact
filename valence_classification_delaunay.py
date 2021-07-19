@@ -1,14 +1,14 @@
 import os
-import math
 import numpy as np
 import pandas as pd
 from scipy import stats
-from sklearn.preprocessing import scale
+from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.utils import resample
 from sklearn.svm import SVC
-from sklearn.metrics import accuracy_score, f1_score, cohen_kappa_score, classification_report
-from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import accuracy_score, cohen_kappa_score, classification_report
+from sklearn.model_selection import RandomizedSearchCV
+from sklearn.pipeline import Pipeline
 
 
 def get_y(group, pose):
@@ -41,7 +41,6 @@ def read_data(group, pose):
         df = df.drop(columns=['frame', 'yaw'])
         videos.append(df.values)
 
-    videos = [scale(video, axis=1) for video in videos]  # standardization
     labels = get_y(group, pose)
 
     return videos, labels
@@ -60,34 +59,7 @@ def load_data(group, pose):
 
 
 def subsampling(X, y):
-    samples_needed = 0
-    for num in y:
-        if num == 0:
-            samples_needed += 1
-
-    X_neg = []
-    X_pos = []
-    for i, val in enumerate(y):
-        if val == 0:
-            X_neg.append(X[i])
-        else:
-            X_pos.append(X[i])
-
-    X_resample = resample(X_pos, replace=False, n_samples=samples_needed)
-
-    new_X = X_resample + X_neg
-
-    new_y = []
-    for i in range(samples_needed):
-        new_y.append(1)
-    for i in range(samples_needed):
-        new_y.append(0)
-
-    return np.asarray(new_X, dtype=np.ndarray), np.asarray(new_y)
-
-
-def tmp_subsampling(X, y):
-    samples_needed = 1000
+    samples_needed = 300
 
     X_neg = []
     X_pos = []
@@ -111,7 +83,8 @@ def tmp_subsampling(X, y):
     return np.asarray(new_X, dtype=np.ndarray), np.asarray(new_y)
 
 
-pose = 'frontal'  # tilted or frontal
+pose = 'tilted'  # tilted or frontal
+clf_mode = 'svm'  # svm or xgboost
 X, y = load_data('train', pose)
 X_val, y_val = load_data('dev', pose)
 X_test, y_test = load_data('test', pose)
@@ -128,7 +101,7 @@ y_test += new_y_test
 X, X_test, y, y_test = np.asarray(X, dtype=np.ndarray), np.asarray(
     X_test, dtype=np.ndarray), np.asarray(y), np.asarray(y_test)
 
-# Searching the best parameters
+"""# Searching the best parameters
 # param_grid = [
 #     {
 #         'C': [0.00001, 0.00001, 0.0001, 0.001, 0.01, 0.1, 0.5, 1, 10, 100],
@@ -145,13 +118,13 @@ X, X_test, y, y_test = np.asarray(X, dtype=np.ndarray), np.asarray(
 #     verbose=0
 # )
 
-# X, y = tmp_subsampling(X, y)
+# X, y = my_subsampling(X, y)
 # optimal_params.fit(X, y)
 
 # print(optimal_params.best_params_)
 # best_params_ -> '{C': 100, 'gamma': 1, 'kernel': 'rbf'}
 
-# SVM
+# Classifier
 num_iter = 100
 all_pred = []
 
@@ -160,10 +133,16 @@ for i in range(num_iter):
     if i % 25 == 0:
         print(f'iteration {i}')
 
-    X, y = tmp_subsampling(X, y)
+    X, y = subsampling(X, y)
 
-    clf = SVC(C=100, gamma=1)  # paramteers found with GridSearch
-    clf.fit(X, y)
+    if clf_mode == "svm":
+        clf = SVC(C=100, gamma=0.01)  # parameters found with GridSearch
+        clf.fit(X, y)
+
+    elif clf_mode == "xgboost":
+        y = y.astype('int32')
+        clf = XGBClassifier(use_label_encoder=False,)
+        clf.fit(X, y, eval_metric='error')
 
     y_pred = clf.predict(X_test)
     all_pred.append(y_pred)
@@ -172,6 +151,44 @@ all_pred = np.asarray(all_pred)
 final_pred, _ = stats.mode(all_pred)  # voting
 final_pred = final_pred[0]
 
+print(f"accuracy score is: {accuracy_score(y_test, final_pred)}")
+print(
+    f"Cohen Kappa score is: {cohen_kappa_score(y_test, final_pred, weights='linear')}")
+print("classification report:")
+print(classification_report(y_test, final_pred))"""
+
+
+# create the pipeline
+pipe = Pipeline([
+    ('scaler', StandardScaler()),
+    ('classifier', SVC())
+])
+
+# set params for random search
+params = {'classifier__C': stats.expon(scale=100),
+          'classifier__gamma': stats.expon(scale=.1),
+          'classifier__kernel': ['rbf']
+          }
+
+
+num_iter = 100
+all_pred = []
+
+for i in range(num_iter):
+
+    X, y = subsampling(X, y)
+
+    randomsearch = RandomizedSearchCV(
+        pipe, params, n_iter=20).fit(X, y) # fit the model
+
+    y_pred = randomsearch.predict(X_test)
+    all_pred.append(y_pred)
+
+all_pred = np.asarray(all_pred)
+final_pred, _ = stats.mode(all_pred) # voting
+final_pred = final_pred[0]
+
+# print(f'Best params: {randomsearch.best_params_}')
 print(f"accuracy score is: {accuracy_score(y_test, final_pred)}")
 print(
     f"Cohen Kappa score is: {cohen_kappa_score(y_test, final_pred, weights='linear')}")

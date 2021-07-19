@@ -140,25 +140,30 @@ all_f1 = 0
 clf_mode = "svm"  # svm, gnb, xgboost, dummy
 mode = "test"  # val or test. val mode is for searching for hyperparameters
 for i in range(num_iter):
-    if clf_mode == "gnb":
-        clf = GaussianNB()
-
-    elif clf_mode == "svm":
-        e = -4  # hyperparameters to be tuned
-        c = math.pow(10, e)
-        clf = SVC(gamma='scale', C=c)
-
-    elif clf_mode == "xgboost":
-        clf = XGBClassifier()
-
-    elif clf_mode == "dummy":
-        clf = DummyClassifier()
 
     new_X, new_y = subsampling(X, y)
     new_X = np.asarray(new_X)
     new_y = np.asarray(new_y)
 
-    clf.fit(new_X, new_y)
+    if clf_mode == "gnb":
+        clf = GaussianNB()
+        clf.fit(new_X, new_y)
+
+    elif clf_mode == "svm":
+        e = -4  # hyperparameters to be tuned
+        c = math.pow(10, e)
+        clf = SVC(gamma='scale', C=c)
+        clf.fit(new_X, new_y)
+
+    elif clf_mode == "xgboost":
+        clf = XGBClassifier()
+        clf.fit(new_X, new_y, eval_metric='logloss')
+
+    elif clf_mode == "dummy":
+        clf = DummyClassifier()
+        clf.fit(new_X, new_y)
+
+    # clf.fit(new_X, new_y)
 
     if mode == "val":
         y_pred = clf.predict(X_val)  # X_val or X_test
@@ -173,12 +178,11 @@ final_pred, _ = stats.mode(all_pred)  # voting
 final_pred = final_pred[0]
 # print(final_pred)
 
-print("accuracy score is...")
-print(accuracy_score(y_test, final_pred))
-print("F1 score is...")
-print(f1_score(y_test, final_pred))
-print("Cohen Kappa score is..")
-print(cohen_kappa_score(y_test, final_pred, weights='linear'))
+print(f"accuracy score is: {accuracy_score(y_test, final_pred)}")
+print(
+    f"Cohen Kappa score is: {cohen_kappa_score(y_test, final_pred, weights='linear')}")
+print("classification report:")
+print(classification_report(y_test, final_pred))
 
 # count = 0
 # for i in range(len(y_test)):
