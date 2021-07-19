@@ -73,7 +73,7 @@ def subsampling(X, y):
     return np.asarray(new_X, dtype=np.ndarray), np.asarray(new_y)
 
 
-pose = 'frontal'  # tilted or frontal
+pose = 'tilted'  # tilted or frontal
 X, y = read_data('train', pose)
 X_val, y_val = read_data('dev', pose)
 X_test, y_test = read_data('test', pose)
