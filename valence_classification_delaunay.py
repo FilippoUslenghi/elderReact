@@ -39,27 +39,18 @@ def read_data(group, pose):
     for csv in sorted(os.listdir(videos_dir)):
         df = pd.read_csv(os.path.join(videos_dir, csv))
         df = df.drop(columns=['frame', 'yaw'])
-        videos.append(df.values)
+        videos.append(df.mean(axis=0).values)
 
     labels = get_y(group, pose)
 
     return videos, labels
 
 
-def load_data(group, pose):
-    X = []
-    y = []
-
-    videos, labels = read_data(group, pose)
-    for video, label in zip(videos, labels):
-        X.extend(video)
-        y.extend([label for _ in range(len(video))])
-
-    return X, y
-
-
 def subsampling(X, y):
-    samples_needed = 300
+    samples_needed = 0
+    for num in y:
+        if num == 0:
+            samples_needed += 1
 
     X_neg = []
     X_pos = []
@@ -69,10 +60,9 @@ def subsampling(X, y):
         else:
             X_pos.append(X[i])
 
-    X_neg = resample(X_neg, replace=False, n_samples=samples_needed)
-    X_pos = resample(X_pos, replace=False, n_samples=samples_needed)
+    X_resample = resample(X_pos, replace=False, n_samples=samples_needed)
 
-    new_X = X_pos + X_neg
+    new_X = X_resample + X_neg
 
     new_y = []
     for i in range(samples_needed):
@@ -84,10 +74,9 @@ def subsampling(X, y):
 
 
 pose = 'tilted'  # tilted or frontal
-clf_mode = 'svm'  # svm or xgboost
-X, y = load_data('train', pose)
-X_val, y_val = load_data('dev', pose)
-X_test, y_test = load_data('test', pose)
+X, y = read_data('train', pose)
+X_val, y_val = read_data('dev', pose)
+X_test, y_test = read_data('test', pose)
 
 # split validation in order to increase train and test
 new_X, new_X_test, new_y, new_y_test = train_test_split(X_val, y_val)
@@ -100,63 +89,6 @@ y_test += new_y_test
 
 X, X_test, y, y_test = np.asarray(X, dtype=np.ndarray), np.asarray(
     X_test, dtype=np.ndarray), np.asarray(y), np.asarray(y_test)
-
-"""# Searching the best parameters
-# param_grid = [
-#     {
-#         'C': [0.00001, 0.00001, 0.0001, 0.001, 0.01, 0.1, 0.5, 1, 10, 100],
-#         'gamma': ['scale', 1, 0.1, 0.01, 0.001, 0.0001],
-#         'kernel': ['rbf']
-#     }
-# ]
-
-# optimal_params = GridSearchCV(
-#     SVC(),
-#     param_grid,
-#     cv=5,
-#     scoring='accuracy',
-#     verbose=0
-# )
-
-# X, y = my_subsampling(X, y)
-# optimal_params.fit(X, y)
-
-# print(optimal_params.best_params_)
-# best_params_ -> '{C': 100, 'gamma': 1, 'kernel': 'rbf'}
-
-# Classifier
-num_iter = 100
-all_pred = []
-
-for i in range(num_iter):
-
-    if i % 25 == 0:
-        print(f'iteration {i}')
-
-    X, y = subsampling(X, y)
-
-    if clf_mode == "svm":
-        clf = SVC(C=100, gamma=0.01)  # parameters found with GridSearch
-        clf.fit(X, y)
-
-    elif clf_mode == "xgboost":
-        y = y.astype('int32')
-        clf = XGBClassifier(use_label_encoder=False,)
-        clf.fit(X, y, eval_metric='error')
-
-    y_pred = clf.predict(X_test)
-    all_pred.append(y_pred)
-
-all_pred = np.asarray(all_pred)
-final_pred, _ = stats.mode(all_pred)  # voting
-final_pred = final_pred[0]
-
-print(f"accuracy score is: {accuracy_score(y_test, final_pred)}")
-print(
-    f"Cohen Kappa score is: {cohen_kappa_score(y_test, final_pred, weights='linear')}")
-print("classification report:")
-print(classification_report(y_test, final_pred))"""
-
 
 # create the pipeline
 pipe = Pipeline([
