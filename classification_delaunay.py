@@ -106,8 +106,9 @@ def subsampling(X, y):
 
 features = ['anger', 'disgust', 'fear', 'happiness', 'sadness', 'surprise', 'valence']
 selected_feature = 0
+pose = 'frontal'  # tilted or frontal
 print(f'Selected feature: {features[selected_feature]}')
-pose = 'tilted'  # tilted or frontal
+print(pose)
 X, y = read_data('train', pose, features[selected_feature])
 X_val, y_val = read_data('dev', pose, features[selected_feature])
 X_test, y_test = read_data('test', pose, features[selected_feature])
