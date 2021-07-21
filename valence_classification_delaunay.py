@@ -11,7 +11,7 @@ from sklearn.model_selection import RandomizedSearchCV
 from sklearn.pipeline import Pipeline
 
 
-def get_y(group, pose):
+def get_y(group, pose, feature):
 
     annotations_path = os.path.join(
         'dataset_net', 'Annotations', f'{group}_labels.txt')
@@ -24,13 +24,39 @@ def get_y(group, pose):
     y_videos = [y.replace('csv', 'mp4') for y in y_videos]
 
     boolean_map = [video in y_videos for video in all_videos]
-    valence = annotations_df[boolean_map][8]  # select the valence column
-    y_labels = [int(value >= 4) for value in valence]
+
+    if feature == 'anger':
+        # select the anger column
+        y_labels = annotations_df[boolean_map][1].tolist()
+
+    elif feature == 'disgust':
+        # select the disgust column
+        y_labels = annotations_df[boolean_map][2].tolist()
+
+    elif feature == 'fear':
+        # select the fear column
+        y_labels = annotations_df[boolean_map][3].tolist()
+
+    elif feature == 'happiness':
+        # select the happiness column
+        y_labels = annotations_df[boolean_map][4].tolist()
+
+    elif feature == 'sadness':
+        # select the sadness column
+        y_labels = annotations_df[boolean_map][5].tolist()
+
+    elif feature == 'surprise':
+        # select the surprise column
+        y_labels = annotations_df[boolean_map][6].tolist()
+
+    elif feature == 'valence':
+        valence = annotations_df[boolean_map][8]  # select the valence column
+        y_labels = [int(value >= 4) for value in valence]
 
     return y_labels
 
 
-def read_data(group, pose):
+def read_data(group, pose, feature):
     videos = []
     labels = []
 
@@ -41,16 +67,14 @@ def read_data(group, pose):
         df = df.drop(columns=['frame', 'yaw'])
         videos.append(df.mean(axis=0).values)
 
-    labels = get_y(group, pose)
+    labels = get_y(group, pose, feature)
 
     return videos, labels
 
 
 def subsampling(X, y):
-    samples_needed = 0
-    for num in y:
-        if num == 0:
-            samples_needed += 1
+    ones = sum(y)
+    zeros = len(y) - ones
 
     X_neg = []
     X_pos = []
@@ -60,9 +84,16 @@ def subsampling(X, y):
         else:
             X_pos.append(X[i])
 
-    X_resample = resample(X_pos, replace=False, n_samples=samples_needed)
+    if ones > zeros:
+        samples_needed = zeros
 
-    new_X = X_resample + X_neg
+        X_resample = resample(X_pos, replace=False, n_samples=samples_needed)
+        new_X = X_resample + X_neg
+    else:
+        samples_needed = ones
+
+        X_resample = resample(X_neg, replace=False, n_samples=samples_needed)
+        new_X = X_pos + X_resample
 
     new_y = []
     for i in range(samples_needed):
@@ -73,10 +104,13 @@ def subsampling(X, y):
     return np.asarray(new_X, dtype=np.ndarray), np.asarray(new_y)
 
 
+features = ['anger', 'disgust', 'fear', 'happiness', 'sadness', 'surprise', 'valence']
+selected_feature = 0
+print(f'Selected feature: {features[selected_feature]}')
 pose = 'tilted'  # tilted or frontal
-X, y = read_data('train', pose)
-X_val, y_val = read_data('dev', pose)
-X_test, y_test = read_data('test', pose)
+X, y = read_data('train', pose, features[selected_feature])
+X_val, y_val = read_data('dev', pose, features[selected_feature])
+X_test, y_test = read_data('test', pose, features[selected_feature])
 
 # split validation in order to increase train and test
 new_X, new_X_test, new_y, new_y_test = train_test_split(X_val, y_val)
@@ -102,22 +136,26 @@ params = {'classifier__C': stats.expon(scale=100),
           'classifier__kernel': ['rbf']
           }
 
+X, y = subsampling(X, y)
+randomsearch = RandomizedSearchCV(
+    pipe, params, n_iter=50).fit(X, y)  # fit the model
+
+pipe.set_params(**randomsearch.best_params_)
 
 num_iter = 100
 all_pred = []
 
 for i in range(num_iter):
 
-    X, y = subsampling(X, y)
+    if i!=0: X, y = subsampling(X, y)
 
-    randomsearch = RandomizedSearchCV(
-        pipe, params, n_iter=20).fit(X, y) # fit the model
+    pipe.fit(X, y)
 
-    y_pred = randomsearch.predict(X_test)
+    y_pred = pipe.predict(X_test)
     all_pred.append(y_pred)
 
 all_pred = np.asarray(all_pred)
-final_pred, _ = stats.mode(all_pred) # voting
+final_pred, _ = stats.mode(all_pred)  # voting
 final_pred = final_pred[0]
 
 # print(f'Best params: {randomsearch.best_params_}')

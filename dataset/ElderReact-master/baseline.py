@@ -24,8 +24,8 @@ import random
 from sklearn.metrics import precision_recall_fscore_support
 
 affects = ['anger', 'disgust', 'fear', 'happy', 'sad', 'surprise']
-affect_state = 5  # choose the affect to recognize, range 0~5
-print(affects[affect_state] + "...")
+affect_state = 0  # choose the affect to recognize, range 0~5
+# print(affects[affect_state] + "...")
 feature_mode = "video"  # audio, video or bimodal
 train_path = ''  # change to your training data path
 val_path = ''
@@ -56,6 +56,7 @@ def read_data(audio_feat_file, video_feat_file, label_file, affect_state, featur
 
         label = label_file[i].split(" ")[1:]
         label = int(label[affect_state])
+        # label = float(label[affect_state][:-2])
 
         X.append(feat)
         y.append(label)
@@ -105,6 +106,10 @@ X_val = X_val / diff
 X_test = X_test - train_min
 X_test = X_test / diff
 
+
+# y = [int(value >= 4) for value in y]
+# y_val = [int(value >= 4) for value in y_val]
+# y_test = [int(value >= 4) for value in y_test]
 
 def subsampling(X, y):
     samples_needed = 0
