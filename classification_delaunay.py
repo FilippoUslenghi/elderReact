@@ -3,7 +3,6 @@ import numpy as np
 import pandas as pd
 from scipy import stats
 from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import train_test_split
 from sklearn.utils import resample
 from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score, cohen_kappa_score, classification_report
@@ -105,22 +104,17 @@ def subsampling(X, y):
 
 
 features = ['anger', 'disgust', 'fear', 'happiness', 'sadness', 'surprise', 'valence']
-selected_feature = 0
-pose = 'frontal'  # tilted or frontal
+selected_feature = 6
+pose = 'tilted'  # frontal or tilted
 print(f'Selected feature: {features[selected_feature]}')
-print(pose)
+print(f'Pose: {pose}')
 X, y = read_data('train', pose, features[selected_feature])
 X_val, y_val = read_data('dev', pose, features[selected_feature])
 X_test, y_test = read_data('test', pose, features[selected_feature])
 
-# split validation in order to increase train and test
-new_X, new_X_test, new_y, new_y_test = train_test_split(X_val, y_val)
-
-# increase train and test
-X += new_X
-X_test += new_X_test
-y += new_y
-y_test += new_y_test
+# Add validation data to train data
+X += X_val
+y += y_val
 
 X, X_test, y, y_test = np.asarray(X, dtype=np.ndarray), np.asarray(
     X_test, dtype=np.ndarray), np.asarray(y), np.asarray(y_test)
@@ -139,9 +133,11 @@ params = {'classifier__C': stats.expon(scale=100),
 
 X, y = subsampling(X, y)
 randomsearch = RandomizedSearchCV(
-    pipe, params, n_iter=50).fit(X, y)  # fit the model
+    pipe, params, n_iter=100).fit(X, y)  # fit the model
 
 pipe.set_params(**randomsearch.best_params_)
+
+import sys; sys.exit()
 
 num_iter = 100
 all_pred = []
@@ -159,7 +155,7 @@ all_pred = np.asarray(all_pred)
 final_pred, _ = stats.mode(all_pred)  # voting
 final_pred = final_pred[0]
 
-# print(f'Best params: {randomsearch.best_params_}')
+print(f'Best params: {randomsearch.best_params_}')
 print(f"accuracy score is: {accuracy_score(y_test, final_pred)}")
 print(
     f"Cohen Kappa score is: {cohen_kappa_score(y_test, final_pred, weights='linear')}")
