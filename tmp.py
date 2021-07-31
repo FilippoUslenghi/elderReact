@@ -8,6 +8,7 @@ from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score, cohen_kappa_score, classification_report
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.pipeline import Pipeline
+from sklearn.dummy import DummyClassifier
 
 
 def get_y(group, pose, feature):
@@ -104,13 +105,13 @@ def subsampling(X, y):
 
 
 features = ['anger', 'disgust', 'fear', 'happiness', 'sadness', 'surprise', 'valence']
-selected_feature = 6
-pose = 'tilted'  # frontal or tilted
-print(f'Selected feature: {features[selected_feature]}')
-print(f'Pose: {pose}')
-X, y = read_data('train', pose, features[selected_feature])
-X_val, y_val = read_data('dev', pose, features[selected_feature])
-X_test, y_test = read_data('test', pose, features[selected_feature])
+selected_feature = input('Selected feature: ')
+pose = input('Pose: ')
+pose = '' if pose == 'none' else pose
+feature_index = features.index(selected_feature)
+X, y = read_data('train', pose, features[feature_index])
+X_val, y_val = read_data('dev', pose, features[feature_index])
+X_test, y_test = read_data('test', pose, features[feature_index])
 
 # Add validation data to train data
 X += X_val
@@ -122,23 +123,21 @@ X, X_test, y, y_test = np.asarray(X, dtype=np.ndarray), np.asarray(
 # create the pipeline
 pipe = Pipeline([
     ('scaler', StandardScaler()),
-    ('classifier', SVC())
+    ('classifier', DummyClassifier())
 ])
 
 # set params for random search
-params = {'classifier__C': stats.expon(scale=100),
-          'classifier__gamma': stats.expon(scale=.1),
-          'classifier__kernel': ['rbf']
-          }
+# params = {'classifier__C': stats.expon(scale=100),
+#           'classifier__gamma': stats.expon(scale=.1),
+#           'classifier__kernel': ['rbf']
+#           }
 
 X, y = subsampling(X, y)
-randomsearch = RandomizedSearchCV(
-    pipe, params, n_iter=100).fit(X, y)  # fit the model
+# randomsearch = RandomizedSearchCV(
+#     pipe, params, n_iter=100).fit(X, y)  # fit the model
 
-print(f'Best params: {randomsearch.best_params_}')
-pipe.set_params(**randomsearch.best_params_)
-
-import sys; sys.exit()
+# print(f'Best params: {randomsearch.best_params_}')
+# pipe.set_params(**randomsearch.best_params_)
 
 num_iter = 100
 all_pred = []
@@ -156,7 +155,6 @@ all_pred = np.asarray(all_pred)
 final_pred, _ = stats.mode(all_pred)  # voting
 final_pred = final_pred[0]
 
-print(f'Best params: {randomsearch.best_params_}')
 print(f"accuracy score is: {accuracy_score(y_test, final_pred)}")
 print(
     f"Cohen Kappa score is: {cohen_kappa_score(y_test, final_pred, weights='linear')}")
