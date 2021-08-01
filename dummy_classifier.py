@@ -11,7 +11,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.dummy import DummyClassifier
 
 
-def get_y(group, pose, feature):
+def get_y(group, pose, emotion):
 
     annotations_path = os.path.join(
         'dataset_net', 'Annotations', f'{group}_labels.txt')
@@ -25,38 +25,38 @@ def get_y(group, pose, feature):
 
     boolean_map = [video in y_videos for video in all_videos]
 
-    if feature == 'anger':
+    if emotion == 'anger':
         # select the anger column
         y_labels = annotations_df[boolean_map][1].tolist()
 
-    elif feature == 'disgust':
+    elif emotion == 'disgust':
         # select the disgust column
         y_labels = annotations_df[boolean_map][2].tolist()
 
-    elif feature == 'fear':
+    elif emotion == 'fear':
         # select the fear column
         y_labels = annotations_df[boolean_map][3].tolist()
 
-    elif feature == 'happiness':
+    elif emotion == 'happiness':
         # select the happiness column
         y_labels = annotations_df[boolean_map][4].tolist()
 
-    elif feature == 'sadness':
+    elif emotion == 'sadness':
         # select the sadness column
         y_labels = annotations_df[boolean_map][5].tolist()
 
-    elif feature == 'surprise':
+    elif emotion == 'surprise':
         # select the surprise column
         y_labels = annotations_df[boolean_map][6].tolist()
 
-    elif feature == 'valence':
+    elif emotion == 'valence':
         valence = annotations_df[boolean_map][8]  # select the valence column
         y_labels = [int(value >= 4) for value in valence] # binarization
 
     return y_labels
 
 
-def read_data(group, pose, feature):
+def read_data(group, pose, emotion):
     videos = []
     labels = []
 
@@ -67,7 +67,7 @@ def read_data(group, pose, feature):
         df = df.drop(columns=['frame', 'yaw'])
         videos.append(df.mean(axis=0).values)
 
-    labels = get_y(group, pose, feature)
+    labels = get_y(group, pose, emotion)
 
     return videos, labels
 
@@ -104,14 +104,14 @@ def subsampling(X, y):
     return np.asarray(new_X, dtype=np.ndarray), np.asarray(new_y)
 
 
-features = ['anger', 'disgust', 'fear', 'happiness', 'sadness', 'surprise', 'valence']
-selected_feature = input('Selected feature: ')
+emotions = ['anger', 'disgust', 'fear', 'happiness', 'sadness', 'surprise', 'valence']
+selected_emotion = input('Target: ')
 pose = input('Pose: ')
 pose = '' if pose == 'none' else pose
-feature_index = features.index(selected_feature)
-X, y = read_data('train', pose, features[feature_index])
-X_val, y_val = read_data('dev', pose, features[feature_index])
-X_test, y_test = read_data('test', pose, features[feature_index])
+feature_index = emotions.index(selected_emotion)
+X, y = read_data('train', pose, emotions[feature_index])
+X_val, y_val = read_data('dev', pose, emotions[feature_index])
+X_test, y_test = read_data('test', pose, emotions[feature_index])
 
 # Add validation data to train data
 X += X_val

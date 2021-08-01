@@ -103,14 +103,14 @@ def subsampling(X, y):
     return np.asarray(new_X, dtype=np.ndarray), np.asarray(new_y)
 
 
-features = ['anger', 'disgust', 'fear', 'happiness', 'sadness', 'surprise', 'valence']
-selected_feature = 6
+emotions = ['anger', 'disgust', 'fear', 'happiness', 'sadness', 'surprise', 'valence']
+selected_emotion = 6
 pose = 'tilted'  # frontal or tilted
-print(f'Selected feature: {features[selected_feature]}')
+print(f'Target: {emotions[selected_emotion]}')
 print(f'Pose: {pose}')
-X, y = read_data('train', pose, features[selected_feature])
-X_val, y_val = read_data('dev', pose, features[selected_feature])
-X_test, y_test = read_data('test', pose, features[selected_feature])
+X, y = read_data('train', pose, emotions[selected_emotion])
+X_val, y_val = read_data('dev', pose, emotions[selected_emotion])
+X_test, y_test = read_data('test', pose, emotions[selected_emotion])
 
 # Add validation data to train data
 X += X_val
