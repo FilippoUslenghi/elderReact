@@ -127,18 +127,18 @@ pipe = Pipeline([
 
 # set params for random search
 params = {
-    'classifier__C': stats.uniform(loc=0, scale=2000),
+    'classifier__C': stats.uniform(loc=0, scale=1),
 }
 
-X, y = subsampling(X, y)
+# X, y = subsampling(X, y)
 
-randomsearch = RandomizedSearchCV(
-        pipe, params, n_iter=1000).fit(X, y)  # fit the model
+# randomsearch = RandomizedSearchCV(
+#     pipe, params, n_iter=100).fit(X, y)  # fit the model
 
-print(f'Best params: {randomsearch.best_params_}')
-import sys; sys.exit()
+# print(f'Best params: {randomsearch.best_params_}')
+# import sys; sys.exit()
 
-num_iter = 50
+num_iter = 100
 all_pred = []
 
 for i in range(num_iter):
