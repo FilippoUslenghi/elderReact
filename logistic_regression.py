@@ -138,7 +138,7 @@ params = {
 # print(f'Best params: {randomsearch.best_params_}')
 # import sys; sys.exit()
 
-num_iter = 50
+num_iter = 100
 all_pred = []
 
 for i in range(num_iter):
