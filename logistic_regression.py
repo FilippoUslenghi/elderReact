@@ -128,14 +128,14 @@ pipe = Pipeline([
 # set params for random search
 params = {
     'classifier__solver': ['liblinear'],
-    'classifier__C': stats.uniform(loc=0, scale=50),
+    'classifier__C': stats.uniform(loc=0, scale=10),
     'classifier__max_iter': [200]
 }
 
 X, y = subsampling(X, y)
 
 randomsearch = RandomizedSearchCV(
-    pipe, params, n_iter=500).fit(X, y)  # fit the model
+    pipe, params, n_iter=100).fit(X, y)  # fit the model
 print(f'Best params: {randomsearch.best_params_}')
 import sys; sys.exit()
 pipe.set_params(**randomsearch.best_params_)
