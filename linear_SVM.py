@@ -122,7 +122,7 @@ X, X_test, y, y_test = np.asarray(X, dtype=np.ndarray), np.asarray(
 # create the pipeline
 pipe = Pipeline([
     ('scaler', StandardScaler()),
-    ('classifier', LinearSVC())
+    ('classifier', LinearSVC(dual=False))
 ])
 
 # set params for random search

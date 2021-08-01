@@ -112,7 +112,7 @@ features = ['anger', 'disgust', 'fear',
 # print(f'Pose: {pose}')
 selected_feature = features.index(input('Feature: '))
 pose = input('Pose: ')
-pose == '' if pose == 'none' else pose
+pose = '' if pose == 'none' else pose
 X, y = read_data('train', pose, features[selected_feature])
 X_val, y_val = read_data('dev', pose, features[selected_feature])
 X_test, y_test = read_data('test', pose, features[selected_feature])
