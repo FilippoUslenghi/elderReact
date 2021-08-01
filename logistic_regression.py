@@ -128,7 +128,7 @@ pipe = Pipeline([
 # set params for random search
 params = {
     'classifier__solver': ['liblinear'],
-    'classifier__C': stats.uniform(loc=0, scale=0.5),
+    'classifier__C': stats.uniform(loc=0, scale=0.1),
     'classifier__max_iter': [200]
 }
 
