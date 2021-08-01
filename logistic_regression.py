@@ -1,3 +1,4 @@
+import sys
 import os
 import numpy as np
 import pandas as pd
@@ -51,7 +52,7 @@ def get_y(group, pose, feature):
 
     elif feature == 'valence':
         valence = annotations_df[boolean_map][8]  # select the valence column
-        y_labels = [int(value >= 4) for value in valence] # binarization
+        y_labels = [int(value >= 4) for value in valence]  # binarization
 
     return y_labels
 
@@ -104,7 +105,8 @@ def subsampling(X, y):
     return np.asarray(new_X, dtype=np.ndarray), np.asarray(new_y)
 
 
-features = ['anger', 'disgust', 'fear', 'happiness', 'sadness', 'surprise', 'valence']
+features = ['anger', 'disgust', 'fear',
+            'happiness', 'sadness', 'surprise', 'valence']
 selected_feature = input('Selected feature: ')
 pose = input('Pose: ')
 pose = '' if pose == 'none' else pose
@@ -127,16 +129,14 @@ pipe = Pipeline([
 ])
 
 # set params for random search
-params = {'classifier__C': stats.expon(scale=100),
-          'classifier__kernel': ['rbf']
-          }
+params = {'classifier__C': stats.expon(scale=100)}
 
 X, y = subsampling(X, y)
 randomsearch = RandomizedSearchCV(
     pipe, params, n_iter=100).fit(X, y)  # fit the model
 
 print(f'Best params: {randomsearch.best_params_}')
-import sys; sys.exit()
+sys.exit()
 pipe.set_params(**randomsearch.best_params_)
 
 num_iter = 100
@@ -144,7 +144,8 @@ all_pred = []
 
 for i in range(num_iter):
 
-    if i!=0: X, y = subsampling(X, y)
+    if i != 0:
+        X, y = subsampling(X, y)
 
     pipe.fit(X, y)
 
