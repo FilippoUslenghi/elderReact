@@ -8,7 +8,7 @@ from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score, cohen_kappa_score, classification_report
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.pipeline import Pipeline
-from sklearn.linear_model import LogisticRegression
+from sklearn.svm import LinearSVC
 
 
 def get_y(group, pose, feature):
@@ -108,8 +108,6 @@ features = ['anger', 'disgust', 'fear',
             'happiness', 'sadness', 'surprise', 'valence']
 selected_feature = 6
 pose = 'tilted'  # tilted, frontal or emptyString'
-print(f'Feature: {features[selected_feature]}')
-print(f'Pose: {pose}')
 X, y = read_data('train', pose, features[selected_feature])
 X_val, y_val = read_data('dev', pose, features[selected_feature])
 X_test, y_test = read_data('test', pose, features[selected_feature])
@@ -124,19 +122,19 @@ X, X_test, y, y_test = np.asarray(X, dtype=np.ndarray), np.asarray(
 # create the pipeline
 pipe = Pipeline([
     ('scaler', StandardScaler()),
-    ('classifier', LogisticRegression())
+    ('classifier', LinearSVC())
 ])
 
 # set params for random search
 params = {
-    'classifier__solver': ['liblinear'],
-    'classifier__C': stats.uniform(loc=0, scale=0.1),
-    'classifier__max_iter': [200]
+    'classifier__C': stats.uniform(loc=0, scale=2000),
 }
 
+randomsearch = RandomizedSearchCV(
+        pipe, params, n_iter=1000).fit(X, y)  # fit the model
 
-# print(f'Best params: {randomsearch.best_params_}')
-# import sys; sys.exit()
+print(f'Best params: {randomsearch.best_params_}')
+import sys; sys.exit()
 
 num_iter = 50
 all_pred = []
