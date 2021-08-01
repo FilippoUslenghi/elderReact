@@ -1,4 +1,3 @@
-import sys
 import os
 import numpy as np
 import pandas as pd
@@ -107,13 +106,11 @@ def subsampling(X, y):
 
 features = ['anger', 'disgust', 'fear',
             'happiness', 'sadness', 'surprise', 'valence']
-selected_feature = input('Selected feature: ')
-pose = input('Pose: ')
-pose = '' if pose == 'none' else pose
-feature_index = features.index(selected_feature)
-X, y = read_data('train', pose, features[feature_index])
-X_val, y_val = read_data('dev', pose, features[feature_index])
-X_test, y_test = read_data('test', pose, features[feature_index])
+selected_feature = 6
+pose = 'tilted' # tilted, frontal or emptyString'
+X, y = read_data('train', pose, features[selected_feature])
+X_val, y_val = read_data('dev', pose, features[selected_feature])
+X_test, y_test = read_data('test', pose, features[selected_feature])
 
 # Add validation data to train data
 X += X_val
@@ -129,14 +126,17 @@ pipe = Pipeline([
 ])
 
 # set params for random search
-params = {'classifier__C': stats.expon(scale=100)}
+params = {
+    'classifier__solver': ['liblinear'],
+    'classifier__C': stats.expon(scale=100),
+}
 
 X, y = subsampling(X, y)
+
 randomsearch = RandomizedSearchCV(
     pipe, params, n_iter=100).fit(X, y)  # fit the model
-
 print(f'Best params: {randomsearch.best_params_}')
-sys.exit()
+import sys; sys.exit()
 pipe.set_params(**randomsearch.best_params_)
 
 num_iter = 100
