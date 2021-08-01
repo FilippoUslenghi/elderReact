@@ -128,6 +128,7 @@ pipe = Pipeline([
 # set params for random search
 params = {
     'classifier__C': stats.uniform(loc=0, scale=2000),
+    'classifier__max_iter': [10000]
 }
 
 X, y = subsampling(X, y)

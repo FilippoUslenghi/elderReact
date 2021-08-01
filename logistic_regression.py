@@ -106,10 +106,12 @@ def subsampling(X, y):
 
 features = ['anger', 'disgust', 'fear',
             'happiness', 'sadness', 'surprise', 'valence']
-selected_feature = 6
-pose = 'tilted'  # tilted, frontal or emptyString'
-print(f'Feature: {features[selected_feature]}')
-print(f'Pose: {pose}')
+# selected_feature = 6
+# pose = 'tilted'  # tilted, frontal or emptyString'
+# print(f'Feature: {features[selected_feature]}')
+# print(f'Pose: {pose}')
+selected_feature = features.index(input('Feature: '))
+pose = input('Pose: ')
 X, y = read_data('train', pose, features[selected_feature])
 X_val, y_val = read_data('dev', pose, features[selected_feature])
 X_test, y_test = read_data('test', pose, features[selected_feature])
