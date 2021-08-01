@@ -107,7 +107,7 @@ def subsampling(X, y):
 features = ['anger', 'disgust', 'fear',
             'happiness', 'sadness', 'surprise', 'valence']
 selected_feature = 6
-pose = 'tilted' # tilted, frontal or emptyString'
+pose = 'tilted'  # tilted, frontal or emptyString'
 X, y = read_data('train', pose, features[selected_feature])
 X_val, y_val = read_data('dev', pose, features[selected_feature])
 X_test, y_test = read_data('test', pose, features[selected_feature])
@@ -132,25 +132,21 @@ params = {
     'classifier__max_iter': [200]
 }
 
-X, y = subsampling(X, y)
 
-randomsearch = RandomizedSearchCV(
-    pipe, params, n_iter=1000).fit(X, y)  # fit the model
-print(f'Best params: {randomsearch.best_params_}')
-import sys; sys.exit()
-pipe.set_params(**randomsearch.best_params_)
+# print(f'Best params: {randomsearch.best_params_}')
+# import sys; sys.exit()
 
-num_iter = 100
+num_iter = 50
 all_pred = []
 
 for i in range(num_iter):
 
-    if i != 0:
-        X, y = subsampling(X, y)
+    X, y = subsampling(X, y)
 
-    pipe.fit(X, y)
+    randomsearch = RandomizedSearchCV(
+        pipe, params, n_iter=100).fit(X, y)  # fit the model
 
-    y_pred = pipe.predict(X_test)
+    y_pred = randomsearch.predict(X_test)
     all_pred.append(y_pred)
 
 all_pred = np.asarray(all_pred)
