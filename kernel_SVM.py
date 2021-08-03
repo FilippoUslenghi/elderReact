@@ -137,12 +137,12 @@ pipe = Pipeline([
 # set params for random search
 params = {'classifier__C': stats.uniform(scale=2000),
           'classifier__gamma': stats.uniform(scale=2000),
-          'classifier__kernel': ['rbf', 'poly', 'rbf', 'sigmoid']
+          'classifier__kernel': ['rbf', 'poly', 'sigmoid']
           }
 
 X, y = subsampling(X, y)
 randomsearch = RandomizedSearchCV(
-    pipe, params, n_iter=1000).fit(X, y)  # fit the model
+    pipe, params, n_iter=10000).fit(X, y)  # fit the model
 
 print(f'Best params: {randomsearch.best_params_}')
 
