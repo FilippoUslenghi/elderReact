@@ -142,7 +142,7 @@ params = {'classifier__C': stats.uniform(scale=2000),
 
 X, y = subsampling(X, y)
 randomsearch = RandomizedSearchCV(
-    pipe, params, n_iter=10000).fit(X, y)  # fit the model
+    pipe, params, n_iter=100000).fit(X, y)  # fit the model
 
 print(f'Best params: {randomsearch.best_params_}')
 
