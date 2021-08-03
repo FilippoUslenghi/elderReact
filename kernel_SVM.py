@@ -136,7 +136,7 @@ pipe = Pipeline([
 
 # set params for random search
 params = {'classifier__C': stats.uniform(scale=2000),
-          'classifier__gamma': stats.uniform(loc=-1000, scale=2000),
+          'classifier__gamma': stats.uniform(scale=2000),
           'classifier__kernel': ['rbf']
           }
 
