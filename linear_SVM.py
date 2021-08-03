@@ -7,11 +7,10 @@ import seaborn as sns
 from scipy import stats
 from sklearn.preprocessing import StandardScaler
 from sklearn.utils import resample
-from sklearn.svm import SVC
+from sklearn.svm import LinearSVC
 from sklearn.metrics import accuracy_score, cohen_kappa_score, classification_report, plot_confusion_matrix
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.pipeline import Pipeline
-from sklearn.svm import LinearSVC
 
 
 def get_y(group, pose, emotion):

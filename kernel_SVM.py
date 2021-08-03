@@ -1,7 +1,9 @@
 import os
+import sys
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import seaborn as sns
 from scipy import stats
 from sklearn.preprocessing import StandardScaler
 from sklearn.utils import resample
@@ -51,7 +53,7 @@ def get_y(group, pose, feature):
 
     elif feature == 'valence':
         valence = annotations_df[boolean_map][8]  # select the valence column
-        y_labels = [int(value >= 4) for value in valence] # binarization
+        y_labels = [int(value >= 4) for value in valence]  # binarization
 
     return y_labels
 
@@ -104,14 +106,20 @@ def subsampling(X, y):
     return np.asarray(new_X, dtype=np.ndarray), np.asarray(new_y)
 
 
-emotions = ['anger', 'disgust', 'fear', 'happiness', 'sadness', 'surprise', 'valence']
-selected_emotion = 6
-pose = 'tilted'  # frontal or tilted
-print(f'Target: {emotions[selected_emotion]}')
+emotions = ['anger', 'disgust', 'fear',
+            'happiness', 'sadness', 'surprise', 'valence']
+
+model, selected_emotion, pose = sys.argv[0][:-3], sys.argv[1], sys.argv[2]
+print(f'Target: {selected_emotion}')
 print(f'Pose: {pose}')
-X, y = read_data('train', pose, emotions[selected_emotion])
-X_val, y_val = read_data('dev', pose, emotions[selected_emotion])
-X_test, y_test = read_data('test', pose, emotions[selected_emotion])
+
+out_dir = os.path.join('results', model, 'delaunay', selected_emotion, pose)
+os.makedirs(out_dir, exist_ok=True)
+
+feature_index = emotions.index(selected_emotion)
+X, y = read_data('train', pose, emotions[feature_index])
+X_val, y_val = read_data('dev', pose, emotions[feature_index])
+X_test, y_test = read_data('test', pose, emotions[feature_index])
 
 # Add validation data to train data
 X += X_val
@@ -127,8 +135,8 @@ pipe = Pipeline([
 ])
 
 # set params for random search
-params = {'classifier__C': stats.expon(scale=100),
-          'classifier__gamma': stats.expon(scale=.1),
+params = {'classifier__C': stats.uniform(scale=2000),
+          'classifier__gamma': stats.uniform(loc=-1000, scale=2000),
           'classifier__kernel': ['rbf']
           }
 
@@ -137,16 +145,16 @@ randomsearch = RandomizedSearchCV(
     pipe, params, n_iter=100).fit(X, y)  # fit the model
 
 print(f'Best params: {randomsearch.best_params_}')
-pipe.set_params(**randomsearch.best_params_)
 
-import sys; sys.exit()
+sys.exit()
 
 num_iter = 100
 all_pred = []
 
 for i in range(num_iter):
 
-    if i!=0: X, y = subsampling(X, y)
+    if i != 0:
+        X, y = subsampling(X, y)
 
     pipe.fit(X, y)
 
@@ -164,5 +172,6 @@ print(
 print("classification report:")
 print(classification_report(y_test, final_pred))
 
-plot_confusion_matrix(estimator=pipe, X=X_test, y_true=y_test, normalize='true', cmap='Blues')
+plot_confusion_matrix(estimator=pipe, X=X_test,
+                      y_true=y_test, normalize='true', cmap='Blues')
 plt.show(block=True)
