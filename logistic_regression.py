@@ -1,7 +1,9 @@
 import os
+import sys
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import seaborn as sns
 from scipy import stats
 from sklearn.preprocessing import StandardScaler
 from sklearn.utils import resample
@@ -107,13 +109,15 @@ def subsampling(X, y):
 
 emotions = ['anger', 'disgust', 'fear',
             'happiness', 'sadness', 'surprise', 'valence']
-# selected_feature = 6
-# pose = 'tilted'  # tilted, frontal or emptyString'
-# print(f'Feature: {features[selected_feature]}')
-# print(f'Pose: {pose}')
-selected_emotion = emotions.index(input('Target: '))
-pose = input('Pose: ')
+
+model, selected_emotion, pose = sys.argv[0][:-3], sys.argv[1], sys.argv[2]
 pose = '' if pose == 'none' else pose
+print(f'Target: {selected_emotion}')
+print(f'Pose: {pose}')
+
+out_dir = os.path.join('results', model, 'delaunay', selected_emotion, pose)
+os.makedirs(out_dir, exist_ok=True)
+
 X, y = read_data('train', pose, emotions[selected_emotion])
 X_val, y_val = read_data('dev', pose, emotions[selected_emotion])
 X_test, y_test = read_data('test', pose, emotions[selected_emotion])
@@ -140,7 +144,7 @@ params = {
 
 
 # print(f'Best params: {randomsearch.best_params_}')
-# import sys; sys.exit()
+# sys.exit()
 
 num_iter = 100
 all_pred = []
@@ -162,8 +166,14 @@ final_pred = final_pred[0]
 print(f"accuracy score is: {accuracy_score(y_test, final_pred)}")
 print(
     f"Cohen Kappa score is: {cohen_kappa_score(y_test, final_pred, weights='linear')}")
-print("classification report:")
-print(classification_report(y_test, final_pred))
+# print("classification report:")
+# print(classification_report(y_test, final_pred))
 
-plot_confusion_matrix(estimator=pipe, X=X_test, y_true=y_test, normalize='true', cmap='Blues')
-plt.show(block=True)
+clf_report = classification_report(y_test, final_pred, output_dict=True)
+sns.heatmap(pd.DataFrame(clf_report).iloc[:-1, :].T, annot=True)
+plt.savefig(os.path.join(out_dir, 'classification_report.png'))
+
+plot_confusion_matrix(estimator=pipe, X=X_test,
+                      y_true=y_test, normalize='true', cmap='Blues')
+plt.savefig(os.path.join(out_dir, 'confusion_matrix.png'))
+
