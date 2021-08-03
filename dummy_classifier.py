@@ -1,6 +1,8 @@
 import os
 import numpy as np
+from numpy.core.shape_base import block
 import pandas as pd
+import matplotlib.pyplot as plt
 from scipy import stats
 from sklearn.preprocessing import StandardScaler
 from sklearn.utils import resample
@@ -9,6 +11,7 @@ from sklearn.metrics import accuracy_score, cohen_kappa_score, classification_re
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.pipeline import Pipeline
 from sklearn.dummy import DummyClassifier
+from sklearn.metrics import plot_confusion_matrix
 
 
 def get_y(group, pose, emotion):
@@ -160,3 +163,6 @@ print(
     f"Cohen Kappa score is: {cohen_kappa_score(y_test, final_pred, weights='linear')}")
 print("classification report:")
 print(classification_report(y_test, final_pred))
+
+plot_confusion_matrix(estimator=pipe, X=X_test, y_true=y_test, normalize='true', cmap='Blues')
+plt.show(block=True)
