@@ -9,7 +9,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.utils import resample
 from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score, cohen_kappa_score, classification_report, plot_confusion_matrix
-from sklearn.model_selection import RandomizedSearchCV
+from sklearn.model_selection import RandomizedSearchCV, GridSearchCV
 from sklearn.pipeline import Pipeline
 
 
@@ -135,16 +135,24 @@ pipe = Pipeline([
 ])
 
 # set params for random search
-params = {'classifier__C': stats.uniform(scale=2000),
-          'classifier__gamma': stats.uniform(scale=2000),
-          'classifier__kernel': ['rbf', 'poly', 'sigmoid']
+# params = {'classifier__C': stats.uniform(scale=2000),
+#           'classifier__gamma': stats.uniform(scale=2000),
+#           'classifier__kernel': ['rbf', 'poly', 'sigmoid']
+#           }
+
+params = {'classifier__C': [i for i in range(1, 2001, 10)],
+          'classifier__gamma': [i for i in range(0, 2000, 10)],
+          'classifier__kernel': ('rbf', 'poly', 'sigmoid')
           }
 
 X, y = subsampling(X, y)
-randomsearch = RandomizedSearchCV(
-    pipe, params, n_iter=100000).fit(X, y)  # fit the model
+# randomsearch = RandomizedSearchCV(
+#     pipe, params, n_iter=100000).fit(X, y)  # fit the model
 
-print(f'Best params: {randomsearch.best_params_}')
+gridsearch = GridSearchCV(pipe, params).fit(X,y)  # fit the model
+
+# print(f'Best params: {randomsearch.best_params_}')
+print(f'Best params: {gridsearch.best_params_}')
 
 sys.exit()
 
