@@ -123,7 +123,7 @@ X, X_test, y, y_test = np.asarray(X, dtype=np.ndarray), np.asarray(
 # create the pipeline
 pipe = Pipeline([
     ('scaler', StandardScaler()),
-    ('classifier', DummyClassifier())
+    ('classifier', DummyClassifier(strategy='uniform'))
 ])
 
 # set params for random search
@@ -132,19 +132,19 @@ pipe = Pipeline([
 #           'classifier__kernel': ['rbf']
 #           }
 
-X, y = subsampling(X, y)
+# X, y = subsampling(X, y)
 # randomsearch = RandomizedSearchCV(
 #     pipe, params, n_iter=100).fit(X, y)  # fit the model
 
 # print(f'Best params: {randomsearch.best_params_}')
-# pipe.set_params(**randomsearch.best_params_)
+# import sys; sys.exit()
 
 num_iter = 100
 all_pred = []
 
 for i in range(num_iter):
 
-    if i!=0: X, y = subsampling(X, y)
+    X, y = subsampling(X, y)
 
     pipe.fit(X, y)
 
