@@ -22,6 +22,7 @@ def get_y(group, pose, emotion):
         annotations_path, delim_whitespace=True, header=None)
     all_videos = annotations_df[0]
 
+    pose = '' if pose == 'none' else pose
     y_videos = os.listdir(os.path.join(
         'dataset_net', 'Features', group, f'delaunay_pose_{pose}'))
     y_videos = [y.replace('csv', 'mp4') for y in y_videos]
@@ -63,6 +64,7 @@ def read_data(group, pose, emotion):
     videos = []
     labels = []
 
+    pose = '' if pose == 'none' else pose
     videos_dir = os.path.join('dataset_net', 'Features',
                               group, f'delaunay_pose_{pose}')
     for csv in sorted(os.listdir(videos_dir)):
@@ -111,7 +113,6 @@ emotions = ['anger', 'disgust', 'fear',
             'happiness', 'sadness', 'surprise', 'valence']
 
 model, selected_emotion, pose = sys.argv[0][:-3], sys.argv[1], sys.argv[2]
-pose = '' if pose == 'none' else pose
 print(f'Target: {selected_emotion}')
 print(f'Pose: {pose}')
 

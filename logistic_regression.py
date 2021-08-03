@@ -22,6 +22,7 @@ def get_y(group, pose, emotion):
         annotations_path, delim_whitespace=True, header=None)
     all_videos = annotations_df[0]
 
+    pose = '' if pose == 'none' else pose
     y_videos = os.listdir(os.path.join(
         'dataset_net', 'Features', group, f'delaunay_pose_{pose}'))
     y_videos = [y.replace('csv', 'mp4') for y in y_videos]
@@ -63,6 +64,7 @@ def read_data(group, pose, emotion):
     videos = []
     labels = []
 
+    pose = '' if pose == 'none' else pose
     videos_dir = os.path.join('dataset_net', 'Features',
                               group, f'delaunay_pose_{pose}')
     for csv in sorted(os.listdir(videos_dir)):
@@ -111,16 +113,16 @@ emotions = ['anger', 'disgust', 'fear',
             'happiness', 'sadness', 'surprise', 'valence']
 
 model, selected_emotion, pose = sys.argv[0][:-3], sys.argv[1], sys.argv[2]
-pose = '' if pose == 'none' else pose
 print(f'Target: {selected_emotion}')
 print(f'Pose: {pose}')
 
 out_dir = os.path.join('results', model, 'delaunay', selected_emotion, pose)
 os.makedirs(out_dir, exist_ok=True)
 
-X, y = read_data('train', pose, emotions[selected_emotion])
-X_val, y_val = read_data('dev', pose, emotions[selected_emotion])
-X_test, y_test = read_data('test', pose, emotions[selected_emotion])
+feature_index = emotions.index(selected_emotion)
+X, y = read_data('train', pose, emotions[feature_index])
+X_val, y_val = read_data('dev', pose, emotions[feature_index])
+X_test, y_test = read_data('test', pose, emotions[feature_index])
 
 # Add validation data to train data
 X += X_val
@@ -173,7 +175,7 @@ clf_report = classification_report(y_test, final_pred, output_dict=True)
 sns.heatmap(pd.DataFrame(clf_report).iloc[:-1, :].T, annot=True)
 plt.savefig(os.path.join(out_dir, 'classification_report.png'))
 
-plot_confusion_matrix(estimator=pipe, X=X_test,
+plot_confusion_matrix(estimator=randomsearch, X=X_test,
                       y_true=y_test, normalize='true', cmap='Blues')
 plt.savefig(os.path.join(out_dir, 'confusion_matrix.png'))
 
