@@ -165,7 +165,6 @@ all_pred = np.asarray(all_pred)
 final_pred, _ = stats.mode(all_pred)  # voting
 final_pred = final_pred[0]
 
-print(f"accuracy score is: {accuracy_score(y_test, final_pred)}")
 print(
     f"Cohen Kappa score is: {cohen_kappa_score(y_test, final_pred, weights='linear')}")
 # print("classification report:")

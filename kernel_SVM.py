@@ -133,28 +133,30 @@ X, X_test, y, y_test = np.asarray(X, dtype=np.ndarray), np.asarray(
 # create the pipeline
 pipe = Pipeline([
     ('scaler', StandardScaler()),
-    ('classifier', SVC(C=21, gamma=70, kernel='sigmoid'))  # C=10, gamma=62  or C=21, gamma=70
+    ('classifier', SVC(C=10, gamma=62, kernel='sigmoid'))  
 ])
 
-# set params for random search
-# params = {'classifier__C': stats.uniform(scale=2000),
-#           'classifier__gamma': stats.uniform(scale=2000),
-#           'classifier__kernel': ['rbf', 'poly', 'sigmoid']
-#           }
+# X, y = subsampling(X, y)
 
+# GridSearch per cercare l'intorno su cui effettuare la randomizedSearch
 # params = {'classifier__C': [i for i in range(10, 31, 1)],
 #           'classifier__gamma': [i for i in range(60, 81, 1)],
 #           'classifier__kernel': ['sigmoid']
 #           }
 
-# X, y = subsampling(X, y)
+# gridsearch = GridSearchCV(pipe, params).fit(X,y)  # fit the model
+# print(f'Best params: {gridsearch.best_params_}')
+
+
+# RandomizedSearch
+params = {'classifier__C': stats.uniform(loc=10, scale=10),
+          'classifier__gamma': stats.uniform(loc=60, scale=10),
+          'classifier__kernel': ['sigmoid']
+          }
 
 # randomsearch = RandomizedSearchCV(
 #     pipe, params, n_iter=100000).fit(X, y)  # fit the model
-# gridsearch = GridSearchCV(pipe, params).fit(X,y)  # fit the model
-
 # print(f'Best params: {randomsearch.best_params_}')
-# print(f'Best params: {gridsearch.best_params_}')
 
 # sys.exit()
 
@@ -165,6 +167,9 @@ for i in range(num_iter):
 
     X, y = subsampling(X, y)
 
+    randomsearch = RandomizedSearchCV(
+        pipe, params, n_iter=100).fit(X, y)  # fit the model
+
     pipe.fit(X, y)
 
     y_pred = pipe.predict(X_test)
@@ -174,7 +179,6 @@ all_pred = np.asarray(all_pred)
 final_pred, _ = stats.mode(all_pred)  # voting
 final_pred = final_pred[0]
 
-print(f"accuracy score is: {accuracy_score(y_test, final_pred)}")
 print(
     f"Cohen Kappa score is: {cohen_kappa_score(y_test, final_pred, weights='linear')}")
 print("classification report:")
