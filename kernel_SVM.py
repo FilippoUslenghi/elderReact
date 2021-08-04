@@ -144,7 +144,7 @@ pipe = Pipeline([
 
 params = {'classifier__C': [i for i in range(10, 31, 1)],
           'classifier__gamma': [i for i in range(60, 81, 1)],
-          'classifier__kernel': ('sigmoid')
+          'classifier__kernel': ['sigmoid']
           }
 
 X, y = subsampling(X, y)
