@@ -170,9 +170,7 @@ for i in range(num_iter):
     randomsearch = RandomizedSearchCV(
         pipe, params, n_iter=100).fit(X, y)  # fit the model
 
-    randomsearch.fit(X, y)
-
-    y_pred = pipe.predict(X_test)
+    y_pred = randomsearch.predict(X_test)
     all_pred.append(y_pred)
 
 all_pred = np.asarray(all_pred)
