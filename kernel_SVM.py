@@ -142,8 +142,8 @@ pipe = Pipeline([
 #           'classifier__kernel': ['rbf', 'poly', 'sigmoid']
 #           }
 
-params = {'classifier__C': [i for i in range(10, 31, 0.5)],
-          'classifier__gamma': [i for i in range(60, 81, 0.5)],
+params = {'classifier__C': [i for i in range(10, 31, 1)],
+          'classifier__gamma': [i for i in range(60, 81, 1)],
           'classifier__kernel': ('sigmoid')
           }
 
