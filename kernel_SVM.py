@@ -133,7 +133,7 @@ X, X_test, y, y_test = np.asarray(X, dtype=np.ndarray), np.asarray(
 # create the pipeline
 pipe = Pipeline([
     ('scaler', StandardScaler()),
-    ('classifier', SVC())
+    ('classifier', SVC(C=21, gamma=70))  # C=10, gamma=62  or C=21, gamma=70
 ])
 
 # set params for random search
@@ -142,21 +142,21 @@ pipe = Pipeline([
 #           'classifier__kernel': ['rbf', 'poly', 'sigmoid']
 #           }
 
-params = {'classifier__C': [i for i in range(10, 31, 1)],
-          'classifier__gamma': [i for i in range(60, 81, 1)],
-          'classifier__kernel': ['sigmoid']
-          }
+# params = {'classifier__C': [i for i in range(10, 31, 1)],
+#           'classifier__gamma': [i for i in range(60, 81, 1)],
+#           'classifier__kernel': ['sigmoid']
+#           }
 
-X, y = subsampling(X, y)
+# X, y = subsampling(X, y)
 
 # randomsearch = RandomizedSearchCV(
 #     pipe, params, n_iter=100000).fit(X, y)  # fit the model
-gridsearch = GridSearchCV(pipe, params).fit(X,y)  # fit the model
+# gridsearch = GridSearchCV(pipe, params).fit(X,y)  # fit the model
 
 # print(f'Best params: {randomsearch.best_params_}')
-print(f'Best params: {gridsearch.best_params_}')
+# print(f'Best params: {gridsearch.best_params_}')
 
-sys.exit()
+# sys.exit()
 
 num_iter = 100
 all_pred = []
