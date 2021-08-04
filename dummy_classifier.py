@@ -7,9 +7,7 @@ import seaborn as sns
 from scipy import stats
 from sklearn.preprocessing import StandardScaler
 from sklearn.utils import resample
-from sklearn.svm import SVC
-from sklearn.metrics import accuracy_score, cohen_kappa_score, classification_report, plot_confusion_matrix
-from sklearn.model_selection import RandomizedSearchCV
+from sklearn.metrics import cohen_kappa_score, classification_report, plot_confusion_matrix
 from sklearn.pipeline import Pipeline
 from sklearn.dummy import DummyClassifier
 
@@ -136,19 +134,6 @@ pipe = Pipeline([
     ('scaler', StandardScaler()),
     ('classifier', DummyClassifier(strategy='uniform'))
 ])
-
-# set params for random search
-# params = {'classifier__C': stats.expon(scale=100),
-#           'classifier__gamma': stats.expon(scale=.1),
-#           'classifier__kernel': ['rbf']
-#           }
-
-# X, y = subsampling(X, y)
-# randomsearch = RandomizedSearchCV(
-#     pipe, params, n_iter=100).fit(X, y)  # fit the model
-
-# print(f'Best params: {randomsearch.best_params_}')
-# sys.exit()
 
 num_iter = 100
 all_pred = []

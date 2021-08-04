@@ -8,7 +8,7 @@ from scipy import stats
 from sklearn.preprocessing import StandardScaler
 from sklearn.utils import resample
 from sklearn.svm import SVC
-from sklearn.metrics import accuracy_score, cohen_kappa_score, classification_report, plot_confusion_matrix
+from sklearn.metrics import cohen_kappa_score, classification_report, plot_confusion_matrix
 from sklearn.model_selection import RandomizedSearchCV, GridSearchCV
 from sklearn.pipeline import Pipeline
 
@@ -170,7 +170,7 @@ for i in range(num_iter):
     randomsearch = RandomizedSearchCV(
         pipe, params, n_iter=100).fit(X, y)  # fit the model
 
-    pipe.fit(X, y)
+    randomsearch.fit(X, y)
 
     y_pred = pipe.predict(X_test)
     all_pred.append(y_pred)
@@ -181,9 +181,13 @@ final_pred = final_pred[0]
 
 print(
     f"Cohen Kappa score is: {cohen_kappa_score(y_test, final_pred, weights='linear')}")
-print("classification report:")
-print(classification_report(y_test, final_pred))
+# print("classification report:")
+# print(classification_report(y_test, final_pred))
 
-plot_confusion_matrix(estimator=pipe, X=X_test,
+clf_report = classification_report(y_test, final_pred, output_dict=True)
+sns.heatmap(pd.DataFrame(clf_report).iloc[:-1, :].T, annot=True)
+plt.savefig(os.path.join(out_dir, 'classification_report.png'))
+
+plot_confusion_matrix(estimator=randomsearch, X=X_test,
                       y_true=y_test, normalize='true', cmap='Blues')
-plt.show(block=True)
+plt.savefig(os.path.join(out_dir, 'confusion_matrix.png'))
