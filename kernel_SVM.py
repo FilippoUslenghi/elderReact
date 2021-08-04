@@ -21,6 +21,7 @@ def get_y(group, pose, feature):
         annotations_path, delim_whitespace=True, header=None)
     all_videos = annotations_df[0]
 
+    pose = '' if pose == 'none' else pose
     y_videos = os.listdir(os.path.join(
         'dataset_net', 'Features', group, f'delaunay_pose_{pose}'))
     y_videos = [y.replace('csv', 'mp4') for y in y_videos]
@@ -62,6 +63,7 @@ def read_data(group, pose, feature):
     videos = []
     labels = []
 
+    pose = '' if pose == 'none' else pose
     videos_dir = os.path.join('dataset_net', 'Features',
                               group, f'delaunay_pose_{pose}')
     for csv in sorted(os.listdir(videos_dir)):
@@ -140,15 +142,15 @@ pipe = Pipeline([
 #           'classifier__kernel': ['rbf', 'poly', 'sigmoid']
 #           }
 
-params = {'classifier__C': [i for i in range(1, 2001, 10)],
-          'classifier__gamma': [i for i in range(0, 2000, 10)],
-          'classifier__kernel': ('rbf', 'poly', 'sigmoid')
+params = {'classifier__C': [i for i in range(10, 31, 0.5)],
+          'classifier__gamma': [i for i in range(60, 81, 0.5)],
+          'classifier__kernel': ('sigmoid')
           }
 
 X, y = subsampling(X, y)
+
 # randomsearch = RandomizedSearchCV(
 #     pipe, params, n_iter=100000).fit(X, y)  # fit the model
-
 gridsearch = GridSearchCV(pipe, params).fit(X,y)  # fit the model
 
 # print(f'Best params: {randomsearch.best_params_}')
@@ -161,8 +163,7 @@ all_pred = []
 
 for i in range(num_iter):
 
-    if i != 0:
-        X, y = subsampling(X, y)
+    X, y = subsampling(X, y)
 
     pipe.fit(X, y)
 
@@ -173,7 +174,6 @@ all_pred = np.asarray(all_pred)
 final_pred, _ = stats.mode(all_pred)  # voting
 final_pred = final_pred[0]
 
-print(f'Best params: {randomsearch.best_params_}')
 print(f"accuracy score is: {accuracy_score(y_test, final_pred)}")
 print(
     f"Cohen Kappa score is: {cohen_kappa_score(y_test, final_pred, weights='linear')}")
