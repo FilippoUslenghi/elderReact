@@ -133,7 +133,7 @@ X, X_test, y, y_test = np.asarray(X, dtype=np.ndarray), np.asarray(
 # create the pipeline
 pipe = Pipeline([
     ('scaler', StandardScaler()),
-    ('classifier', SVC(C=10, gamma=62, kernel='sigmoid'))  
+    ('classifier', SVC())  # best params: C=10, gamma=62, kernel='sigmoid'
 ])
 
 # X, y = subsampling(X, y)
