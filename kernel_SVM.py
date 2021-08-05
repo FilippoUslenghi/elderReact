@@ -146,42 +146,42 @@ pipe = Pipeline([
 
 
 # GridSearch per cercare l'intorno su cui effettuare la randomizedSearch
-if features == 'delaunay':
-    params = {'classifier__C': [i for i in range(10, 31, 1)],
-            'classifier__gamma': [i for i in range(60, 81, 1)],
-            'classifier__kernel': ['sigmoid']
-            }
-
-elif features == 'au':
-    params = {'classifier__C': [i for i in range(1, 10, 1)],
-            'classifier__gamma': [i for i in range(0, 20, 1)],
-            'classifier__kernel': ['poly']
-            }
-
-X, y = subsampling(X, y)
-gridsearch = GridSearchCV(pipe, params).fit(X,y)  # fit the model
-print(f'Best params: {gridsearch.best_params_}')
-
-
-# RandomizedSearch
 # if features == 'delaunay':
-#     params = {'classifier__C': stats.uniform(loc=10, scale=10),
-#             'classifier__gamma': stats.uniform(loc=60, scale=10),
+#     params = {'classifier__C': [i for i in range(10, 31, 1)],
+#             'classifier__gamma': [i for i in range(60, 81, 1)],
 #             'classifier__kernel': ['sigmoid']
 #             }
 
 # elif features == 'au':
-#     params = {'classifier__C': stats.uniform(loc=10, scale=10),
-#             'classifier__gamma': stats.uniform(loc=60, scale=10),
-#             'classifier__kernel': ['sigmoid']
-#             }    
+#     params = {'classifier__C': [i for i in range(1, 10, 1)],
+#             'classifier__gamma': [i for i in range(0, 20, 1)],
+#             'classifier__kernel': ['poly']
+#             }
+
+# X, y = subsampling(X, y)
+# gridsearch = GridSearchCV(pipe, params).fit(X,y)  # fit the model
+# print(f'Best params: {gridsearch.best_params_}')
+
+
+# RandomizedSearch
+if features == 'delaunay':
+    params = {'classifier__C': stats.uniform(loc=10, scale=10),
+            'classifier__gamma': stats.uniform(loc=60, scale=10),
+            'classifier__kernel': ['sigmoid']
+            }
+
+elif features == 'au':
+    params = {'classifier__C': stats.uniform(loc=0, scale=2),
+            'classifier__gamma': stats.uniform(loc=0, scale=2),
+            'classifier__kernel': ['poly']
+            }    
 
 # X, y = subsampling(X, y)
 # randomsearch = RandomizedSearchCV(
-#     pipe, params, n_iter=100000).fit(X, y)  # fit the model
+#     pipe, params, n_iter=100).fit(X, y)  # fit the model
 # print(f'Best params: {randomsearch.best_params_}')
 
-sys.exit()
+# sys.exit()
 
 num_iter = 100
 all_pred = []
