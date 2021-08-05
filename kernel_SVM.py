@@ -153,9 +153,9 @@ if features == 'delaunay':
             }
 
 elif features == 'au':
-    params = {'classifier__C': [i for i in range(1, 2001, 10)],
-            'classifier__gamma': [i for i in range(0, 2000, 10)],
-            'classifier__kernel': ['poly', 'rbf', 'sigmoid']
+    params = {'classifier__C': [i for i in range(1, 10, 1)],
+            'classifier__gamma': [i for i in range(0, 20, 1)],
+            'classifier__kernel': ['poly']
             }
 
 X, y = subsampling(X, y)
