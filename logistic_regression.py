@@ -154,16 +154,16 @@ if features == 'delaunay':
 elif features == 'au':
     params = {
         'classifier__solver': ['liblinear'],
-        'classifier__C': stats.uniform(loc=0, scale=2000),
+        'classifier__C': stats.uniform(loc=0, scale=0.1),
         'classifier__max_iter': [200]
     }
 
-X, y = subsampling(X, y)
-randomsearch = RandomizedSearchCV(
-        pipe, params, n_iter=10000).fit(X, y)  # fit the model
+# X, y = subsampling(X, y)
+# randomsearch = RandomizedSearchCV(
+#         pipe, params, n_iter=10000).fit(X, y)  # fit the model
 
-print(f'Best params: {randomsearch.best_params_}')
-sys.exit()
+# print(f'Best params: {randomsearch.best_params_}')
+# sys.exit()
 
 num_iter = 100
 all_pred = []
