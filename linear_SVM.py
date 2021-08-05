@@ -153,14 +153,14 @@ if features == 'delaunay':
 
 elif features == 'au':
     params = {
-        'classifier__C': stats.uniform(loc=0, scale=2000),
+        'classifier__C': stats.uniform(loc=0, scale=1),
     }
 
-randomsearch = RandomizedSearchCV(
-    pipe, params, n_iter=10000).fit(X, y)  # fit the model
+# randomsearch = RandomizedSearchCV(
+#     pipe, params, n_iter=100).fit(X, y)  # fit the model
 
-print(f'Best params: {randomsearch.best_params_}')
-sys.exit()
+# print(f'Best params: {randomsearch.best_params_}')
+# sys.exit()
 
 num_iter = 100
 all_pred = []
