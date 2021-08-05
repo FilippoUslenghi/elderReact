@@ -146,15 +146,21 @@ pipe = Pipeline([
 # X, y = subsampling(X, y)
 
 # set params for random search
-params = {
-    'classifier__C': stats.uniform(loc=0, scale=1),
-}
+if features == 'delaunay':
+    params = {
+        'classifier__C': stats.uniform(loc=0, scale=1),
+    }
 
-# randomsearch = RandomizedSearchCV(
-#     pipe, params, n_iter=100).fit(X, y)  # fit the model
+elif features == 'au':
+    params = {
+        'classifier__C': stats.uniform(loc=0, scale=2000),
+    }
 
-# print(f'Best params: {randomsearch.best_params_}')
-# sys.exit()
+randomsearch = RandomizedSearchCV(
+    pipe, params, n_iter=2000).fit(X, y)  # fit the model
+
+print(f'Best params: {randomsearch.best_params_}')
+sys.exit()
 
 num_iter = 100
 all_pred = []
