@@ -157,7 +157,7 @@ elif features == 'au':
     }
 
 randomsearch = RandomizedSearchCV(
-    pipe, params, n_iter=2000).fit(X, y)  # fit the model
+    pipe, params, n_iter=10000).fit(X, y)  # fit the model
 
 print(f'Best params: {randomsearch.best_params_}')
 sys.exit()
