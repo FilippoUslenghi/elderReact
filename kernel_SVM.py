@@ -143,7 +143,7 @@ pipe = Pipeline([
     ('classifier', SVC())  # best params: C=10, gamma=62, kernel='sigmoid'
 ])
 
-# X, y = subsampling(X, y)
+
 
 # GridSearch per cercare l'intorno su cui effettuare la randomizedSearch
 # params = {'classifier__C': [i for i in range(10, 31, 1)],
@@ -151,6 +151,7 @@ pipe = Pipeline([
 #           'classifier__kernel': ['sigmoid']
 #           }
 
+# X, y = subsampling(X, y)
 # gridsearch = GridSearchCV(pipe, params).fit(X,y)  # fit the model
 # print(f'Best params: {gridsearch.best_params_}')
 
@@ -168,6 +169,7 @@ elif features == 'au':
             'classifier__kernel': ['sigmoid']
             }    
 
+# X, y = subsampling(X, y)
 # randomsearch = RandomizedSearchCV(
 #     pipe, params, n_iter=100000).fit(X, y)  # fit the model
 # print(f'Best params: {randomsearch.best_params_}')

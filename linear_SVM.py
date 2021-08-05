@@ -143,7 +143,7 @@ pipe = Pipeline([
     ('classifier', LinearSVC(dual=False))
 ])
 
-# X, y = subsampling(X, y)
+
 
 # set params for random search
 if features == 'delaunay':
@@ -153,14 +153,15 @@ if features == 'delaunay':
 
 elif features == 'au':
     params = {
-        'classifier__C': stats.uniform(loc=0, scale=1),
+        'classifier__C': stats.uniform(loc=0, scale=2000),
     }
 
-# randomsearch = RandomizedSearchCV(
-#     pipe, params, n_iter=100).fit(X, y)  # fit the model
+X, y = subsampling(X, y)
+randomsearch = RandomizedSearchCV(
+    pipe, params, n_iter=10000).fit(X, y)  # fit the model
 
-# print(f'Best params: {randomsearch.best_params_}')
-# sys.exit()
+print(f'Best params: {randomsearch.best_params_}')
+sys.exit()
 
 num_iter = 100
 all_pred = []
