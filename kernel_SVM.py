@@ -13,7 +13,7 @@ from sklearn.model_selection import RandomizedSearchCV, GridSearchCV
 from sklearn.pipeline import Pipeline
 
 
-def get_y(group, pose, feature):
+def get_y(group, pose, emotion):
 
     annotations_path = os.path.join(
         'dataset_net', 'Annotations', f'{group}_labels.txt')
@@ -28,50 +28,60 @@ def get_y(group, pose, feature):
 
     boolean_map = [video in y_videos for video in all_videos]
 
-    if feature == 'anger':
+    if emotion == 'anger':
         # select the anger column
         y_labels = annotations_df[boolean_map][1].tolist()
 
-    elif feature == 'disgust':
+    elif emotion == 'disgust':
         # select the disgust column
         y_labels = annotations_df[boolean_map][2].tolist()
 
-    elif feature == 'fear':
+    elif emotion == 'fear':
         # select the fear column
         y_labels = annotations_df[boolean_map][3].tolist()
 
-    elif feature == 'happiness':
+    elif emotion == 'happiness':
         # select the happiness column
         y_labels = annotations_df[boolean_map][4].tolist()
 
-    elif feature == 'sadness':
+    elif emotion == 'sadness':
         # select the sadness column
         y_labels = annotations_df[boolean_map][5].tolist()
 
-    elif feature == 'surprise':
+    elif emotion == 'surprise':
         # select the surprise column
         y_labels = annotations_df[boolean_map][6].tolist()
 
-    elif feature == 'valence':
+    elif emotion == 'valence':
         valence = annotations_df[boolean_map][8]  # select the valence column
         y_labels = [int(value >= 4) for value in valence]  # binarization
 
     return y_labels
 
 
-def read_data(group, pose, feature):
+def read_data(group, pose, emotion, features):
     videos = []
     labels = []
 
     pose = '' if pose == 'none' else pose
-    videos_dir = os.path.join('dataset_net', 'Features',
-                              group, f'delaunay_pose_{pose}')
+    if features == 'delaunay':
+        videos_dir = os.path.join('dataset_net', 'Features',
+                                  group, f'delaunay_pose_{pose}')
+    elif features == 'au':
+        videos_dir = os.path.join('dataset_net', 'Features',
+                                  group, f'interpolated_AU_{pose}')
+
     for csv in sorted(os.listdir(videos_dir)):
+        
         df = pd.read_csv(os.path.join(videos_dir, csv))
-        df = df.drop(columns=['frame', 'yaw'])
+        df = df.drop(columns=['frame'])
+        
+        if features == 'delaunay' and pose != '':
+            df = df.drop(columns=['yaw'])
+        
         videos.append(df.mean(axis=0).values)
 
-    labels = get_y(group, pose, feature)
+    labels = get_y(group, pose, emotion)
 
     return videos, labels
 
@@ -111,17 +121,14 @@ def subsampling(X, y):
 emotions = ['anger', 'disgust', 'fear',
             'happiness', 'sadness', 'surprise', 'valence']
 
-model, selected_emotion, pose = sys.argv[0][:-3], sys.argv[1], sys.argv[2]
+model, selected_emotion, pose, features = sys.argv[0][:-3], sys.argv[1], sys.argv[2], sys.argv[3]
 print(f'Target: {selected_emotion}')
 print(f'Pose: {pose}')
 
-out_dir = os.path.join('results', model, 'delaunay', selected_emotion, pose)
-os.makedirs(out_dir, exist_ok=True)
-
-feature_index = emotions.index(selected_emotion)
-X, y = read_data('train', pose, emotions[feature_index])
-X_val, y_val = read_data('dev', pose, emotions[feature_index])
-X_test, y_test = read_data('test', pose, emotions[feature_index])
+emotion_index = emotions.index(selected_emotion)
+X, y = read_data('train', pose, emotions[emotion_index], features)
+X_val, y_val = read_data('dev', pose, emotions[emotion_index], features)
+X_test, y_test = read_data('test', pose, emotions[emotion_index], features)
 
 # Add validation data to train data
 X += X_val
@@ -149,10 +156,17 @@ pipe = Pipeline([
 
 
 # RandomizedSearch
-params = {'classifier__C': stats.uniform(loc=10, scale=10),
-          'classifier__gamma': stats.uniform(loc=60, scale=10),
-          'classifier__kernel': ['sigmoid']
-          }
+if features == 'delaunay':
+    params = {'classifier__C': stats.uniform(loc=10, scale=10),
+            'classifier__gamma': stats.uniform(loc=60, scale=10),
+            'classifier__kernel': ['sigmoid']
+            }
+
+elif features == 'au':
+    params = {'classifier__C': stats.uniform(loc=10, scale=10),
+            'classifier__gamma': stats.uniform(loc=60, scale=10),
+            'classifier__kernel': ['sigmoid']
+            }    
 
 # randomsearch = RandomizedSearchCV(
 #     pipe, params, n_iter=100000).fit(X, y)  # fit the model
@@ -181,6 +195,9 @@ print(
     f"Cohen Kappa score is: {cohen_kappa_score(y_test, final_pred, weights='linear')}")
 # print("classification report:")
 # print(classification_report(y_test, final_pred))
+
+out_dir = os.path.join('results', model, features, selected_emotion, pose)
+os.makedirs(out_dir, exist_ok=True)
 
 clf_report = classification_report(y_test, final_pred, output_dict=True)
 sns.heatmap(pd.DataFrame(clf_report).iloc[:-1, :].T, annot=True)

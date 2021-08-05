@@ -59,16 +59,26 @@ def get_y(group, pose, emotion):
     return y_labels
 
 
-def read_data(group, pose, emotion):
+def read_data(group, pose, emotion, features):
     videos = []
     labels = []
 
     pose = '' if pose == 'none' else pose
-    videos_dir = os.path.join('dataset_net', 'Features',
-                              group, f'delaunay_pose_{pose}')
+    if features == 'delaunay':
+        videos_dir = os.path.join('dataset_net', 'Features',
+                                  group, f'delaunay_pose_{pose}')
+    elif features == 'au':
+        videos_dir = os.path.join('dataset_net', 'Features',
+                                  group, f'interpolated_AU_{pose}')
+
     for csv in sorted(os.listdir(videos_dir)):
+        
         df = pd.read_csv(os.path.join(videos_dir, csv))
-        df = df.drop(columns=['frame', 'yaw'])
+        df = df.drop(columns=['frame'])
+        
+        if features == 'delaunay' and pose != '':
+            df = df.drop(columns=['yaw'])
+        
         videos.append(df.mean(axis=0).values)
 
     labels = get_y(group, pose, emotion)
@@ -111,17 +121,14 @@ def subsampling(X, y):
 emotions = ['anger', 'disgust', 'fear',
             'happiness', 'sadness', 'surprise', 'valence']
 
-model, selected_emotion, pose = sys.argv[0][:-3], sys.argv[1], sys.argv[2]
+model, selected_emotion, pose, features = sys.argv[0][:-3], sys.argv[1], sys.argv[2], sys.argv[3]
 print(f'Target: {selected_emotion}')
 print(f'Pose: {pose}')
 
-out_dir = os.path.join('results', model, 'delaunay', selected_emotion, pose)
-os.makedirs(out_dir, exist_ok=True)
-
-feature_index = emotions.index(selected_emotion)
-X, y = read_data('train', pose, emotions[feature_index])
-X_val, y_val = read_data('dev', pose, emotions[feature_index])
-X_test, y_test = read_data('test', pose, emotions[feature_index])
+emotion_index = emotions.index(selected_emotion)
+X, y = read_data('train', pose, emotions[emotion_index], features)
+X_val, y_val = read_data('dev', pose, emotions[emotion_index], features)
+X_test, y_test = read_data('test', pose, emotions[emotion_index], features)
 
 # Add validation data to train data
 X += X_val
@@ -136,18 +143,18 @@ pipe = Pipeline([
     ('classifier', LinearSVC(dual=False))
 ])
 
+# X, y = subsampling(X, y)
+
 # set params for random search
 params = {
     'classifier__C': stats.uniform(loc=0, scale=1),
 }
 
-# X, y = subsampling(X, y)
-
 # randomsearch = RandomizedSearchCV(
 #     pipe, params, n_iter=100).fit(X, y)  # fit the model
 
 # print(f'Best params: {randomsearch.best_params_}')
-# import sys; sys.exit()
+# sys.exit()
 
 num_iter = 100
 all_pred = []
@@ -170,6 +177,9 @@ print(
     f"Cohen Kappa score is: {cohen_kappa_score(y_test, final_pred, weights='linear')}")
 # print("classification report:")
 # print(classification_report(y_test, final_pred))
+
+out_dir = os.path.join('results', model, features, selected_emotion, pose)
+os.makedirs(out_dir, exist_ok=True)
 
 clf_report = classification_report(y_test, final_pred, output_dict=True)
 sns.heatmap(pd.DataFrame(clf_report).iloc[:-1, :].T, annot=True)
