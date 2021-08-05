@@ -149,13 +149,13 @@ pipe = Pipeline([
 # if features == 'delaunay':
 #     params = {'classifier__C': [i for i in range(10, 31, 1)],
 #             'classifier__gamma': [i for i in range(60, 81, 1)],
-#             'classifier__kernel': ['sigmoid']
+#             'classifier__kernel': ['ploy', 'sigmoid', 'rbf']
 #             }
 
 # elif features == 'au':
 #     params = {'classifier__C': [i for i in range(1, 10, 1)],
 #             'classifier__gamma': [i for i in range(0, 20, 1)],
-#             'classifier__kernel': ['poly']
+#             'classifier__kernel': ['poly', 'rbf', 'sigmoid']
 #             }
 
 # X, y = subsampling(X, y)
