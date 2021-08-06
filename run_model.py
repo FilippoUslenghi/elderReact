@@ -9,6 +9,11 @@ emotions = ['anger', 'disgust', 'fear',
 poses = ['tilted', 'frontal', 'none']
 
 for emotion in emotions:
-    for pose in poses:
-        os.system(' '.join(['python', file, emotion, pose, features]))
-        # print(' '.join([file, emotion, pose, features]))
+
+    if model == 'lstm':
+        os.system(' '.join(['python', file, emotion, features]))
+        # print(' '.join(['python', file, emotion, features]))
+    else:
+        for pose in poses:
+            os.system(' '.join(['python', file, emotion, pose, features]))
+            # print(' '.join([file, emotion, pose, features]))
