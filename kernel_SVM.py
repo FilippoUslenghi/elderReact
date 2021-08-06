@@ -1,16 +1,17 @@
+from sklearn.pipeline import Pipeline
+from sklearn.model_selection import RandomizedSearchCV, GridSearchCV
+from sklearn.metrics import cohen_kappa_score, classification_report, plot_confusion_matrix
+from sklearn.svm import SVC
+from sklearn.utils import resample
+from sklearn.preprocessing import StandardScaler
+from scipy import stats
+import seaborn as sns
 import os
 import sys
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sns
-from scipy import stats
-from sklearn.preprocessing import StandardScaler
-from sklearn.utils import resample
-from sklearn.svm import SVC
-from sklearn.metrics import cohen_kappa_score, classification_report, plot_confusion_matrix
-from sklearn.model_selection import RandomizedSearchCV, GridSearchCV
-from sklearn.pipeline import Pipeline
+matplotlib.use('agg')
 
 
 def get_y(group, pose, emotion):
@@ -72,13 +73,13 @@ def read_data(group, pose, emotion, features):
                                   group, f'interpolated_AU_{pose}')
 
     for csv in sorted(os.listdir(videos_dir)):
-        
+
         df = pd.read_csv(os.path.join(videos_dir, csv))
         df = df.drop(columns=['frame'])
-        
+
         if features == 'delaunay' and pose != '':
             df = df.drop(columns=['yaw'])
-        
+
         videos.append(df.mean(axis=0).values)
 
     labels = get_y(group, pose, emotion)
@@ -121,7 +122,8 @@ def subsampling(X, y):
 emotions = ['anger', 'disgust', 'fear',
             'happiness', 'sadness', 'surprise', 'valence']
 
-model, selected_emotion, pose, features = sys.argv[0][:-3], sys.argv[1], sys.argv[2], sys.argv[3]
+model, selected_emotion, pose, features = sys.argv[0][:-
+                                                      3], sys.argv[1], sys.argv[2], sys.argv[3]
 print(f'Target: {selected_emotion}')
 print(f'Pose: {pose}')
 
@@ -142,7 +144,6 @@ pipe = Pipeline([
     ('scaler', StandardScaler()),
     ('classifier', SVC())  # best params: C=10, gamma=62, kernel='sigmoid'
 ])
-
 
 
 # GridSearch per cercare l'intorno su cui effettuare la randomizedSearch
@@ -166,15 +167,15 @@ pipe = Pipeline([
 # RandomizedSearch
 if features == 'delaunay':
     params = {'classifier__C': stats.uniform(loc=10, scale=10),
-            'classifier__gamma': stats.uniform(loc=60, scale=10),
-            'classifier__kernel': ['sigmoid']
-            }
+              'classifier__gamma': stats.uniform(loc=60, scale=10),
+              'classifier__kernel': ['sigmoid']
+              }
 
 elif features == 'au':
     params = {'classifier__C': stats.uniform(loc=0, scale=2),
-            'classifier__gamma': stats.uniform(loc=0, scale=2),
-            'classifier__kernel': ['poly']
-            }    
+              'classifier__gamma': stats.uniform(loc=0, scale=2),
+              'classifier__kernel': ['poly']
+              }
 
 # X, y = subsampling(X, y)
 # randomsearch = RandomizedSearchCV(

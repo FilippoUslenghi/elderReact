@@ -1,16 +1,16 @@
+from sklearn.pipeline import Pipeline
+from sklearn.model_selection import RandomizedSearchCV
+from sklearn.metrics import cohen_kappa_score, classification_report, plot_confusion_matrix
+from sklearn.linear_model import LogisticRegression
+from sklearn.utils import resample
+from sklearn.preprocessing import StandardScaler
 import os
 import sys
+import matplotlib
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sns
-from scipy import stats
-from sklearn.preprocessing import StandardScaler
-from sklearn.utils import resample
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import cohen_kappa_score, classification_report, plot_confusion_matrix
-from sklearn.model_selection import RandomizedSearchCV
-from sklearn.pipeline import Pipeline
+matplotlib.use('agg')
 
 
 def get_y(group, pose, emotion):
@@ -121,7 +121,8 @@ def subsampling(X, y):
 emotions = ['anger', 'disgust', 'fear',
             'happiness', 'sadness', 'surprise', 'valence']
 
-model, selected_emotion, pose, features = sys.argv[0][:-3], sys.argv[1], sys.argv[2], sys.argv[3]
+model, selected_emotion, pose, features = sys.argv[0][:-
+                                                      3], sys.argv[1], sys.argv[2], sys.argv[3]
 print(f'Target: {selected_emotion}')
 print(f'Pose: {pose}')
 

@@ -1,16 +1,18 @@
+from sklearn.pipeline import Pipeline
+from sklearn.model_selection import RandomizedSearchCV
+from sklearn.metrics import cohen_kappa_score, classification_report, plot_confusion_matrix
+from sklearn.svm import LinearSVC
+from sklearn.utils import resample
+from sklearn.preprocessing import StandardScaler
+from scipy import stats
+import seaborn as sns
 import os
 import sys
+import matplotlib
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sns
-from scipy import stats
-from sklearn.preprocessing import StandardScaler
-from sklearn.utils import resample
-from sklearn.svm import LinearSVC
-from sklearn.metrics import cohen_kappa_score, classification_report, plot_confusion_matrix
-from sklearn.model_selection import RandomizedSearchCV
-from sklearn.pipeline import Pipeline
+matplotlib.use('agg')
 
 
 def get_y(group, pose, emotion):
@@ -72,13 +74,13 @@ def read_data(group, pose, emotion, features):
                                   group, f'interpolated_AU_{pose}')
 
     for csv in sorted(os.listdir(videos_dir)):
-        
+
         df = pd.read_csv(os.path.join(videos_dir, csv))
         df = df.drop(columns=['frame'])
-        
+
         if features == 'delaunay' and pose != '':
             df = df.drop(columns=['yaw'])
-        
+
         videos.append(df.mean(axis=0).values)
 
     labels = get_y(group, pose, emotion)
@@ -121,7 +123,8 @@ def subsampling(X, y):
 emotions = ['anger', 'disgust', 'fear',
             'happiness', 'sadness', 'surprise', 'valence']
 
-model, selected_emotion, pose, features = sys.argv[0][:-3], sys.argv[1], sys.argv[2], sys.argv[3]
+model, selected_emotion, pose, features = sys.argv[0][:-
+                                                      3], sys.argv[1], sys.argv[2], sys.argv[3]
 print(f'Target: {selected_emotion}')
 print(f'Pose: {pose}')
 
@@ -142,7 +145,6 @@ pipe = Pipeline([
     ('scaler', StandardScaler()),
     ('classifier', LinearSVC(dual=False))
 ])
-
 
 
 # set params for random search
