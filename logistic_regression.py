@@ -5,6 +5,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.utils import resample
 from sklearn.preprocessing import StandardScaler
 from scipy import stats
+import seaborn as sns
 import os
 import sys
 import matplotlib
