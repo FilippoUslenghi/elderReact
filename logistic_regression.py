@@ -4,6 +4,7 @@ from sklearn.metrics import cohen_kappa_score, classification_report, plot_confu
 from sklearn.linear_model import LogisticRegression
 from sklearn.utils import resample
 from sklearn.preprocessing import StandardScaler
+from scipy import stats
 import os
 import sys
 import matplotlib
