@@ -15,5 +15,5 @@ for emotion in emotions:
         # print(' '.join(['python', file, emotion, features]))
     else:
         for pose in poses:
-            os.system(' '.join(['python', file, emotion, pose, features]))
-            # print(' '.join([file, emotion, pose, features]))
+            # os.system(' '.join(['python', file, emotion, pose, features]))
+            print(' '.join([file, emotion, pose, features]))

@@ -66,18 +66,25 @@ def read_data(group, pose, emotion, features):
     if features == 'delaunay':
         videos_dir = os.path.join('dataset_net', 'Features',
                                   group, f'delaunay_pose_{pose}')
-    elif features == 'au':
+    elif 'au' in features:
         videos_dir = os.path.join('dataset_net', 'Features',
                                   group, f'interpolated_AU_{pose}')
 
     for csv in sorted(os.listdir(videos_dir)):
-        
+
         df = pd.read_csv(os.path.join(videos_dir, csv))
         df = df.drop(columns=['frame'])
-        
+
+        if 'intensities' in features and 'activations' not in features:
+            df = df.iloc[:, :17]  # select the action units intensities
+        elif 'intensities' not in features and 'activations' in features:
+            df = df.iloc[:, 17:]  # select the action units activations
+        elif 'intensities' not in features and 'activations' not in features:
+            raise ValueError('Select the type of au features you want to use')
+
         if features == 'delaunay' and pose != '':
             df = df.drop(columns=['yaw'])
-        
+
         videos.append(df.mean(axis=0).values)
 
     labels = get_y(group, pose, emotion)
@@ -123,6 +130,7 @@ emotions = ['anger', 'disgust', 'fear',
 model, selected_emotion, pose, features = sys.argv[0][:-3], sys.argv[1], sys.argv[2], sys.argv[3]
 print(f'Target: {selected_emotion}')
 print(f'Pose: {pose}')
+print(f'Features: {features}')
 
 emotion_index = emotions.index(selected_emotion)
 X, y = read_data('train', pose, emotions[emotion_index], features)
@@ -158,8 +166,8 @@ all_pred = np.asarray(all_pred)
 final_pred, _ = stats.mode(all_pred)  # voting
 final_pred = final_pred[0]
 
-print(
-    f"Cohen Kappa score is: {cohen_kappa_score(y_test, final_pred, weights='linear')}")
+# print(
+#     f"Cohen Kappa score is: {cohen_kappa_score(y_test, final_pred, weights='linear')}")
 # print("classification report:")
 # print(classification_report(y_test, final_pred))
 

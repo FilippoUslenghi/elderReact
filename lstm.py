@@ -119,13 +119,13 @@ def main(selected_emotion, intensities, activations):
     new_x_train, new_y_train = subsampling(x_train, y_train)
 
     if intensities and activations:
-        features = 'intensities_activations'
+        features = 'au_intensities_activations'
 
     elif intensities and not activations:
-        features = 'intensities'
+        features = 'au_intensities'
 
     elif not intensities and activations:
-        features = 'activations'
+        features = 'au_activations'
 
     epochs = 15
     batch_size = 8

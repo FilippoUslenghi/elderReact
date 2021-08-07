@@ -69,7 +69,7 @@ def read_data(group, pose, emotion, features):
     if features == 'delaunay':
         videos_dir = os.path.join('dataset_net', 'Features',
                                   group, f'delaunay_pose_{pose}')
-    elif features == 'au':
+    elif 'au' in features:
         videos_dir = os.path.join('dataset_net', 'Features',
                                   group, f'interpolated_AU_{pose}')
 
@@ -77,6 +77,13 @@ def read_data(group, pose, emotion, features):
 
         df = pd.read_csv(os.path.join(videos_dir, csv))
         df = df.drop(columns=['frame'])
+
+        if 'intensities' in features and 'activations' not in features:
+            df = df.iloc[:, :17]  # select the action units intensities
+        elif 'intensities' not in features and 'activations' in features:
+            df = df.iloc[:, 17:]  # select the action units activations
+        elif 'intensities' not in features and 'activations' not in features:
+            raise ValueError('Select the type of au features you want to use')
 
         if features == 'delaunay' and pose != '':
             df = df.drop(columns=['yaw'])
@@ -123,10 +130,10 @@ def subsampling(X, y):
 emotions = ['anger', 'disgust', 'fear',
             'happiness', 'sadness', 'surprise', 'valence']
 
-model, selected_emotion, pose, features = sys.argv[0][:-
-                                                      3], sys.argv[1], sys.argv[2], sys.argv[3]
+model, selected_emotion, pose, features = sys.argv[0][:-3], sys.argv[1], sys.argv[2], sys.argv[3]
 print(f'Target: {selected_emotion}')
 print(f'Pose: {pose}')
+print(f'Features: {features}')
 
 emotion_index = emotions.index(selected_emotion)
 X, y = read_data('train', pose, emotions[emotion_index], features)
@@ -153,7 +160,7 @@ if features == 'delaunay':
         'classifier__C': stats.uniform(loc=0, scale=1),
     }
 
-elif features == 'au':
+elif 'au' in features:
     params = {
         'classifier__C': stats.uniform(loc=0, scale=1),
     }
