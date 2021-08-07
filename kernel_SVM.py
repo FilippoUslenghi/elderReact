@@ -200,7 +200,7 @@ for i in range(num_iter):
     X, y = subsampling(X, y)
 
     randomsearch = RandomizedSearchCV(
-        pipe, params, n_iter=500).fit(X, y)  # fit the model
+        pipe, params, n_iter=100).fit(X, y)  # fit the model
 
     y_pred = randomsearch.predict(X_test)
     all_pred.append(y_pred)
