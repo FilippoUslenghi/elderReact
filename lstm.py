@@ -159,7 +159,7 @@ def main(selected_emotion, intensities, activations):
 
     # Train
     history = model.fit(new_x_train, new_y_train, validation_data=(
-        x_dev, y_dev), epochs=epochs, batch_size=batch_size, verbose=1)  # , callbacks=[es,cp_callback])
+        x_dev, y_dev), epochs=epochs, batch_size=batch_size, verbose=0)  # , callbacks=[es,cp_callback])
 
     # Evaluate
     y_pred = model.predict(x_test)
