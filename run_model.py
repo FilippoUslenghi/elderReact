@@ -19,6 +19,9 @@ for features in features_list:
             os.system(' '.join(['python', script, emotion, features]))
             # print(' '.join(['python', script, emotion, features]))
 
+        elif script == 'kernel_SVM.py':
+            if features == 'delaunay': continue
+
         else:
             for pose in poses:
                 os.system(' '.join(['python', script, emotion, pose, features]))
