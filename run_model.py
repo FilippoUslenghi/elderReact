@@ -16,10 +16,10 @@ for features in features_list:
 
         if script == 'lstm.py':
             if features == 'delaunay': continue
-            # os.system(' '.join(['python', script, emotion, features]))
-            print(' '.join(['python', script, emotion, features]))
+            os.system(' '.join(['python', script, emotion, features]))
+            # print(' '.join(['python', script, emotion, features]))
 
         else:
             for pose in poses:
-                # os.system(' '.join(['python', script, emotion, pose, features]))
-                print(' '.join([script, emotion, pose, features]))
+                os.system(' '.join(['python', script, emotion, pose, features]))
+                # print(' '.join([script, emotion, pose, features]))
