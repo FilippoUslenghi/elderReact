@@ -78,12 +78,13 @@ def read_data(group, pose, emotion, features):
         df = pd.read_csv(os.path.join(videos_dir, csv))
         df = df.drop(columns=['frame'])
 
-        if 'intensities' in features and 'activations' not in features:
-            df = df.iloc[:, :17]  # select the action units intensities
-        elif 'intensities' not in features and 'activations' in features:
-            df = df.iloc[:, 17:]  # select the action units activations
-        elif 'intensities' not in features and 'activations' not in features:
-            raise ValueError('Select the type of au features you want to use')
+        if features[:2] == 'au':
+            if 'intensities' in features and 'activations' not in features:
+                df = df.iloc[:, :17]  # select the action units intensities
+            elif 'intensities' not in features and 'activations' in features:
+                df = df.iloc[:, 17:]  # select the action units activations
+            elif 'intensities' not in features and 'activations' not in features:
+                raise ValueError('Select the type of au features you want to use')
 
         if features == 'delaunay' and pose != '':
             df = df.drop(columns=['yaw'])
