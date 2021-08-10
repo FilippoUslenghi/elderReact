@@ -20,7 +20,8 @@ for features in features_list:
             # print(' '.join(['python', script, emotion, features]))
 
         elif script == 'kernel_SVM.py':
-            if features == 'delaunay': continue
+            # if features == 'delaunay': continue
+            if features[:2] == 'au': continue
             for pose in poses:
                 os.system(' '.join(['python', script, emotion, pose, features]))
 
