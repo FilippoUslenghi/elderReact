@@ -161,7 +161,7 @@ pipe = Pipeline([
 #             'classifier__kernel': ['ploy', 'sigmoid', 'rbf']
 #             }
 
-# elif features == 'au':
+# elif features[:2] == 'au':
 #     params = {'classifier__C': [i for i in range(1, 10, 1)],
 #             'classifier__gamma': [i for i in range(0, 20, 1)],
 #             'classifier__kernel': ['poly', 'rbf', 'sigmoid']
