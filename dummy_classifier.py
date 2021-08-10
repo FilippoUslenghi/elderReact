@@ -75,12 +75,13 @@ def read_data(group, pose, emotion, features):
         df = pd.read_csv(os.path.join(videos_dir, csv))
         df = df.drop(columns=['frame'])
 
-        if 'intensities' in features and 'activations' not in features:
-            df = df.iloc[:, :17]  # select the action units intensities
-        elif 'intensities' not in features and 'activations' in features:
-            df = df.iloc[:, 17:]  # select the action units activations
-        elif 'intensities' not in features and 'activations' not in features:
-            raise ValueError('Select the type of au features you want to use')
+        if features[:2] == 'au':
+            if 'intensities' in features and 'activations' not in features:
+                df = df.iloc[:, :17]  # select the action units intensities
+            elif 'intensities' not in features and 'activations' in features:
+                df = df.iloc[:, 17:]  # select the action units activations
+            elif 'intensities' not in features and 'activations' not in features:
+                raise ValueError('Select the type of au features you want to use')
 
         if features == 'delaunay' and pose != '':
             df = df.drop(columns=['yaw'])
@@ -175,9 +176,11 @@ out_dir = os.path.join('results', model, features, selected_emotion, pose)
 os.makedirs(out_dir, exist_ok=True)
 
 clf_report = classification_report(y_test, final_pred, output_dict=True)
-sns.heatmap(pd.DataFrame(clf_report).iloc[:-1, :].T, annot=True)
-plt.savefig(os.path.join(out_dir, 'classification_report.png'))
+pd.DataFrame(clf_report).T.to_csv(os.path.join(out_dir, 'classification_report.csv'))
 
-plot_confusion_matrix(estimator=pipe, X=X_test,
-                      y_true=y_test, normalize='true', cmap='Blues')
-plt.savefig(os.path.join(out_dir, 'confusion_matrix.png'))
+# sns.heatmap(pd.DataFrame(clf_report).iloc[:-1, :].T, annot=True)
+# plt.savefig(os.path.join(out_dir, 'classification_report.png'))
+
+# plot_confusion_matrix(estimator=pipe, X=X_test,
+#                       y_true=y_test, normalize='true', cmap='Blues')
+# plt.savefig(os.path.join(out_dir, 'confusion_matrix.png'))
