@@ -18,8 +18,7 @@ for f, features in enumerate(features_list):
         for p, pose in enumerate(poses):
 
             base_dir = os.path.join(model, features, emotion, pose)
-            df = pd.read_csv(os.path.join(
-                base_dir, 'classification_report.csv'))
+            df = pd.read_csv(os.path.join(base_dir, 'classification_report.csv'))
             data[e][f*len(poses)+p] = df.at[3, 'f1-score']  # macro avg
             data[e+len(emotions)][f*len(poses)+p] = df.at[4,'f1-score']  # weigthed avg
 

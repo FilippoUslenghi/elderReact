@@ -171,6 +171,8 @@ def main(selected_emotion, intensities, activations):
 
     clf_report = classification_report(
         y_test, y_pred_class, labels=[0, 1], output_dict=True)
+    pd.DataFrame(clf_report).T.to_csv(os.path.join(out_dir, 'classification_report.csv'))
+
     sns.heatmap(pd.DataFrame(clf_report).iloc[:-1, :].T, annot=True)
     plt.savefig(os.path.join(out_dir, 'classification_report.png'))
     plt.close()

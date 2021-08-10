@@ -69,7 +69,7 @@ def read_data(group, pose, emotion, features):
     if features == 'delaunay':
         videos_dir = os.path.join('dataset_net', 'Features',
                                   group, f'delaunay_pose_{pose}')
-    elif 'au' in features:
+    elif features[:2] == 'au':
         videos_dir = os.path.join('dataset_net', 'Features',
                                   group, f'interpolated_AU_{pose}')
 
@@ -179,7 +179,7 @@ if features == 'delaunay':
               'classifier__kernel': ['sigmoid']
               }
 
-elif 'au' in features:
+elif  features[:2] == 'au':
     params = {'classifier__C': stats.uniform(loc=0, scale=2),
               'classifier__gamma': stats.uniform(loc=0, scale=2),
               'classifier__kernel': ['poly']
@@ -192,7 +192,7 @@ elif 'au' in features:
 
 # sys.exit()
 
-num_iter = 100
+num_iter = 500 if features == 'delaunay' else 100
 all_pred = []
 
 for i in range(num_iter):
@@ -218,6 +218,7 @@ out_dir = os.path.join('results', model, features, selected_emotion, pose)
 os.makedirs(out_dir, exist_ok=True)
 
 clf_report = classification_report(y_test, final_pred, output_dict=True)
+pd.DataFrame(clf_report).T.to_csv(os.path.join(out_dir, 'classification_report.csv'))
 sns.heatmap(pd.DataFrame(clf_report).iloc[:-1, :].T, annot=True)
 plt.savefig(os.path.join(out_dir, 'classification_report.png'))
 
