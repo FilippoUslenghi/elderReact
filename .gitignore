@@ -143,5 +143,5 @@ videos
 
 # dataframes
 dataframes/delaunay
-dataframes/landamrks
+dataframes/landmarks
 dataframes/*.csv
