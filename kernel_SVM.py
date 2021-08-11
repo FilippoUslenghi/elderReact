@@ -163,9 +163,9 @@ if features == 'delaunay':
             }
 
 elif features == 'au_intensities_activations':
-    params = {'classifier__C': [i for i in range(1, 2000, 10)],
-            'classifier__gamma': [i for i in range(0, 2000, 10)],
-            'classifier__kernel': ['poly', 'rbf', 'sigmoid']
+    params = {'classifier__C': [i for i in range(1, 10, 1)],
+            'classifier__gamma': [i for i in range(0, 20, 1)],
+            'classifier__kernel': ['poly']
             }
 
 elif features == 'au_intensities':
@@ -192,7 +192,7 @@ print(f'Best params: {gridsearch.best_params_}')
 #               'classifier__kernel': ['sigmoid']
 #               }
 
-# elif features[:2] == 'au':
+# elif features == 'au_intensities_activations':
 #     params = {'classifier__C': stats.uniform(loc=0, scale=2),
 #               'classifier__gamma': stats.uniform(loc=0, scale=2),
 #               'classifier__kernel': ['poly']
