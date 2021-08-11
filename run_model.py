@@ -41,10 +41,10 @@ for emotion in emotions:
     if script == 'lstm.py':
         if features == 'au':
             for au_feature in au_features:
-                # os.system(' '.join(['python', script, emotion, au_feature]))
-                print(' '.join(['python', script, emotion, au_feature]))
+                os.system(' '.join(['python', script, emotion, au_feature]))
+                # print(' '.join(['python', script, emotion, au_feature]))
 
     else:
         for pose in poses:
-            # os.system(' '.join(['python', script, emotion, pose, features]))
-            print(' '.join([script, emotion, pose, features]))
+            os.system(' '.join(['python', script, emotion, pose, features]))
+            # print(' '.join([script, emotion, pose, features]))
