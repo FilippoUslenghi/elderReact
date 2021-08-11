@@ -77,6 +77,7 @@ def read_data(group, pose, emotion, features):
 
         df = pd.read_csv(os.path.join(videos_dir, csv))
         df = df.drop(columns=['frame'])
+
         if features[:2] == 'au':
             if 'intensities' in features and 'activations' not in features:
                 df = df.iloc[:, :17]  # select the action units intensities
@@ -155,52 +156,65 @@ pipe = Pipeline([
 
 
 # GridSearch per cercare l'intorno su cui effettuare la randomizedSearch
-# if features == 'delaunay':
-#     params = {'classifier__C': [i for i in range(10, 31, 1)],
-#             'classifier__gamma': [i for i in range(60, 81, 1)],
-#             'classifier__kernel': ['ploy', 'sigmoid', 'rbf']
-#             }
+if features == 'delaunay':
+    params = {'classifier__C': [i for i in range(10, 31, 1)],
+            'classifier__gamma': [i for i in range(60, 81, 1)],
+            'classifier__kernel': ['ploy', 'sigmoid', 'rbf']
+            }
 
-# elif features[:2] == 'au':
-#     params = {'classifier__C': [i for i in range(1, 10, 1)],
-#             'classifier__gamma': [i for i in range(0, 20, 1)],
-#             'classifier__kernel': ['poly', 'rbf', 'sigmoid']
-#             }
+elif features == 'au_intensities_activations':
+    params = {'classifier__C': [i for i in range(1, 2000, 10)],
+            'classifier__gamma': [i for i in range(0, 2000, 10)],
+            'classifier__kernel': ['poly', 'rbf', 'sigmoid']
+            }
 
-# X, y = subsampling(X, y)
-# gridsearch = GridSearchCV(pipe, params).fit(X,y)  # fit the model
-# print(f'Best params: {gridsearch.best_params_}')
+elif features == 'au_intensities':
+    params = {'classifier__C': [i for i in range(1, 2000, 10)],
+            'classifier__gamma': [i for i in range(0, 2000, 10)],
+            'classifier__kernel': ['poly', 'rbf', 'sigmoid']
+            }
+
+elif features == 'au_activations':
+    params = {'classifier__C': [i for i in range(1, 2000, 10)],
+            'classifier__gamma': [i for i in range(0, 2000, 10)],
+            'classifier__kernel': ['poly', 'rbf', 'sigmoid']
+            }
+
+X, y = subsampling(X, y)
+gridsearch = GridSearchCV(pipe, params).fit(X,y)  # fit the model
+print(f'Best params: {gridsearch.best_params_}')
 
 
 # RandomizedSearch
-if features == 'delaunay':
-    params = {'classifier__C': stats.uniform(loc=10, scale=10),
-              'classifier__gamma': stats.uniform(loc=60, scale=10),
-              'classifier__kernel': ['sigmoid']
-              }
+# if features == 'delaunay':
+#     params = {'classifier__C': stats.uniform(loc=10, scale=10),
+#               'classifier__gamma': stats.uniform(loc=60, scale=10),
+#               'classifier__kernel': ['sigmoid']
+#               }
 
-elif  features[:2] == 'au':
-    params = {'classifier__C': stats.uniform(loc=0, scale=2),
-              'classifier__gamma': stats.uniform(loc=0, scale=2),
-              'classifier__kernel': ['poly']
-              }
+# elif features[:2] == 'au':
+#     params = {'classifier__C': stats.uniform(loc=0, scale=2),
+#               'classifier__gamma': stats.uniform(loc=0, scale=2),
+#               'classifier__kernel': ['poly']
+#               }
 
 # X, y = subsampling(X, y)
 # randomsearch = RandomizedSearchCV(
 #     pipe, params, n_iter=100).fit(X, y)  # fit the model
 # print(f'Best params: {randomsearch.best_params_}')
 
-# sys.exit()
+sys.exit()
 
-num_iter = 500 if features == 'delaunay' else 100
+num_iter = 100
 all_pred = []
 
 for i in range(num_iter):
 
     X, y = subsampling(X, y)
 
+    n_iter = 100 if features[:2] == 'au' else 500
     randomsearch = RandomizedSearchCV(
-        pipe, params, n_iter=100).fit(X, y)  # fit the model
+        pipe, params, n_iter=n_iter).fit(X, y)  # fit the model
 
     y_pred = randomsearch.predict(X_test)
     all_pred.append(y_pred)
@@ -216,9 +230,11 @@ final_pred = final_pred[0]
 
 out_dir = os.path.join('results', model, features, selected_emotion, pose)
 os.makedirs(out_dir, exist_ok=True)
+print(out_dir)
 
 clf_report = classification_report(y_test, final_pred, output_dict=True)
 pd.DataFrame(clf_report).T.to_csv(os.path.join(out_dir, 'classification_report.csv'))
+
 sns.heatmap(pd.DataFrame(clf_report).iloc[:-1, :].T, annot=True)
 plt.savefig(os.path.join(out_dir, 'classification_report.png'))
 

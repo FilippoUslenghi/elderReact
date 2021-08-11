@@ -1,0 +1,17 @@
+features,,delaunay,delaunay,delaunay,au_intensities,au_intensities,au_intensities,au_activations,au_activations,au_activations,au_intensities_activations,au_intensities_activations,au_intensities_activations
+pose,,tilted,frontal,none,tilted,frontal,none,tilted,frontal,none,tilted,frontal,none
+f1_score,emotions,,,,,,,,,,,,
+macro_avg,anger,0.51,0.5,0.49,0.52,0.47,0.48,0.52,0.49,0.53,0.57,0.51,0.51
+macro_avg,disgust,0.44,0.44,0.44,0.41,0.49,0.51,0.44,0.52,0.48,0.47,0.51,0.48
+macro_avg,fear,0.41,0.42,0.48,0.4,0.46,0.41,0.45,0.46,0.41,0.43,0.47,0.45
+macro_avg,happiness,0.57,0.6,0.59,0.68,0.58,0.66,0.59,0.58,0.67,0.66,0.59,0.65
+macro_avg,sadness,0.45,0.44,0.43,0.46,0.46,0.47,0.43,0.53,0.5,0.43,0.47,0.47
+macro_avg,surprise,0.53,0.54,0.55,0.51,0.56,0.56,0.52,0.6,0.55,0.49,0.61,0.59
+macro_avg,valence,0.5,0.49,0.52,0.59,0.57,0.64,0.52,0.59,0.61,0.61,0.55,0.63
+weighted_avg,anger,0.57,0.59,0.57,0.58,0.59,0.57,0.62,0.6,0.63,0.65,0.62,0.6
+weighted_avg,disgust,0.56,0.51,0.53,0.5,0.64,0.63,0.56,0.67,0.62,0.58,0.64,0.61
+weighted_avg,fear,0.61,0.67,0.74,0.57,0.7,0.63,0.64,0.7,0.62,0.6,0.73,0.67
+weighted_avg,happiness,0.57,0.6,0.59,0.68,0.58,0.65,0.59,0.59,0.68,0.66,0.59,0.65
+weighted_avg,sadness,0.61,0.54,0.55,0.56,0.58,0.56,0.58,0.66,0.62,0.56,0.58,0.57
+weighted_avg,surprise,0.53,0.57,0.57,0.51,0.62,0.6,0.53,0.65,0.58,0.5,0.66,0.62
+weighted_avg,valence,0.5,0.49,0.52,0.58,0.59,0.64,0.53,0.61,0.61,0.61,0.57,0.63
