@@ -155,61 +155,67 @@ pipe = Pipeline([
 ])
 
 
-# GridSearch per cercare l'intorno su cui effettuare la randomizedSearch
-if features == 'delaunay':
-    params = {'classifier__C': [i for i in range(10, 31, 1)],
-            'classifier__gamma': [i for i in range(60, 81, 1)],
-            'classifier__kernel': ['ploy', 'sigmoid', 'rbf']
-            }
+# # GridSearch per cercare l'intorno su cui effettuare la randomizedSearch
+# if features == 'delaunay':
+#     params = {'classifier__C': [i for i in range(10, 31, 1)],
+#             'classifier__gamma': [i for i in range(60, 81, 1)],
+#             'classifier__kernel': ['ploy', 'sigmoid', 'rbf']
+#             }
 
-elif features == 'au_intensities_activations':
-    params = {'classifier__C': [i for i in range(1, 10, 1)],
-            'classifier__gamma': [i for i in range(0, 20, 1)],
-            'classifier__kernel': ['poly']
-            }
+# elif features == 'au_intensities_activations':
+#     params = {'classifier__C': [i for i in range(1, 10, 1)],
+#             'classifier__gamma': [i for i in range(0, 20, 1)],
+#             'classifier__kernel': ['poly']
+#             }
 
-elif features == 'au_intensities':  # C=471, gamma=260, kernel='sigmoid'
-    params = {'classifier__C': [i for i in range(461, 482, 1)],
-            'classifier__gamma': [i for i in range(250, 271, 1)],
-            'classifier__kernel': ['sigmoid']
-            }
+# elif features == 'au_intensities':  # C=461, gamma=268, kernel='sigmoid'
+#     params = {'classifier__C': [i for i in range(461, 482, 1)],
+#             'classifier__gamma': [i for i in range(250, 271, 1)],
+#             'classifier__kernel': ['sigmoid']
+#             }
 
-elif features == 'au_activations':  # C=1, gamma=1030, kernel='sigmoid'
-    params = {'classifier__C': [1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200],
-            'classifier__gamma': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 1030],
-            'classifier__kernel': ['sigmoid']
-            }
+# elif features == 'au_activations':  # C=8, gamma=1, kernel='sigmoid'
+#     params = {'classifier__C': [i for i in range(1,11,1)],
+#             'classifier__gamma': [i for i in range(0,18,1)],
+#             'classifier__kernel': ['sigmoid']
+#             }
 
-X, y = subsampling(X, y)
-gridsearch = GridSearchCV(pipe, params).fit(X,y)  # fit the model
-print(f'Best params: {gridsearch.best_params_}')
+# X, y = subsampling(X, y)
+# gridsearch = GridSearchCV(pipe, params).fit(X,y)  # fit the model
+# print(f'Best params: {gridsearch.best_params_}')
 
 
 # RandomizedSearch
-# if features == 'delaunay':
-#     params = {'classifier__C': stats.uniform(loc=10, scale=10),
-#               'classifier__gamma': stats.uniform(loc=60, scale=10),
-#               'classifier__kernel': ['sigmoid']
-#               }
+if features == 'delaunay':
+    params = {'classifier__C': stats.uniform(loc=10, scale=10),
+              'classifier__gamma': stats.uniform(loc=60, scale=10),
+              'classifier__kernel': ['sigmoid']
+              }
 
-# elif features == 'au_intensities_activations':
-#     params = {'classifier__C': stats.uniform(loc=0, scale=2),
-#               'classifier__gamma': stats.uniform(loc=0, scale=2),
-#               'classifier__kernel': ['poly']
-#               }
+elif features == 'au_intensities_activations':
+    params = {'classifier__C': stats.uniform(loc=0, scale=2),
+              'classifier__gamma': stats.uniform(loc=0, scale=2),
+              'classifier__kernel': ['poly']
+              }
 
-# elif features == 'au_intensities':
-#     params = {'classifier__C': stats.uniform(loc=0, scale=2),
-#               'classifier__gamma': stats.uniform(loc=0, scale=2),
-#               'classifier__kernel': ['poly']
-#               }
+elif features == 'au_intensities':
+    params = {'classifier__C': stats.uniform(loc=460, scale=2),
+              'classifier__gamma': stats.uniform(loc=67, scale=2),
+              'classifier__kernel': ['sigmoid']
+              }
+
+elif features == 'au_activations':
+    params = {'classifier__C': stats.uniform(loc=7, scale=2),
+              'classifier__gamma': stats.uniform(loc=0, scale=2),
+              'classifier__kernel': ['sigmoid']
+              }
 
 # X, y = subsampling(X, y)
 # randomsearch = RandomizedSearchCV(
 #     pipe, params, n_iter=100).fit(X, y)  # fit the model
 # print(f'Best params: {randomsearch.best_params_}')
 
-sys.exit()
+# sys.exit()
 
 num_iter = 100
 all_pred = []
