@@ -1,6 +1,6 @@
 features,,delaunay,delaunay,delaunay,au_intensities,au_intensities,au_intensities,au_activations,au_activations,au_activations,au_intensities_activations,au_intensities_activations,au_intensities_activations
 pose,,tilted,frontal,none,tilted,frontal,none,tilted,frontal,none,tilted,frontal,none
-f1_score,emotions,,,,,,,,,,,,
+f1_score,emotion,,,,,,,,,,,,
 macro_avg,anger,0.52,0.48,0.48,0.53,0.45,0.51,0.51,0.47,0.48,0.52,0.46,0.45
 macro_avg,disgust,0.49,0.44,0.53,0.45,0.54,0.51,0.49,0.48,0.45,0.48,0.53,0.44
 macro_avg,fear,0.38,0.44,0.39,0.4,0.42,0.41,0.41,0.39,0.41,0.34,0.6,0.38

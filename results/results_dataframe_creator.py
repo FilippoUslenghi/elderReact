@@ -43,7 +43,7 @@ if model != 'LSTM':
     columns_index = pd.MultiIndex.from_arrays(
         columns, names=['features', 'pose'])
     rows_index = pd.MultiIndex.from_arrays(
-        rows, names=['f1_score', 'emotions'])
+        rows, names=['f1_score', 'emotion'])
     df = pd.DataFrame(data=data, index=rows_index, columns=columns_index)
     df.to_csv(os.path.join(f'{model}.csv'))
 
@@ -78,6 +78,6 @@ else:
     ]
 
     rows_index = pd.MultiIndex.from_arrays(
-        rows, names=['f1_score', 'emotions'])
+        rows, names=['f1_score', 'emotion'])
     df = pd.DataFrame(data=data, index=rows_index, columns=columns)
     df.to_csv(os.path.join(f'{model}.csv'))

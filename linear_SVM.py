@@ -7,6 +7,7 @@ from sklearn.preprocessing import StandardScaler
 from scipy import stats
 import seaborn as sns
 import os
+import json
 import sys
 import matplotlib
 import numpy as np
@@ -198,12 +199,16 @@ final_pred = final_pred[0]
 out_dir = os.path.join('results', model, features, selected_emotion, pose)
 os.makedirs(out_dir, exist_ok=True)
 
-clf_report = classification_report(y_test, final_pred, output_dict=True)
-pd.DataFrame(clf_report).T.to_csv(os.path.join(out_dir, 'classification_report.csv'))
+data = {'cohen_kappa': cohen_kappa_score(y_test, final_pred, weights='linear')}
+with open(os.path.join(out_dir, 'cohen_kappa.json'), 'w') as f:
+    json.dump(data, f)
 
-sns.heatmap(pd.DataFrame(clf_report).iloc[:-1, :].T, annot=True)
-plt.savefig(os.path.join(out_dir, 'classification_report.png'))
+# clf_report = classification_report(y_test, final_pred, output_dict=True)
+# pd.DataFrame(clf_report).T.to_csv(os.path.join(out_dir, 'classification_report.csv'))
 
-plot_confusion_matrix(estimator=randomsearch, X=X_test,
-                      y_true=y_test, normalize='true', cmap='Blues')
-plt.savefig(os.path.join(out_dir, 'confusion_matrix.png'))
+# sns.heatmap(pd.DataFrame(clf_report).iloc[:-1, :].T, annot=True)
+# plt.savefig(os.path.join(out_dir, 'classification_report.png'))
+
+# plot_confusion_matrix(estimator=randomsearch, X=X_test,
+#                       y_true=y_test, normalize='true', cmap='Blues')
+# plt.savefig(os.path.join(out_dir, 'confusion_matrix.png'))

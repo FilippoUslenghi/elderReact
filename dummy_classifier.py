@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -175,12 +176,19 @@ final_pred = final_pred[0]
 out_dir = os.path.join('results', model, features, selected_emotion, pose)
 os.makedirs(out_dir, exist_ok=True)
 
-clf_report = classification_report(y_test, final_pred, output_dict=True)
-pd.DataFrame(clf_report).T.to_csv(os.path.join(out_dir, 'classification_report.csv'))
+# Cohen Kappa
+data = {'cohen_kappa': cohen_kappa_score(y_test, final_pred, weights='linear')}
+with open(os.path.join(out_dir, 'cohen_kappa.json'), 'w') as f:
+    json.dump(data, f)
 
-sns.heatmap(pd.DataFrame(clf_report).iloc[:-1, :].T, annot=True)
-plt.savefig(os.path.join(out_dir, 'classification_report.png'))
+# # f1 score
+# clf_report = classification_report(y_test, final_pred, output_dict=True)
+# pd.DataFrame(clf_report).T.to_csv(os.path.join(out_dir, 'classification_report.csv'))
 
-plot_confusion_matrix(estimator=pipe, X=X_test,
-                      y_true=y_test, normalize='true', cmap='Blues')
-plt.savefig(os.path.join(out_dir, 'confusion_matrix.png'))
+# sns.heatmap(pd.DataFrame(clf_report).iloc[:-1, :].T, annot=True)
+# plt.savefig(os.path.join(out_dir, 'classification_report.png'))
+
+# # Confusion matrix
+# plot_confusion_matrix(estimator=pipe, X=X_test,
+#                       y_true=y_test, normalize='true', cmap='Blues')
+# plt.savefig(os.path.join(out_dir, 'confusion_matrix.png'))

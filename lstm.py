@@ -1,13 +1,13 @@
 import os
 import sys
+import json
 import numpy as np
 import pandas as pd
 import seaborn as sns
 import matplotlib
 import matplotlib.pyplot as plt
-from sklearn.metrics import classification_report
+from sklearn.metrics import classification_report, confusion_matrix, cohen_kappa_score
 from sklearn.utils import resample
-from sklearn.metrics import confusion_matrix
 import tensorflow as tf
 from tensorflow.keras import regularizers
 from tensorflow.keras.models import Sequential
@@ -169,19 +169,23 @@ def main(selected_emotion, intensities, activations):
     out_dir = os.path.join('results', 'LSTM', features, selected_emotion)
     os.makedirs(out_dir, exist_ok=True)
 
-    clf_report = classification_report(
-        y_test, y_pred_class, labels=[0, 1], output_dict=True)
-    pd.DataFrame(clf_report).T.to_csv(os.path.join(out_dir, 'classification_report.csv'))
+    data = {'cohen_kappa': cohen_kappa_score(y_test, y_pred_class, weights='linear')}
+    with open(os.path.join(out_dir, 'cohen_kappa.json'), 'w') as f:
+        json.dump(data, f)
 
-    sns.heatmap(pd.DataFrame(clf_report).iloc[:-1, :].T, annot=True)
-    plt.savefig(os.path.join(out_dir, 'classification_report.png'))
-    plt.close()
+    # clf_report = classification_report(
+    #     y_test, y_pred_class, labels=[0, 1], output_dict=True)
+    # pd.DataFrame(clf_report).T.to_csv(os.path.join(out_dir, 'classification_report.csv'))
 
-    confusion_mtx = confusion_matrix(y_test, y_pred_class, normalize='true')
-    sns.heatmap(confusion_mtx, annot=True, fmt='.2g', cmap='Blues')
-    plt.xlabel('Predicted label')
-    plt.ylabel('True label')
-    plt.savefig(os.path.join(out_dir, 'confusion_matrix.png'))
+    # sns.heatmap(pd.DataFrame(clf_report).iloc[:-1, :].T, annot=True)
+    # plt.savefig(os.path.join(out_dir, 'classification_report.png'))
+    # plt.close()
+
+    # confusion_mtx = confusion_matrix(y_test, y_pred_class, normalize='true')
+    # sns.heatmap(confusion_mtx, annot=True, fmt='.2g', cmap='Blues')
+    # plt.xlabel('Predicted label')
+    # plt.ylabel('True label')
+    # plt.savefig(os.path.join(out_dir, 'confusion_matrix.png'))
 
 
 if __name__ == '__main__':

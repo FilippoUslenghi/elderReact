@@ -1,5 +1,5 @@
 ,,au_intensities,au_activations,au_intensities_activations
-f1_score,emotions,,,
+f1_score,emotion,,,
 macro_avg,anger,0.44,0.54,0.48
 macro_avg,disgust,0.41,0.37,0.47
 macro_avg,fear,0.52,0.45,0.46
