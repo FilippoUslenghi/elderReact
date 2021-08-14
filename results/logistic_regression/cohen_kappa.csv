@@ -1,0 +1,10 @@
+features,,delaunay,delaunay,delaunay,au_intensities,au_intensities,au_intensities,au_activations,au_activations,au_activations,au_intensities_activations,au_intensities_activations,au_intensities_activations
+pose,,tilted,frontal,none,tilted,frontal,none,tilted,frontal,none,tilted,frontal,none
+cohen_kappa,emotion,,,,,,,,,,,,
+value,anger,0.06,0.06,0.09,0.09,0.02,0.05,0.05,-0.03,0.12,0.11,0.04,0.09
+value,disgust,0.04,-0.08,0.02,0.03,-0.0,0.15,0.03,0.1,0.08,0.06,0.04,0.06
+value,fear,-0.0,0.01,0.06,0.07,-0.07,0.05,0.1,0.01,0.03,0.09,0.12,0.01
+value,happiness,0.1,0.22,0.18,0.4,0.15,0.31,0.2,0.17,0.3,0.33,0.16,0.33
+value,sadness,-0.03,0.18,-0.02,-0.0,0.06,0.1,-0.02,0.04,0.1,0.07,0.09,0.11
+value,surprise,0.07,0.14,0.1,-0.0,0.18,0.09,0.05,0.22,0.11,0.11,0.26,0.22
+value,valence,0.06,0.02,0.11,0.22,0.13,0.22,0.06,0.14,0.24,0.18,0.17,0.19

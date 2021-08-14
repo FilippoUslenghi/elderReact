@@ -1,0 +1,9 @@
+,,au_intensities,au_activations,au_intensities_activations
+cohen_kappa,emotion,,,
+value,anger,0.08,0.03,0.03
+value,disgust,0.08,0.02,0.0
+value,fear,0.04,0.01,0.06
+value,happiness,0.33,0.26,0.35
+value,sadness,0.04,-0.06,0.15
+value,surprise,0.1,0.11,0.02
+value,valence,0.18,0.16,0.2
