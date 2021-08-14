@@ -114,14 +114,13 @@ def cohen_kappa(model):
         ]
 
         rows = [
-            ['value', 'value', 'value', 'value', 'value', 'value', 'value'],
             ['anger', 'disgust', 'fear', 'happiness', 'sadness', 'surprise', 'valence']
         ]
 
         columns_index = pd.MultiIndex.from_arrays(
             columns, names=['features', 'pose'])
         rows_index = pd.MultiIndex.from_arrays(
-            rows, names=['cohen_kappa', 'emotion'])
+            rows, names=['emotion'])
         df = pd.DataFrame(data=data, index=rows_index, columns=columns_index)
         df.to_csv(os.path.join(model, 'cohen_kappa.csv'))
         
@@ -148,12 +147,11 @@ def cohen_kappa(model):
         ]
 
         rows = [
-            ['value', 'value', 'value', 'value', 'value', 'value', 'value'],
             ['anger', 'disgust', 'fear', 'happiness', 'sadness', 'surprise', 'valence']
         ]
 
         rows_index = pd.MultiIndex.from_arrays(
-            rows, names=['cohen_kappa', 'emotion'])
+            rows, names=['emotion'])
         df = pd.DataFrame(data=data, index=rows_index, columns=columns)
         df.to_csv(os.path.join(model, 'cohen_kappa.csv'))
 
