@@ -13,7 +13,7 @@ def f1_score(model):
         emotions = ['anger', 'disgust', 'fear',
                     'happiness', 'sadness', 'surprise', 'valence']
         poses = ['tilted', 'frontal', 'none']
-        data = np.ndarray(shape=(14, 12), dtype=np.float32)
+        data = np.ndarray(shape=(21, 12), dtype=np.float32)
 
         for f, features in enumerate(features_list):
             for e, emotion in enumerate(emotions):
@@ -24,6 +24,7 @@ def f1_score(model):
                         base_dir, 'classification_report.csv'))
                     data[e][f*len(poses)+p] = df.at[3, 'f1-score']  # macro avg
                     data[e+len(emotions)][f*len(poses)+p] = df.at[4,'f1-score']  # weigthed avg
+                    data[e+2*len(emotions)][f*len(poses)+p] = df.at[1,'f1-score']  # label 1
 
         data = data.round(2)
 
@@ -36,8 +37,10 @@ def f1_score(model):
 
         rows = [
             ['macro_avg', 'macro_avg', 'macro_avg', 'macro_avg', 'macro_avg', 'macro_avg', 'macro_avg', 'weighted_avg',
-                'weighted_avg', 'weighted_avg', 'weighted_avg', 'weighted_avg', 'weighted_avg', 'weighted_avg'],
+                'weighted_avg', 'weighted_avg', 'weighted_avg', 'weighted_avg', 'weighted_avg', 'weighted_avg', 
+                'label_1', 'label_1', 'label_1', 'label_1', 'label_1', 'label_1', 'label_1'],
             ['anger', 'disgust', 'fear', 'happiness', 'sadness', 'surprise', 'valence',
+                'anger', 'disgust', 'fear', 'happiness', 'sadness', 'surprise', 'valence',
                 'anger', 'disgust', 'fear', 'happiness', 'sadness', 'surprise', 'valence']
         ]
 
@@ -53,7 +56,7 @@ def f1_score(model):
         features_list = ['au_intensities', 'au_activations', 'au_intensities_activations']
         emotions = ['anger', 'disgust', 'fear',
                     'happiness', 'sadness', 'surprise', 'valence']
-        data = np.ndarray(shape=(14, 3), dtype=np.float32)
+        data = np.ndarray(shape=(21, 3), dtype=np.float32)
 
         for f, features in enumerate(features_list):
             for e, emotion in enumerate(emotions):
@@ -63,6 +66,7 @@ def f1_score(model):
                         base_dir, 'classification_report.csv'))
                     data[e][f] = df.at[3, 'f1-score']  # macro avg
                     data[e+len(emotions)][f] = df.at[4,'f1-score']  # weigthed avg
+                    data[e+2*len(emotions)][f] = df.at[1,'f1-score']  # weigthed avg
 
         data = data.round(2)
 
@@ -72,8 +76,10 @@ def f1_score(model):
 
         rows = [
             ['macro_avg', 'macro_avg', 'macro_avg', 'macro_avg', 'macro_avg', 'macro_avg', 'macro_avg', 'weighted_avg',
-                'weighted_avg', 'weighted_avg', 'weighted_avg', 'weighted_avg', 'weighted_avg', 'weighted_avg'],
+                'weighted_avg', 'weighted_avg', 'weighted_avg', 'weighted_avg', 'weighted_avg', 'weighted_avg',
+                'label_1', 'label_1', 'label_1', 'label_1', 'label_1', 'label_1', 'label_1'],
             ['anger', 'disgust', 'fear', 'happiness', 'sadness', 'surprise', 'valence',
+                'anger', 'disgust', 'fear', 'happiness', 'sadness', 'surprise', 'valence',
                 'anger', 'disgust', 'fear', 'happiness', 'sadness', 'surprise', 'valence']
         ]
 

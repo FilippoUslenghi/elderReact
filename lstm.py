@@ -173,19 +173,19 @@ def main(selected_emotion, intensities, activations):
     with open(os.path.join(out_dir, 'cohen_kappa.json'), 'w') as f:
         json.dump(data, f)
 
-    # clf_report = classification_report(
-    #     y_test, y_pred_class, labels=[0, 1], output_dict=True)
-    # pd.DataFrame(clf_report).T.to_csv(os.path.join(out_dir, 'classification_report.csv'))
+    clf_report = classification_report(
+        y_test, y_pred_class, labels=[0, 1], output_dict=True)
+    pd.DataFrame(clf_report).T.to_csv(os.path.join(out_dir, 'classification_report.csv'))
 
-    # sns.heatmap(pd.DataFrame(clf_report).iloc[:-1, :].T, annot=True)
-    # plt.savefig(os.path.join(out_dir, 'classification_report.png'))
-    # plt.close()
+    sns.heatmap(pd.DataFrame(clf_report).iloc[:-1, :].T, annot=True)
+    plt.savefig(os.path.join(out_dir, 'classification_report.png'))
+    plt.close()
 
-    # confusion_mtx = confusion_matrix(y_test, y_pred_class, normalize='true')
-    # sns.heatmap(confusion_mtx, annot=True, fmt='.2g', cmap='Blues')
-    # plt.xlabel('Predicted label')
-    # plt.ylabel('True label')
-    # plt.savefig(os.path.join(out_dir, 'confusion_matrix.png'))
+    confusion_mtx = confusion_matrix(y_test, y_pred_class, normalize='true')
+    sns.heatmap(confusion_mtx, annot=True, fmt='.2g', cmap='Blues')
+    plt.xlabel('Predicted label')
+    plt.ylabel('True label')
+    plt.savefig(os.path.join(out_dir, 'confusion_matrix.png'))
 
 
 if __name__ == '__main__':
