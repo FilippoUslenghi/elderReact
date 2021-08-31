@@ -23,12 +23,8 @@ from sklearn.svm import SVC
 import random
 from sklearn.metrics import precision_recall_fscore_support
 
-affects = ['anger', 'disgust', 'fear', 'happy', 'sad', 'surprise']
-affect_state = 5  # choose the affect to recognize, range 0~5, 7 is valence
-if affect_state != 7:
-    print(affects[affect_state] + "...")
-else:
-    print("valence...")
+affects = ['anger', 'disgust', 'fear', 'happy', 'sad', 'surprise', 'valence']
+affect_state = 6  # choose the affect to recognize, range 0~5, 6 is valence
 feature_mode = "video"  # audio, video or bimodal
 train_path = ''  # change to your training data path
 val_path = ''
@@ -112,7 +108,7 @@ X_val = X_val / diff
 X_test = X_test - train_min
 X_test = X_test / diff
 
-if affect_state == 7:
+if affect_state == 6:
     y = [int(value >= 4) for value in y]
     y_val = [int(value >= 4) for value in y_val]
     y_test = [int(value >= 4) for value in y_test]
