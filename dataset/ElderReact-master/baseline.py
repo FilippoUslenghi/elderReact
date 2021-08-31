@@ -55,7 +55,7 @@ def read_data(audio_feat_file, video_feat_file, label_file, affect_state, featur
 
         label = label_file[i].split(" ")[1:]
 
-        if affect_state == 7:
+        if affect_state == 6:
             label = float(label[affect_state][:-2])
         else:
             label = int(label[affect_state])
