@@ -24,7 +24,7 @@ import random
 from sklearn.metrics import precision_recall_fscore_support
 
 affects = ['anger', 'disgust', 'fear', 'happy', 'sad', 'surprise']
-affect_state = 0  # choose the affect to recognize, range 0~5, 7 is valence
+affect_state = 1  # choose the affect to recognize, range 0~5, 7 is valence
 if affect_state != 7:
     print(affects[affect_state] + "...")
 else:
