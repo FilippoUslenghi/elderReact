@@ -213,7 +213,8 @@ elif features == 'au_activations':
 
 
 X, y = subsampling(X, y)
-param_range = np.logspace(-5, 1, 50)
+param_range = np.logspace(-5, 4, 50)
+
 train_scores, test_scores = validation_curve(
     pipe.set_params(**{'classifier__C':9, 'classifier__kernel':'sigmoid'}), X, y,
     param_name="classifier__gamma", param_range=param_range, n_jobs=-1, scoring='accuracy')
@@ -223,7 +224,7 @@ test_scores_mean = np.mean(test_scores, axis=1)
 test_scores_std = np.std(test_scores, axis=1)
 
 plt.figure()
-plt.title("Validation Curve with Linear SVM")
+plt.title("Validation Curve with Kernel SVM")
 plt.xlabel(r"$\gamma$")
 plt.ylabel("Score")
 plt.ylim(0.0, 1.1)

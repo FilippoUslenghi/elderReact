@@ -180,7 +180,7 @@ test_scores_mean = np.mean(test_scores, axis=1)
 test_scores_std = np.std(test_scores, axis=1)
 
 plt.figure()
-plt.title("Validation Curve with Linear SVM")
+plt.title("Validation Curve with Logistic Regression")
 plt.xlabel("C")
 plt.ylabel("Score")
 plt.ylim(0.0, 1.1)
