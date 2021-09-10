@@ -213,7 +213,7 @@ elif features == 'au_activations':
 
 
 X, y = subsampling(X, y)
-param_range = np.logspace(-5, 4, 50)
+param_range = np.logspace(-5, 1, 50)
 
 train_scores, test_scores = validation_curve(
     pipe.set_params(**{'classifier__C':9, 'classifier__kernel':'sigmoid'}), X, y,
