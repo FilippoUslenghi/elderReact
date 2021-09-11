@@ -4,7 +4,7 @@ import pandas as pd
 from scipy.signal import find_peaks, peak_widths
 from sklearn.metrics import mean_squared_error
 
-
+TOT_FRAME_INTERPOLATED = 0
 FACE_MESH = pd.read_csv(os.path.join('faceMesh','face_mesh.csv'))
 def landmarks_mapper(of_df, mp_df):
     
@@ -116,7 +116,7 @@ def clean_and_interpolate(openface_df, mediapipe_df, threshold, AU):
     openface_df.interpolate(method='linear', axis=0, inplace=True)
     mediapipe_df.interpolate(method='linear', axis=0, inplace=True)
         
-    return openface_df, mediapipe_df
+    return openface_df, mediapipe_df, n_frames_interpolated
 
 
 
@@ -134,23 +134,24 @@ for dataset in datasets:
         mediapipe_df = pd.read_csv(os.path.join('mediaPipe', dataset, 'processed', f'{video_name}_mediapipe.csv'))
         
         # without Action Units
-        openface_df, mediapipe_df = clean_and_interpolate(openface_df, mediapipe_df, THRESHOLD, AU=False)
-        if openface_df is not None:
-            openface_df.to_csv(os.path.join('openFace', dataset, 'processed_interpolated', f'{video_name}_openface.csv'), index=False)
-        if mediapipe_df is not None:
-            mediapipe_df.to_csv(os.path.join('mediaPipe', dataset, 'processed_interpolated', f'{video_name}_mediapipe.csv'), index=False)
-        else: print(video_name)
+        openface_df, mediapipe_df, n_frames_interpolated = clean_and_interpolate(openface_df, mediapipe_df, THRESHOLD, AU=False)
+        TOT_FRAME_INTERPOLATED += n_frames_interpolated
+        # if openface_df is not None:
+        #     openface_df.to_csv(os.path.join('openFace', dataset, 'processed_interpolated', f'{video_name}_openface.csv'), index=False)
+        # if mediapipe_df is not None:
+        #     mediapipe_df.to_csv(os.path.join('mediaPipe', dataset, 'processed_interpolated', f'{video_name}_mediapipe.csv'), index=False)
+        # else: print(video_name)
 
             
-    for video in os.listdir(base_dir):
+    # for video in os.listdir(base_dir):
         
-        video_name = video[:-4]
-        openface_df = pd.read_csv(os.path.join('openFace', dataset, 'processed', f'{video_name}_openface.csv'))
-        mediapipe_df = pd.read_csv(os.path.join('mediaPipe', dataset, 'processed', f'{video_name}_mediapipe.csv'))
+    #     video_name = video[:-4]
+    #     openface_df = pd.read_csv(os.path.join('openFace', dataset, 'processed', f'{video_name}_openface.csv'))
+    #     mediapipe_df = pd.read_csv(os.path.join('mediaPipe', dataset, 'processed', f'{video_name}_mediapipe.csv'))
         
-        # with Action Units
-        openface_df, mediapipe_df = clean_and_interpolate(openface_df, mediapipe_df, THRESHOLD, AU=True)
-        openface_df = openface_df[columns]
-        if openface_df is not None:
-            openface_df.to_csv(os.path.join('dataset_net', 'Features', dataset, 'interpolated_AU', f'{video_name}.csv'), index=False)
-            
+    #     # with Action Units
+    #     openface_df, mediapipe_df = clean_and_interpolate(openface_df, mediapipe_df, THRESHOLD, AU=True)
+    #     openface_df = openface_df[columns]
+    #     if openface_df is not None:
+    #         openface_df.to_csv(os.path.join('dataset_net', 'Features', dataset, 'interpolated_AU', f'{video_name}.csv'), index=False)
+print(TOT_FRAME_INTERPOLATED)
