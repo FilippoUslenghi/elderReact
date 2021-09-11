@@ -110,8 +110,8 @@ def clean_and_interpolate(openface_df, mediapipe_df, threshold, AU):
                 openface_df.loc[start:end-2, action_unit] = np.nan
             
     # check if the video is worth saving
-    n_frames_interpolated = np.count_nonzero(tmp_df.x_27.isnull()) # count the number of rows (and so frames) that have to be interpolated
-    if n_frames_interpolated/tmp_df.frame.size>0.6: return None, None # if they are over the 60% of the video, reject the video
+    n_frames_interpolated = np.count_nonzero(tmp_df.x_27.isnull())  # count the number of rows (and so frames) that have to be interpolated
+    if n_frames_interpolated/tmp_df.frame.size>0.6: return None, None, 0  # if they are over the 60% of the video, reject the video
 
     openface_df.interpolate(method='linear', axis=0, inplace=True)
     mediapipe_df.interpolate(method='linear', axis=0, inplace=True)
