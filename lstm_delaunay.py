@@ -18,26 +18,18 @@ from tensorflow.keras.preprocessing import sequence
 from tensorflow.python.keras.layers.core import Dropout
 matplotlib.use('agg')
 
-def load_group(group, intensities, activations):
+def load_group(selected_emotion, group):
     
     # load x
-    x_dir = os.path.join('dataset_net', 'Features', group, 'interpolated_AU_')
+    x_dir = os.path.join('dataset_net', 'Features', group, 'delaunay_pose_')
 
     matrix_list = []
     for csv in sorted(os.listdir(x_dir)):
         df = pd.read_csv(os.path.join(x_dir, csv)).drop(columns='frame') # remove the `frame` column
-
-        if intensities and not activations:
-          df = df.iloc[:,:17] # select the action units intensities
-        elif not intensities and activations:
-          df = df.iloc[:,17:] # select the action units activations
-        elif not intensities and not activations:
-          raise ValueError('Intensities and activations cannot be both False')
-
         matrix_list.append(df.values)
     
     flatten_matrix_list = [matrix.flatten() for matrix in matrix_list] # flatten the matrixes
-    # pad the flatten matrix for a length of 748 (biggest n_timesteps in the dataset) by 113 (n_features)\1
+    # pad the flatten matrix for a length of 748 (biggest n_timesteps in the dataset) by n_features
     padded_flatten_matrix_list = sequence.pad_sequences(flatten_matrix_list, maxlen=748*len(df.columns), padding='post', dtype=np.float64, value=-1)
     padded_matrix_list = [flatten_matrix.reshape(748,-1) for flatten_matrix in padded_flatten_matrix_list] # reshape the flatten matrices to the original shape
     x_group = np.stack(padded_matrix_list, axis=0) # create a 3D matrix of the stacked dataframes with LSTM shape (n_samples, n_timestep, n_features)
@@ -45,32 +37,32 @@ def load_group(group, intensities, activations):
 
     # load y
     y_path = os.path.join('dataset_net', 'Annotations', f'{group}_labels.txt')
-    y_df = pd.read_csv(y_path, delim_whitespace=True, header=None)
-    valence = y_df[8].values
+    y_df = pd.read_csv(y_path, delim_whitespace=True, header=None).drop(columns=[0, 7])  # drop name and gender columns
+    y_df.columns = ['anger', 'disgust', 'fear', 'happiness', 'sadness', 'surprise', 'valence']
 
-    # encode valence in a binary value
-    y_group = np.asarray([int(y>=4) for y in valence])
+    y_group = y_df[selected_emotion].values
+
+    if selected_emotion == 'valence':
+      # encode valence in a binary value
+      y_group = np.asarray([int(y>=4) for y in y_group])
 
     return x_group, y_group
 
-def load_dataset(intensities, activations):
+def load_dataset(selected_emotion):
 
     dataset = []
     groups = ['train', 'dev', 'test']
 
     for group in groups:
-        x,y = load_group(group, intensities, activations)
+        x,y = load_group(selected_emotion, group)
         dataset.append(x)
         dataset.append(y)   
 
     return dataset
 
-
 def subsampling(X, y):
-    samples_needed = 0
-    for num in y:
-        if num == 0:
-            samples_needed += 1
+    ones = sum(y)
+    zeros = len(y) - ones
 
     X_neg = []
     X_pos = []
@@ -80,10 +72,19 @@ def subsampling(X, y):
         else:
             X_pos.append(X[i,:,:])
 
-    X_resample = resample(X_pos, replace=False, n_samples=samples_needed)
+    if ones > zeros:
+        samples_needed = zeros
 
-    new_X = X_resample + X_neg
-    new_X = np.stack(new_X, axis=0)
+        X_resample = resample(X_pos, replace=False, n_samples=samples_needed)
+        new_X = X_resample + X_neg
+        new_X = np.stack(new_X, axis=0)
+
+    else:
+        samples_needed = ones
+
+        X_resample = resample(X_neg, replace=False, n_samples=samples_needed)
+        new_X = X_pos + X_resample
+        new_X = np.stack(new_X, axis=0)
 
     new_y = []
     for i in range(samples_needed):
@@ -92,7 +93,7 @@ def subsampling(X, y):
         new_y.append(0)
 
     return new_X, np.asarray(new_y)
-
+    
 def main(selected_emotion):
     x_train, y_train, x_dev, y_dev, x_test, y_test = load_dataset(selected_emotion)
     x_train = np.vstack([x_train, x_dev])  # add dev data to train data
