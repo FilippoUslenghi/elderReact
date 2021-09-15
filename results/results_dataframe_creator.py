@@ -53,10 +53,10 @@ def f1_score(model):
 
     else:
 
-        features_list = ['au_intensities', 'au_activations', 'au_intensities_activations']
+        features_list = ['delaunay', 'au_intensities', 'au_activations', 'au_intensities_activations']
         emotions = ['anger', 'disgust', 'fear',
                     'happiness', 'sadness', 'surprise', 'valence']
-        data = np.ndarray(shape=(21, 3), dtype=np.float32)
+        data = np.ndarray(shape=(21, 4), dtype=np.float32)
 
         for f, features in enumerate(features_list):
             for e, emotion in enumerate(emotions):
@@ -71,7 +71,7 @@ def f1_score(model):
         data = data.round(2)
 
         columns = [
-            ['au_intensities', 'au_activations', 'au_intensities_activations']
+            ['delaunay','au_intensities', 'au_activations', 'au_intensities_activations']
         ]
 
         rows = [
@@ -132,10 +132,10 @@ def cohen_kappa(model):
         
     else:
 
-        features_list = ['au_intensities', 'au_activations', 'au_intensities_activations']
+        features_list = ['delaunay','au_intensities', 'au_activations', 'au_intensities_activations']
         emotions = ['anger', 'disgust', 'fear',
                     'happiness', 'sadness', 'surprise', 'valence']
-        data = np.ndarray(shape=(7, 3), dtype=np.float32)
+        data = np.ndarray(shape=(7, 4), dtype=np.float32)
 
         for f, features in enumerate(features_list):
             for e, emotion in enumerate(emotions):
@@ -149,7 +149,7 @@ def cohen_kappa(model):
         data = data.round(2)
 
         columns = [
-            ['au_intensities', 'au_activations', 'au_intensities_activations']
+            ['delaunay','au_intensities', 'au_activations', 'au_intensities_activations']
         ]
 
         rows = [
