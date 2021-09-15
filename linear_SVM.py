@@ -1,6 +1,6 @@
 from numpy.core.shape_base import block
 from sklearn.pipeline import Pipeline
-from sklearn.model_selection import RandomizedSearchCV, validation_curve
+from sklearn.model_selection import RandomizedSearchCV, validation_curve, learning_curve
 from sklearn.metrics import cohen_kappa_score, classification_report, plot_confusion_matrix
 from sklearn.svm import LinearSVC
 from sklearn.utils import resample
@@ -168,9 +168,34 @@ elif features[:2] == 'au':
     }
 
 X, y = subsampling(X, y)
-param_range = np.logspace(-6, 2, 100)
-train_scores, test_scores = validation_curve(
-    pipe, X, y, param_name="classifier__C", param_range=param_range, n_jobs=-1)
+# param_range = np.logspace(-6, 2, 100)
+# train_scores, test_scores = validation_curve(
+#     pipe, X, y, param_name="classifier__C", param_range=param_range, n_jobs=-1)
+# train_scores_mean = np.mean(train_scores, axis=1)
+# train_scores_std = np.std(train_scores, axis=1)
+# test_scores_mean = np.mean(test_scores, axis=1)
+# test_scores_std = np.std(test_scores, axis=1)
+
+# plt.figure()
+# plt.title("Validation Curve with Linear SVM")
+# plt.xlabel("C")
+# plt.ylabel("Score")
+# plt.ylim(0.0, 1.1)
+# lw = 2
+# plt.semilogx(param_range, train_scores_mean, label="Training score",
+#              color="darkorange", lw=lw)
+# plt.fill_between(param_range, train_scores_mean - train_scores_std,
+#                  train_scores_mean + train_scores_std, alpha=0.2,
+#                  color="darkorange", lw=lw)
+# plt.semilogx(param_range, test_scores_mean, label="Cross-validation score",
+#              color="navy", lw=lw)
+# plt.fill_between(param_range, test_scores_mean - test_scores_std,
+#                  test_scores_mean + test_scores_std, alpha=0.2,
+#                  color="navy", lw=lw)
+# plt.legend(loc="best")
+# plt.show()
+param_range=[100, 200, 300, 400, 500, 600]
+train_sizes, train_scores, test_scores = learning_curve(pipe, X, y, train_sizes=param_range, cv=5, n_jobs=-1)
 train_scores_mean = np.mean(train_scores, axis=1)
 train_scores_std = np.std(train_scores, axis=1)
 test_scores_mean = np.mean(test_scores, axis=1)
@@ -182,19 +207,18 @@ plt.xlabel("C")
 plt.ylabel("Score")
 plt.ylim(0.0, 1.1)
 lw = 2
-plt.semilogx(param_range, train_scores_mean, label="Training score",
+plt.semilogx(train_sizes, train_scores_mean, label="Training score",
              color="darkorange", lw=lw)
-plt.fill_between(param_range, train_scores_mean - train_scores_std,
+plt.fill_between(train_sizes, train_scores_mean - train_scores_std,
                  train_scores_mean + train_scores_std, alpha=0.2,
                  color="darkorange", lw=lw)
-plt.semilogx(param_range, test_scores_mean, label="Cross-validation score",
+plt.semilogx(train_sizes, test_scores_mean, label="Cross-validation score",
              color="navy", lw=lw)
 plt.fill_between(param_range, test_scores_mean - test_scores_std,
                  test_scores_mean + test_scores_std, alpha=0.2,
                  color="navy", lw=lw)
 plt.legend(loc="best")
 plt.show()
-
 # X, y = subsampling(X, y)
 # randomsearch = RandomizedSearchCV(
 #     pipe, params, n_iter=10000).fit(X, y)  # fit the model

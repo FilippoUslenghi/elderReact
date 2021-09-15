@@ -23,6 +23,11 @@ for features in features_list:
             for pose in poses:
                 os.system(' '.join(['python', script, emotion, pose, features]))
 
+        elif script == 'lstm_delaunay.py':
+            if features != 'delaunay': continue
+            # os.system(' '.join(['python', script, emotion, features]))
+            print(' '.join(['python', script, emotion, features]))
+
         else:
             for pose in poses:
                 os.system(' '.join(['python', script, emotion, pose, features]))
