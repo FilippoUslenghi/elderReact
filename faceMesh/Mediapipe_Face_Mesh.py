@@ -1,4 +1,4 @@
-# To add a new cell, type '# %%'
+e# To add a new cell, type '# %%'
 # To add a new markdown cell, type '# %% [markdown]'
 # %%
 from IPython import get_ipython
@@ -50,7 +50,7 @@ with mp_face_mesh.FaceMesh(
         landmark_drawing_spec=drawing_spec,
         connection_drawing_spec=drawing_spec)
   annotated_image = cv2.cvtColor(annotated_image, cv2.COLOR_BGR2RGB)
-  plt.figure(figsize=(8,8))
+  plt.figure(figsize=(8,8), dpi=600)
   plt.imshow(annotated_image)
   plt.show()
 

@@ -4,19 +4,18 @@ import pandas as pd
 from scipy.signal import find_peaks, peak_widths
 from sklearn.metrics import mean_squared_error
 
-TOT_FRAME_INTERPOLATED = 0
 FACE_MESH = pd.read_csv(os.path.join('faceMesh','face_mesh.csv'))
 def landmarks_mapper(of_df, mp_df):
     
     OPENFACE_LANDMARKS = [i for i in range(17, 68)]
     
     final_df = of_df['frame'] # initialize the final dataframe
-    for i, landmark in enumerate(OPENFACE_LANDMARKS):
+    for landmark in OPENFACE_LANDMARKS:
 
         mask = (FACE_MESH['openFace_landmark'] == landmark) # group the mediapipe landmarks by the openface landmark
 
         tmp1_df = of_df[[f'x_{landmark}', f'y_{landmark}']] # select the columns from the openface dataframe
-        tmp1_df.columns = [f'openface_x_{landmark}', f'openface_y_{landmark}'] # rename the columnsk
+        tmp1_df.columns = [f'openface_x_{landmark}', f'openface_y_{landmark}'] # rename the columns
         
         mediaPipe_landmarks_X = ['x_'+str(ID) for ID in FACE_MESH[mask].id] # collect the X coordinate
         mediaPipe_landmarks_Y = ['y_'+str(ID) for ID in FACE_MESH[mask].id] # collect the Y coordinate
@@ -41,7 +40,7 @@ def mse(df: pd.DataFrame):
     
     return video_mse
 
-def clean_and_interpolate(openface_df, mediapipe_df, threshold, AU):
+def clean_and_interpolate(openface_df, mediapipe_df, threshold):
     
     """
     If the video is worth saving, returns the dataframe cleansed and interpolated
@@ -105,9 +104,9 @@ def clean_and_interpolate(openface_df, mediapipe_df, threshold, AU):
         for i in range(468):
             mediapipe_df.loc[start:end-2, f'x_{i}'], mediapipe_df.loc[start:end-2, f'y_{i}'] = np.nan, np.nan
             
-        if AU:
-            for action_unit in ACTION_UNITS:
-                openface_df.loc[start:end-2, action_unit] = np.nan
+        
+        for action_unit in ACTION_UNITS:
+            openface_df.loc[start:end-2, action_unit] = np.nan
             
     # check if the video is worth saving
     n_frames_interpolated = np.count_nonzero(tmp_df.x_27.isnull())  # count the number of rows (and so frames) that have to be interpolated
@@ -132,25 +131,9 @@ for dataset in datasets:
         openface_df = pd.read_csv(os.path.join('openFace', dataset, 'processed', f'{video_name}_openface.csv'))
         mediapipe_df = pd.read_csv(os.path.join('mediaPipe', dataset, 'processed', f'{video_name}_mediapipe.csv'))
         
-        # without Action Units
-        openface_df, mediapipe_df, n_frames_interpolated = clean_and_interpolate(openface_df, mediapipe_df, THRESHOLD, AU=False)
-        TOT_FRAME_INTERPOLATED += n_frames_interpolated
-        # if openface_df is not None:
-        #     openface_df.to_csv(os.path.join('openFace', dataset, 'processed_interpolated', f'{video_name}_openface.csv'), index=False)
-        # if mediapipe_df is not None:
-        #     mediapipe_df.to_csv(os.path.join('mediaPipe', dataset, 'processed_interpolated', f'{video_name}_mediapipe.csv'), index=False)
-        # else: print(video_name)
-
-            
-    # for video in os.listdir(base_dir):
-        
-    #     video_name = video[:-4]
-    #     openface_df = pd.read_csv(os.path.join('openFace', dataset, 'processed', f'{video_name}_openface.csv'))
-    #     mediapipe_df = pd.read_csv(os.path.join('mediaPipe', dataset, 'processed', f'{video_name}_mediapipe.csv'))
-        
-    #     # with Action Units
-    #     openface_df, mediapipe_df = clean_and_interpolate(openface_df, mediapipe_df, THRESHOLD, AU=True)
-    #     openface_df = openface_df[columns]
-    #     if openface_df is not None:
-    #         openface_df.to_csv(os.path.join('dataset_net', 'Features', dataset, 'interpolated_AU', f'{video_name}.csv'), index=False)
-print(TOT_FRAME_INTERPOLATED)
+        openface_df, mediapipe_df, n_frames_interpolated = clean_and_interpolate(openface_df, mediapipe_df, THRESHOLD)
+        if openface_df is not None:
+            openface_df.to_csv(os.path.join('openFace', dataset, 'interpolated', f'{video_name}_openface.csv'), index=False)
+        if mediapipe_df is not None:
+            mediapipe_df.to_csv(os.path.join('mediaPipe', dataset, 'interpolated', f'{video_name}_mediapipe.csv'), index=False)
+        else: print(video_name)
