@@ -1,4 +1,7 @@
 # %%
+"""
+This script creates a video with the mediapipe landmarks drawn onto the face
+"""
 import os
 import cv2
 import mediapipe as mp

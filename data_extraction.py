@@ -4,14 +4,14 @@ import mediapipe as mp
 import pandas as pd
 
 
-# Estrai i landmark e le action unit dei video del dataset con OpenFace
+# Estrae i landmark e le action unit dei video del dataset con OpenFace
 user = "filippo"
 datasets = ['train', 'dev', 'test']
 
 for dataset in datasets:
     out_dir = os.path.join('/', 'home', user, 'elderReact', 'openFace', dataset, 'processed')
     os.makedirs(out_dir)
-    
+
     for video in os.listdir(os.path.join('dataset','ElderReact_Data', 'ElderReact_' + dataset)):
         videoName = video[:-4]
         if f'{videoName}.csv' in os.listdir(out_dir): continue # skip the already processed videos in case you ahve to stop the script
@@ -19,7 +19,7 @@ for dataset in datasets:
         print(f'./FeaturesExtraction -f {video} -2Dfp -aus -out_dir {out_dir}')
 
 #import sys; sys.exit()
-# Estrai i landmark con MediaPipe
+# Estrae i landmark con MediaPipe
 mp_drawing = mp.solutions.drawing_utils
 mp_face_mesh = mp.solutions.face_mesh
 
@@ -62,3 +62,9 @@ for dataset in datasets:
 
         cap.release()
         video_df.to_csv(os.path.join(out_dir, f'{videoName}.csv'), index=False)
+
+
+
+# Estrae i dati dell'orientazione del volto con FSA-Net
+os.chdir(os.path.join('FSA-Net', 'demo'))
+os.system(f'python my_demo_FSANET_sdd.py')
