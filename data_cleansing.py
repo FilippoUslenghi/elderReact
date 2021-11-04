@@ -3,7 +3,6 @@ import numpy as np
 import pandas as pd
 
 def remove_first_frames(df: pd.DataFrame):
-    LANDMARKS = [f'x_{i}' for i in range(68)] + [f'y_{i}' for i in range(68)]
     
     firstFrame_x = 0
     firstJumps_x = np.absolute(np.diff(df.x_27.values[:30]))>30
