@@ -18,14 +18,14 @@ import matplotlib.pyplot as plt
 def get_y(group, pose, emotion):
 
     annotations_path = os.path.join(
-        'dataset_net', 'Annotations', f'{group}_labels.txt')
+        'my_dataset', 'Annotations', f'{group}_labels.txt')
     annotations_df = pd.read_csv(
         annotations_path, delim_whitespace=True, header=None)
     all_videos = annotations_df[0]
 
     pose = '' if pose == 'none' else pose
     y_videos = os.listdir(os.path.join(
-        'dataset_net', 'Features', group, f'delaunay_pose_{pose}'))
+        'my_dataset', 'Features', group, f'delaunay_pose_{pose}'))
     y_videos = [y.replace('csv', 'mp4') for y in y_videos]
 
     boolean_map = [video in y_videos for video in all_videos]
@@ -67,10 +67,10 @@ def read_data(group, pose, emotion, features):
 
     pose = '' if pose == 'none' else pose
     if features == 'delaunay':
-        videos_dir = os.path.join('dataset_net', 'Features',
+        videos_dir = os.path.join('my_dataset', 'Features',
                                   group, f'delaunay_pose_{pose}')
     elif features[:2] == 'au':
-        videos_dir = os.path.join('dataset_net', 'Features',
+        videos_dir = os.path.join('my_dataset', 'Features',
                                   group, f'interpolated_AU_{pose}')
 
     for csv in sorted(os.listdir(videos_dir)):
@@ -171,6 +171,8 @@ elif features[:2] == 'au':
 
 
 X, y = subsampling(X, y)
+
+# Plot validation curve
 param_range = np.logspace(-6, 2, 100)
 train_scores, test_scores = validation_curve(
     pipe, X, y, param_name="classifier__C", param_range=param_range, n_jobs=-1)
@@ -199,13 +201,10 @@ plt.legend(loc="best")
 plt.show()
 
 
-
 # X, y = subsampling(X, y)
 # randomsearch = RandomizedSearchCV(
 #     pipe, params, n_iter=10000).fit(X, y)  # fit the model
-
 # print(f'Best params: {randomsearch.best_params_}')
-sys.exit()
 
 num_iter = 100
 all_pred = []

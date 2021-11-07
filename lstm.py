@@ -20,7 +20,7 @@ matplotlib.use('agg')
 def load_group(selected_emotion, group, intensities, activations):
 
     # load x
-    x_dir = os.path.join('dataset_net', 'Features', group, 'interpolated_AU_')
+    x_dir = os.path.join('my_dataset', 'Features', group, 'interpolated_AU_')
 
     matrix_list = []
     for csv in sorted(os.listdir(x_dir)):
@@ -49,7 +49,7 @@ def load_group(selected_emotion, group, intensities, activations):
     x_group = np.stack(padded_matrix_list, axis=0)
 
     # load y
-    y_path = os.path.join('dataset_net', 'Annotations', f'{group}_labels.txt')
+    y_path = os.path.join('my_dataset', 'Annotations', f'{group}_labels.txt')
     y_df = pd.read_csv(y_path, delim_whitespace=True, header=None).drop(
         columns=[0, 7])  # drop name and gender columns
     y_df.columns = ['anger', 'disgust', 'fear',

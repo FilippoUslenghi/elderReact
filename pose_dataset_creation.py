@@ -29,21 +29,21 @@ for pose in poses:
     angles = POSE_DICT[pose]
     for group in groups:
 
-        base_dir = os.path.join('dataset_net', 'Features', group, 'delaunay_pose_')
+        base_dir = os.path.join('my_dataset', 'Features', group, 'delaunay_pose_')
         for csv in os.listdir(base_dir):
             df = pd.read_csv(os.path.join(base_dir, csv))
             new_df = df[df['yaw'].round(2).isin(angles)]
             if len(new_df) != 0:
-                new_df.to_csv(os.path.join('dataset_net', 'Features',
+                new_df.to_csv(os.path.join('my_dataset', 'Features',
                             group, f'delaunay_pose_{pose}', csv), index=False)
 
-        base_dir = os.path.join('dataset_net', 'Features', group, 'interpolated_AU_')
-        pose_dir = os.path.join('dataset_net', 'Features', group, 'delaunay_pose_')
+        base_dir = os.path.join('my_dataset', 'Features', group, 'interpolated_AU_')
+        pose_dir = os.path.join('my_dataset', 'Features', group, 'delaunay_pose_')
         for csv in os.listdir(base_dir):
             df = pd.read_csv(os.path.join(base_dir, csv))
             pose_df = pd.read_csv(os.path.join(pose_dir, csv))
             boolean_map = pose_df['yaw'].round(2).isin(angles)
             new_df = df[boolean_map]
             if len(new_df) != 0:
-                new_df.to_csv(os.path.join('dataset_net', 'Features',
+                new_df.to_csv(os.path.join('my_dataset', 'Features',
                             group, f'interpolated_AU_{pose}', csv), index=False)
