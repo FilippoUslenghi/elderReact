@@ -1,3 +1,7 @@
+"""
+Questo script esegue l'estrazione dei dati sia con OpenFace che con MediaPipe.
+"""
+
 import os
 import cv2
 import mediapipe as mp

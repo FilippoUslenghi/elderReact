@@ -1,3 +1,7 @@
+"""
+Questo script effettua la pulizia e l'interpolazione dei dati estratti da openface e da mediapipe.
+"""
+
 import os
 import numpy as np
 import pandas as pd

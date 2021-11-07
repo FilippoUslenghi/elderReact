@@ -1,3 +1,7 @@
+"""
+Questo script crea i csv con i risultati ottenuti con l'addestramento dei modelli di machine learning.
+"""
+
 import pandas as pd
 import numpy as np
 import json

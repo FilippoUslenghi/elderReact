@@ -1,5 +1,5 @@
 """
-Questo script ricrea le annotazioni elimnando quelle relative ai video scartati
+Questo script ricrea le annotazioni del dataset eliminando quelle relative ai video scartati
 """
 
 import os
