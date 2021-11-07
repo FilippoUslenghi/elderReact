@@ -16,6 +16,7 @@ for dataset in datasets:
         if f'{videoName}.csv' in os.listdir(out_dir): continue # skip the already processed videos in case you have to stop the script
         os.system(f'./FeatureExtraction -f {video} -2Dfp -aus -out_dir {out_dir}')
         # print(f'./FeaturesExtraction -f {video} -2Dfp -aus -out_dir {out_dir}')
+os.system(f'rm {out_dir}/*.txt')
 
 # Estrae i landmark con MediaPipe
 mp_drawing = mp.solutions.drawing_utils
