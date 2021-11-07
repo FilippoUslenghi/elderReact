@@ -104,7 +104,6 @@ def clean_and_interpolate(openface_df, mediapipe_df, threshold):
         for i in range(468):
             mediapipe_df.loc[start:end-2, f'x_{i}'], mediapipe_df.loc[start:end-2, f'y_{i}'] = np.nan, np.nan
             
-        
         for action_unit in ACTION_UNITS:
             openface_df.loc[start:end-2, action_unit] = np.nan
             

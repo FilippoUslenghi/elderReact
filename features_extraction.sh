@@ -17,3 +17,4 @@ echo "Estraendo le features sull'orientazione del volto con FSA-Net... (this may
 python3 my_demo_FSANET_sdd.py
 
 cd ../../elderReact/
+
