@@ -1,3 +1,7 @@
+"""
+Script per eseguire l'addestramento dei modelli di machine learning.
+"""
+
 import os
 
 scripts = ['dummy_classifier.py', 'logistic_regressione.py', 'linear_SVM.py', 'kernel_SVM.py', 'lstm.py', 'lstm_delaunay.py']
