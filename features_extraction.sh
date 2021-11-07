@@ -1,7 +1,7 @@
-echo "Estraendo i landmark e le Actio Units con OpenFace... (può richiedere tanto tempo)"
+echo "Estraendo i landmark e le Actio Units con OpenFace... (può richiedere qualche ora)"
 python3 data_extraction.py
 
-echo "Estraendo i landmark con MediaPipe... (può richiedere tanto tempo)"
+echo "Estraendo i landmark con MediaPipe... (può richiedere qualche ora)"
 python3 data_interpolation.py
 
 echo "Creando le features di Delaunay..."
@@ -12,7 +12,7 @@ Per poter eseguire 'my_demo_FSANET_sdd.py' leggi i requirements scritti sul gith
 ##############################################################################################"
 
 cd ../FSA-Net/demo/
-echo "Estraendo le features sull'orientazione del volto con FSA-Net... (può richiedere tanto tempo)"
+echo "Estraendo le features sull'orientazione del volto con FSA-Net... (può richiedere qualche ora)"
 
 python3 my_demo_FSANET_sdd.py
 
