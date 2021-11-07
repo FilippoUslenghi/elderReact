@@ -18,7 +18,7 @@ groups = ['train', 'dev', 'test']
 for group in groups:
     base_dir = os.path.join('openFace', group, 'processed_interpolated', '')
     out_dir = os.path.join('my_dataset', 'Features', group, 'interpolated_AU_')
-    os.makedirs(out_dir)
+    os.makedirs(out_dir, exist_ok=True)
     for csv in os.listdir(base_dir):
         df = pd.read_csv(os.path.join(base_dir, csv))
         new_df = df[np.append('frame',df.columns[df.columns.str.contains('AU')])]

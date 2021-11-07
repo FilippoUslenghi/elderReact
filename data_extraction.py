@@ -10,7 +10,7 @@ datasets = ['train', 'dev', 'test']
 
 for dataset in datasets:
     out_dir = os.path.join('/', 'home', user, 'elderReact', 'openFace', dataset, 'processed')
-    os.makedirs(out_dir)
+    os.makedirs(out_dir, exist_ok=True)
 
     for video in os.listdir(os.path.join('dataset','ElderReact_Data', 'ElderReact_' + dataset)):
         videoName = video[:-4]
@@ -25,7 +25,7 @@ mp_face_mesh = mp.solutions.face_mesh
 for dataset in datasets:
     base_dir = os.path.join('dataset','ElderReact_Data',f'ElderReact_{dataset}','')
     out_dir = os.path.join('mediaPipe', dataset, 'processed')
-    os.makedirs(out_dir)
+    os.makedirs(out_dir, exist_ok=True)
 
     for video in os.listdir(base_dir):
         videoName = video[:-4]

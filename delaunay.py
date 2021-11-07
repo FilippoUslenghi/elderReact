@@ -99,6 +99,6 @@ for dataset in datasets:
 
         delaunay_df = pd.DataFrame(data=delaunay_df_data)  # create the daframe with the data gathered
 
-        os.makedirs(os.path.join('openFace', dataset, 'delaunay'))
+        os.makedirs(os.path.join('openFace', dataset, 'delaunay'), exist_ok=True)
         out_dir = os.path.join('openFace', dataset, 'delaunay')
         delaunay_df.to_csv(os.path.join(out_dir, f'{csv}.csv'), index=False)

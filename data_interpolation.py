@@ -125,6 +125,8 @@ for dataset in datasets:
     base_dir = os.path.join('dataset','ElderReact_Data',f'ElderReact_{dataset}')
     
     for video in os.listdir(base_dir):
+
+        if video.replace('.mp4', '.csv') in os.listdir(os.path.join('openFace', dataset, 'processed_interpolated')): continue
         
         video_name = video[:-4]       
         openface_df = pd.read_csv(os.path.join('openFace', dataset, 'processed', f'{video_name}.csv'))
@@ -132,7 +134,7 @@ for dataset in datasets:
         
         openface_df, mediapipe_df, n_frames_interpolated = clean_and_interpolate(openface_df, mediapipe_df, THRESHOLD)
         if openface_df is not None:
-            openface_df.to_csv(os.path.join('openFace', dataset, 'interpolated', f'{video_name}.csv'), index=False)
+            openface_df.to_csv(os.path.join('openFace', dataset, 'processed_interpolated', f'{video_name}.csv'), index=False)
         if mediapipe_df is not None:
-            mediapipe_df.to_csv(os.path.join('mediaPipe', dataset, 'interpolated', f'{video_name}.csv'), index=False)
+            mediapipe_df.to_csv(os.path.join('mediaPipe', dataset, 'processed_interpolated', f'{video_name}.csv'), index=False)
         else: print(video_name)

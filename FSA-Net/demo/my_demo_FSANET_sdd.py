@@ -187,7 +187,7 @@ def main():
         video_dir = os.path.join('..','..','dataset','ElderReact_Data',f'ElderReact_{dataset}','')
         csv_dir = os.path.join('..','..','openFace',dataset,'delaunay')
         out_dir = os.path.join('..','..','my_dataset','Features',dataset,'delaunay_pose_')
-        os.makedirs(out_dir)
+        os.makedirs(out_dir, exist_ok=True)
 
         for csv in os.listdir(csv_dir):
 
@@ -274,6 +274,8 @@ def main():
             df['roll'] = roll_column
             df.interpolate(method='linear', axis=0, inplace=True)
             df.to_csv(os.path.join(out_dir, csv), index = False)
+            break
+        break
 
 if __name__ == '__main__':
     main()
