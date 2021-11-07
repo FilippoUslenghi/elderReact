@@ -1,4 +1,4 @@
-echo "Estraendo i landmark e le Actio Units con OpenFace... (può richiedere qualche ora)"
+echo "Estraendo i landmark e le Action Units con OpenFace... (può richiedere qualche ora)"
 python3 data_extraction.py
 
 echo "Estraendo i landmark con MediaPipe... (può richiedere qualche ora)"
