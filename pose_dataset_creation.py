@@ -1,3 +1,8 @@
+"""
+Questo script crea il nuovo dataset con le feature di delaunay (aggregate a quelle della posa)
+e con le feature relative alle action unit, divise in base alla posa del volto.
+"""
+
 import os
 import numpy as np
 import pandas as pd
@@ -10,23 +15,15 @@ POSE_DICT = {
 poses = ['tilted', 'frontal']
 groups = ['train', 'dev', 'test']
 
-count = 0
 for group in groups:
-    
     base_dir = os.path.join('openFace', group, 'processed_interpolated', '')
     out_dir = os.path.join('my_dataset', 'Features', group, 'interpolated_AU_')
     os.makedirs(out_dir)
     for csv in os.listdir(base_dir):
-        count+=1
         df = pd.read_csv(os.path.join(base_dir, csv))
         new_df = df[np.append('frame',df.columns[df.columns.str.contains('AU')])]
         new_df.to_csv(os.path.join(out_dir, csv), index=False)
-        print(count)
-    break
 
-
-
-import sys; sys.exit()
 for pose in poses:
 
     angles = POSE_DICT[pose]
