@@ -61,9 +61,3 @@ for dataset in datasets:
 
         cap.release()
         video_df.to_csv(os.path.join(out_dir, f'{videoName}.csv'), index=False)
-
-
-
-# Estrae i dati dell'orientazione del volto con FSA-Net
-os.chdir(os.path.join('FSA-Net', 'demo'))
-os.system(f'python my_demo_FSANET_sdd.py')

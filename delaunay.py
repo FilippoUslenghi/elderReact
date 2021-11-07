@@ -1,3 +1,8 @@
+"""
+Questo script estrae le feature relative alla triangolazione 
+di Delaunay dei landamrk del volto estratti con OpenFace.
+"""
+
 import os
 import re
 import json
@@ -19,6 +24,7 @@ def polygon_area(x, y, n):
     # Return absolute value
     return abs(area // 2.0)
 
+# Creation of the scheme of the triangles:
 
 # frontal_face_df = pd.read_csv(os.path.join('faceMesh','frontal_face_smile_openface.csv'))
 # frontal_face_df.columns = [column.replace(' ', '') for column in frontal_face_df.columns]
@@ -34,6 +40,10 @@ def polygon_area(x, y, n):
 
 # tri = Delaunay(landmarks_points) # compute Delaunay triangulation
 # triangles = landmarks_points[tri.simplices]
+
+# data = {TRIANGLES_SCHEME: triangles}
+# with open('triangles_scheme.json', 'w') as f:
+#     json.dump(data, f)
 
 # loading the triangle scheme
 with open("triangles_scheme.json") as jsonFile:
@@ -89,6 +99,6 @@ for dataset in datasets:
 
         delaunay_df = pd.DataFrame(data=delaunay_df_data)  # create the daframe with the data gathered
 
-        video_name = csv.replace('_openface.csv', '')
+        os.makedirs(os.path.join('openFace', dataset, 'delaunay'))
         out_dir = os.path.join('openFace', dataset, 'delaunay')
-        #delaunay_df.to_csv(os.path.join(out_dir, f'{video_name}_delaunay.csv'), index=False)
+        delaunay_df.to_csv(os.path.join(out_dir, f'{csv}.csv'), index=False)
