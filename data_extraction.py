@@ -14,7 +14,7 @@ for dataset in datasets:
 
     for video in os.listdir(os.path.join('dataset','ElderReact_Data', 'ElderReact_' + dataset)):
         videoName = video[:-4]
-        if f'{videoName}.csv' in os.listdir(out_dir): continue # skip the already processed videos in case you ahve to stop the script
+        if f'{videoName}.csv' in os.listdir(out_dir): continue # skip the already processed videos in case you have to stop the script
         #os.system(f'./FeaturesExtraction -f {video} -2Dfp -aus -out_dir {out_dir}')
         print(f'./FeaturesExtraction -f {video} -2Dfp -aus -out_dir {out_dir}')
 
