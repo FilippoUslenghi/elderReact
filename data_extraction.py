@@ -5,18 +5,17 @@ import pandas as pd
 
 
 # Estrae i landmark e le action unit dei video del dataset con OpenFace
-user = "filippo"
 datasets = ['train', 'dev', 'test']
 
 for dataset in datasets:
-    out_dir = os.path.join('/', 'home', user, 'elderReact', 'openFace', dataset, 'processed')
+    out_dir = os.path.join('/', 'home', 'filippo', 'elderReact', 'openFace', dataset, 'processed')
     os.makedirs(out_dir, exist_ok=True)
 
     for video in os.listdir(os.path.join('dataset','ElderReact_Data', 'ElderReact_' + dataset)):
         videoName = video[:-4]
         if f'{videoName}.csv' in os.listdir(out_dir): continue # skip the already processed videos in case you have to stop the script
-        #os.system(f'./FeaturesExtraction -f {video} -2Dfp -aus -out_dir {out_dir}')
-        print(f'./FeaturesExtraction -f {video} -2Dfp -aus -out_dir {out_dir}')
+        os.system(f'./FeatureExtraction -f {video} -2Dfp -aus -out_dir {out_dir}')
+        # print(f'./FeaturesExtraction -f {video} -2Dfp -aus -out_dir {out_dir}')
 
 # Estrae i landmark con MediaPipe
 mp_drawing = mp.solutions.drawing_utils
