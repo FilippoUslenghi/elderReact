@@ -18,7 +18,6 @@ for dataset in datasets:
         #os.system(f'./FeaturesExtraction -f {video} -2Dfp -aus -out_dir {out_dir}')
         print(f'./FeaturesExtraction -f {video} -2Dfp -aus -out_dir {out_dir}')
 
-#import sys; sys.exit()
 # Estrae i landmark con MediaPipe
 mp_drawing = mp.solutions.drawing_utils
 mp_face_mesh = mp.solutions.face_mesh

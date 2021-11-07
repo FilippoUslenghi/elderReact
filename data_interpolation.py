@@ -128,12 +128,12 @@ for dataset in datasets:
     for video in os.listdir(base_dir):
         
         video_name = video[:-4]       
-        openface_df = pd.read_csv(os.path.join('openFace', dataset, 'processed', f'{video_name}_openface.csv'))
-        mediapipe_df = pd.read_csv(os.path.join('mediaPipe', dataset, 'processed', f'{video_name}_mediapipe.csv'))
+        openface_df = pd.read_csv(os.path.join('openFace', dataset, 'processed', f'{video_name}.csv'))
+        mediapipe_df = pd.read_csv(os.path.join('mediaPipe', dataset, 'processed', f'{video_name}.csv'))
         
         openface_df, mediapipe_df, n_frames_interpolated = clean_and_interpolate(openface_df, mediapipe_df, THRESHOLD)
         if openface_df is not None:
-            openface_df.to_csv(os.path.join('openFace', dataset, 'interpolated', f'{video_name}_openface.csv'), index=False)
+            openface_df.to_csv(os.path.join('openFace', dataset, 'interpolated', f'{video_name}.csv'), index=False)
         if mediapipe_df is not None:
-            mediapipe_df.to_csv(os.path.join('mediaPipe', dataset, 'interpolated', f'{video_name}_mediapipe.csv'), index=False)
+            mediapipe_df.to_csv(os.path.join('mediaPipe', dataset, 'interpolated', f'{video_name}.csv'), index=False)
         else: print(video_name)
