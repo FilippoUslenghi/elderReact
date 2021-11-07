@@ -66,3 +66,24 @@ for dataset in datasets:
 
         cap.release()
         video_df.to_csv(os.path.join(out_dir, f'{videoName}.csv'), index=False)
+
+for dataset in datasets:
+    base_dir = os.path.join('mediaPipe', dataset, 'processed')
+
+    # with ffill
+    for csv in os.listdir(base_dir):
+        df = pd.read_csv(os.path.join(base_dir, csv))
+        videos_dir = os.path.join('..','dataset','ElderReact_Data',f'ElderReact_{dataset}','')
+        cap = cv2.VideoCapture(os.path.join(videos_dir, csv[:-14]+'.mp4'))
+        totFrames = cap.get(cv2.CAP_PROP_FRAME_COUNT)
+        frames = {i for i in range(1, int(totFrames+1))}
+
+        df_frames = set(df['frame'])
+        missing_frames = frames - df_frames
+        for frame in missing_frames:
+            df = df.append({'frame': frame, 'min_detection_cf': 0.5, 'min_tracking_cf': 0.5}, ignore_index=True)
+
+        df.sort_values(by=['frame'], inplace=True)
+        df.ffill(inplace=True) # interpola con il valore precedente
+        df.fillna(0, inplace=True) # se non c'è un valore precedente (cioè a inizio video) poni i frame mancanti a 0
+        df.to_csv(os.path.join(base_dir, csv), index=False)
