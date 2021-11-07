@@ -12,6 +12,7 @@ import pandas as pd
 datasets = ['train', 'dev', 'test']
 
 for dataset in datasets:
+    # path dell'output di OpenFace
     out_dir = os.path.join('/', 'home', 'filippo', 'elderReact', 'openFace', dataset, 'processed')
     os.makedirs(out_dir, exist_ok=True)
 
