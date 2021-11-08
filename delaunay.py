@@ -101,4 +101,4 @@ for dataset in datasets:
 
         os.makedirs(os.path.join('openFace', dataset, 'delaunay'), exist_ok=True)
         out_dir = os.path.join('openFace', dataset, 'delaunay')
-        delaunay_df.to_csv(os.path.join(out_dir, f'{csv}.csv'), index=False)
+        delaunay_df.to_csv(os.path.join(out_dir, csv), index=False)
