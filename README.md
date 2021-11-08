@@ -4,7 +4,7 @@
 Per effettuare l'estrazione delle feature bisogna eseguire lo script shell "feature_extraction_1.sh".
 Lo script eseguira i file python presenti nel repository. L'esecuzione potrà durare anche un giorno.
 
-Una volta eseguito il file "feature_extraction_1.sh" bisogna eseguire il file python "my_demo_FSANET_sdd.py"; per fare questo leggere
+Una volta eseguito il file "feature_extraction_1.sh" bisogna eseguire il file python "my_demo_FSANET_sdd.py" presente in "FSA-Net/demo"; per fare questo leggere
 le dependencies sul GitHub di FSA-Net [qui](https://github.com/shamangary/FSA-Net/blob/master/README.md). L'esecuzione di questo
 script può durare anche mezza giornata.
 
