@@ -16,7 +16,7 @@ echo "Estraendo le features sull'orientazione del volto con FSA-Net... (può ric
 
 python3 my_demo_FSANET_sdd.py
 
-cd ../../elderReact/
+cd ../../
 echo "Ultimando il dataset..."
 python3 pose_dataset_creation.py
 python3 annotations_creations.py
