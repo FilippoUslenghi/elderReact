@@ -18,10 +18,17 @@ for dataset in datasets:
 
     for video in os.listdir(os.path.join('dataset','ElderReact_Data', 'ElderReact_' + dataset)):
         videoName = video[:-4]
-        if f'{videoName}.csv' in os.listdir(out_dir): continue # skip the already processed videos in case you have to stop the script
+        # skip the already processed videos in case you have to stop the script
+        if f'{videoName}.csv' in os.listdir(out_dir): continue
         os.system(f'./FeatureExtraction -f {video} -2Dfp -aus -out_dir {out_dir}')
-        # print(f'./FeaturesExtraction -f {video} -2Dfp -aus -out_dir {out_dir}')
-os.system(f'rm {out_dir}/*.txt')
+    
+    # Remove the whitespace in front of the column names of the dataframes
+    for csv in os.listdir(out_dir):
+        df = pd.read_csv(os.path.join(out_dir, csv))
+        df.columns = [col.replace(' ', '') for col in df.columns]
+        df.to_csv(os.path.join(out_dir, csv), index=False)
+
+    os.system(f'rm {out_dir}/*.txt')
 
 # Estrae i landmark con MediaPipe
 mp_drawing = mp.solutions.drawing_utils
@@ -83,9 +90,8 @@ for dataset in datasets:
     # with ffill
     for csv in os.listdir(base_dir):
         df = pd.read_csv(os.path.join(base_dir, csv))
-        videos_dir = os.path.join(
-            '..', 'dataset', 'ElderReact_Data', f'ElderReact_{dataset}', '')
-        cap = cv2.VideoCapture(os.path.join(videos_dir, csv[:-14]+'.mp4'))
+        videos_dir = os.path.join('dataset', 'ElderReact_Data', f'ElderReact_{dataset}', '')
+        cap = cv2.VideoCapture(os.path.join(videos_dir, csv.replace('.csv', '.mp4')))
         totFrames = cap.get(cv2.CAP_PROP_FRAME_COUNT)
         frames = {i for i in range(1, int(totFrames+1))}
 
@@ -100,3 +106,13 @@ for dataset in datasets:
         # se non c'è un valore precedente (cioè a inizio video) poni i frame mancanti a 0
         df.fillna(0, inplace=True)
         df.to_csv(os.path.join(base_dir, csv), index=False)
+
+# Tratta questo video a parte poiché particolarmente problematico
+csv = 'gta1_34.csv'
+open_df = pd.read_csv(os.path.join('openFace','train','processed', csv))
+media_df = pd.read_csv(os.path.join('mediaPipe','train','processed', csv))
+
+open_df, media_df = open_df.iloc[24:,:], media_df.iloc[24:,:]
+
+open_df.to_csv(os.path.join('openFace','train','processed', csv), index=False)
+media_df.to_csv(os.path.join('mediaPipe','train','processed', csv), index=False)

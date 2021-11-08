@@ -126,11 +126,17 @@ THRESHOLD = 75
 columns = ['frame','AU01_r','AU02_r','AU04_r','AU05_r','AU06_r','AU07_r','AU09_r','AU10_r','AU12_r','AU14_r','AU15_r','AU17_r','AU20_r','AU23_r','AU25_r','AU26_r','AU45_r','AU01_c','AU02_c','AU04_c','AU05_c','AU06_c','AU07_c','AU09_c','AU10_c','AU12_c','AU14_c','AU15_c','AU17_c','AU20_c','AU23_c','AU25_c','AU26_c','AU28_c','AU45_c']
 datasets = ['train','dev','test']
 for dataset in datasets:
+
     base_dir = os.path.join('dataset','ElderReact_Data',f'ElderReact_{dataset}')
-    
+    open_dir = os.path.join('openFace', dataset, 'processed_interpolated')
+    media_dir = os.path.join('mediaPipe', dataset, 'processed_interpolated')
+    os.makedirs(open_dir, exist_ok=True)
+    os.makedirs(media_dir, exist_ok=True)
     for video in os.listdir(base_dir):
 
-        if video.replace('.mp4', '.csv') in os.listdir(os.path.join('openFace', dataset, 'processed_interpolated')): continue
+        if video.replace('.mp4', '.csv') in os.listdir(open_dir) and \
+           video.replace('.mp4', '.csv') in os.listdir(media_dir):
+            continue
         
         video_name = video[:-4]       
         openface_df = pd.read_csv(os.path.join('openFace', dataset, 'processed', f'{video_name}.csv'))
@@ -138,7 +144,6 @@ for dataset in datasets:
         
         openface_df, mediapipe_df, n_frames_interpolated = clean_and_interpolate(openface_df, mediapipe_df, THRESHOLD)
         if openface_df is not None:
-            openface_df.to_csv(os.path.join('openFace', dataset, 'processed_interpolated', f'{video_name}.csv'), index=False)
+            openface_df.to_csv(os.path.join(open_dir, f'{video_name}.csv'), index=False)
         if mediapipe_df is not None:
-            mediapipe_df.to_csv(os.path.join('mediaPipe', dataset, 'processed_interpolated', f'{video_name}.csv'), index=False)
-        else: print(video_name)
+            mediapipe_df.to_csv(os.path.join(media_dir, f'{video_name}.csv'), index=False)
