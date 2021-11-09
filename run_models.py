@@ -4,7 +4,7 @@ Script per eseguire l'addestramento dei modelli di machine learning.
 
 import os
 
-scripts = ['dummy_classifier.py', 'logistic_regressione.py', 'linear_SVM.py', 'kernel_SVM.py', 'lstm.py', 'lstm_delaunay.py']
+scripts = ['dummy_classifier.py', 'logistic_regression.py', 'linear_SVM.py', 'kernel_SVM.py', 'lstm.py', 'lstm_delaunay.py']
 features_list = ['delaunay', 'au_intensities', 'au_activations', 'au_intensities_activations']
 emotions = ['anger', 'disgust', 'fear',
             'happiness', 'sadness', 'surprise', 'valence']

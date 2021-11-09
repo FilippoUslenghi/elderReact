@@ -170,31 +170,31 @@ elif features[:2] == 'au':
 X, y = subsampling(X, y)
 
 # Plot validation curve
-param_range=[100, 200, 300, 400, 500, 600]
-train_sizes, train_scores, test_scores = learning_curve(pipe, X, y, train_sizes=param_range, cv=5, n_jobs=-1)
-train_scores_mean = np.mean(train_scores, axis=1)
-train_scores_std = np.std(train_scores, axis=1)
-test_scores_mean = np.mean(test_scores, axis=1)
-test_scores_std = np.std(test_scores, axis=1)
+# param_range=[100, 200, 300, 400, 500, 600]
+# train_sizes, train_scores, test_scores = learning_curve(pipe, X, y, train_sizes=param_range, cv=5, n_jobs=-1)
+# train_scores_mean = np.mean(train_scores, axis=1)
+# train_scores_std = np.std(train_scores, axis=1)
+# test_scores_mean = np.mean(test_scores, axis=1)
+# test_scores_std = np.std(test_scores, axis=1)
 
-plt.figure()
-plt.title("Validation Curve with Linear SVM")
-plt.xlabel("C")
-plt.ylabel("Score")
-plt.ylim(0.0, 1.1)
-lw = 2
-plt.semilogx(train_sizes, train_scores_mean, label="Training score",
-             color="darkorange", lw=lw)
-plt.fill_between(train_sizes, train_scores_mean - train_scores_std,
-                 train_scores_mean + train_scores_std, alpha=0.2,
-                 color="darkorange", lw=lw)
-plt.semilogx(train_sizes, test_scores_mean, label="Cross-validation score",
-             color="navy", lw=lw)
-plt.fill_between(param_range, test_scores_mean - test_scores_std,
-                 test_scores_mean + test_scores_std, alpha=0.2,
-                 color="navy", lw=lw)
-plt.legend(loc="best")
-plt.show()
+# plt.figure()
+# plt.title("Validation Curve with Linear SVM")
+# plt.xlabel("C")
+# plt.ylabel("Score")
+# plt.ylim(0.0, 1.1)
+# lw = 2
+# plt.semilogx(train_sizes, train_scores_mean, label="Training score",
+#              color="darkorange", lw=lw)
+# plt.fill_between(train_sizes, train_scores_mean - train_scores_std,
+#                  train_scores_mean + train_scores_std, alpha=0.2,
+#                  color="darkorange", lw=lw)
+# plt.semilogx(train_sizes, test_scores_mean, label="Cross-validation score",
+#              color="navy", lw=lw)
+# plt.fill_between(param_range, test_scores_mean - test_scores_std,
+#                  test_scores_mean + test_scores_std, alpha=0.2,
+#                  color="navy", lw=lw)
+# plt.legend(loc="best")
+# plt.show()
 
 
 # X, y = subsampling(X, y)
