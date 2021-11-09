@@ -203,7 +203,7 @@ def main():
             pitch_column = []
             roll_column = []
 
-            print(f'Start detecting pose of {video_name}')
+            # print(f'Start detecting pose of {video_name}')
             detected_pre = np.empty((1,1,1))
             
             frame = 1
@@ -214,14 +214,14 @@ def main():
                 ret, input_img = cap.read()
 
                 if not ret:
-                    print("Video ended. Exiting ...")
+                    # print("Video ended. Exiting ...")
                     break
                 
                 if frame < first_frame: 
                     frame+=1
                     continue
                 if frame > last_frame:
-                    print('Frame exceeded last frame. Exiting ...')
+                    # print('Frame exceeded last frame. Exiting ...')
                     break
                 frame+=1
 
