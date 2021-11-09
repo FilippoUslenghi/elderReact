@@ -1,4 +1,4 @@
-echo "Ultimando il dataset..."
+echo "Ultimando il dataset... (può richiedere qualche minuto)"
 python3 pose_dataset_creation.py
 python3 annotations_creations.py
 

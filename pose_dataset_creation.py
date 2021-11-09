@@ -40,6 +40,8 @@ for pose in poses:
 
         base_dir = os.path.join('my_dataset', 'Features', group, 'interpolated_AU_')
         pose_dir = os.path.join('my_dataset', 'Features', group, 'delaunay_pose_')
+        out_dir = os.path.join('my_dataset', 'Features', group, f'interpolated_AU_{pose}')
+        os.makedirs(out_dir, exist_ok=True)
         for csv in os.listdir(base_dir):
             df = pd.read_csv(os.path.join(base_dir, csv))
             pose_df = pd.read_csv(os.path.join(pose_dir, csv))
