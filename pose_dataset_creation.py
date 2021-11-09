@@ -30,12 +30,13 @@ for pose in poses:
     for group in groups:
 
         base_dir = os.path.join('my_dataset', 'Features', group, 'delaunay_pose_')
+        out_dir = os.path.join('my_dataset', 'Features', group, f'delaunay_pose_{pose}')
+        os.makedirs(out_dir, exist_ok=True)
         for csv in os.listdir(base_dir):
             df = pd.read_csv(os.path.join(base_dir, csv))
             new_df = df[df['yaw'].round(2).isin(angles)]
             if len(new_df) != 0:
-                new_df.to_csv(os.path.join('my_dataset', 'Features',
-                            group, f'delaunay_pose_{pose}', csv), index=False)
+                new_df.to_csv(os.path.join(out_dir, csv), index=False)
 
         base_dir = os.path.join('my_dataset', 'Features', group, 'interpolated_AU_')
         pose_dir = os.path.join('my_dataset', 'Features', group, 'delaunay_pose_')
