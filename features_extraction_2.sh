@@ -1,6 +1,6 @@
 echo "Ultimando il dataset... (può richiedere qualche minuto)"
 python3 pose_dataset_creation.py
-python3 annotations_creations.py
+python3 annotations_creation.py
 
 echo "Il dataset è stato creato con successo. Lo puoi trovare nella directory 'my_dataset'."
 echo "Per eseguire l'addestramento dei modelli di machine learning esegui lo script 'run_models.py'.

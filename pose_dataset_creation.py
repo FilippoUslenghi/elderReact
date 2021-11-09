@@ -20,6 +20,10 @@ for group in groups:
     out_dir = os.path.join('my_dataset', 'Features', group, 'interpolated_AU_')
     os.makedirs(out_dir, exist_ok=True)
     for csv in os.listdir(base_dir):
+
+        if csv in os.listdir(out_dir):
+            continue
+
         df = pd.read_csv(os.path.join(base_dir, csv))
         new_df = df[np.append('frame',df.columns[df.columns.str.contains('AU')])]
         new_df.to_csv(os.path.join(out_dir, csv), index=False)
@@ -33,6 +37,10 @@ for pose in poses:
         out_dir = os.path.join('my_dataset', 'Features', group, f'delaunay_pose_{pose}')
         os.makedirs(out_dir, exist_ok=True)
         for csv in os.listdir(base_dir):
+
+            if csv in os.listdir(out_dir):
+                continue
+
             df = pd.read_csv(os.path.join(base_dir, csv))
             new_df = df[df['yaw'].round(2).isin(angles)]
             if len(new_df) != 0:
@@ -43,10 +51,13 @@ for pose in poses:
         out_dir = os.path.join('my_dataset', 'Features', group, f'interpolated_AU_{pose}')
         os.makedirs(out_dir, exist_ok=True)
         for csv in os.listdir(base_dir):
+
+            if csv in os.listdir(out_dir):
+                continue
+
             df = pd.read_csv(os.path.join(base_dir, csv))
             pose_df = pd.read_csv(os.path.join(pose_dir, csv))
             boolean_map = pose_df['yaw'].round(2).isin(angles)
             new_df = df[boolean_map]
             if len(new_df) != 0:
-                new_df.to_csv(os.path.join('my_dataset', 'Features',
-                            group, f'interpolated_AU_{pose}', csv), index=False)
+                new_df.to_csv(os.path.join(out_dir, csv), index=False)
